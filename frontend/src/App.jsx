@@ -74,6 +74,42 @@ const ITEM_VISUALS = {
   "KAM-001": { emoji: "☕", bg: "#FFF3E0", label: "Craft Coffee" },
   "KAM-002": { emoji: "🕯️", bg: "#FFF8E1", label: "Beeswax Candle" },
   "KAM-003": { emoji: "🐟", bg: "#E3F2FD", label: "Salmon Run Pin" },
+  // Saskatchewan
+  "SSK-001": { emoji: "🖼️", bg: "#F3E5F5", label: "Linocut Print" },
+  "SSK-002": { emoji: "🦬", bg: "#FFF8E1", label: "Bison Pin" },
+  "SSK-003": { emoji: "🌸", bg: "#E8F5E9", label: "Wildflower Kit" },
+  // Regina
+  "REG-001": { emoji: "👮", bg: "#FCE4EC", label: "RCMP Pin" },
+  "REG-002": { emoji: "🎨", bg: "#E3F2FD", label: "Wascana Print" },
+  "REG-003": { emoji: "🦴", bg: "#FFF8E1", label: "T. Rex Keychain" },
+  // Montréal
+  "MTL-001": { emoji: "🌿", bg: "#E8F5E9", label: "Market Seed Kit" },
+  "MTL-002": { emoji: "⛪", bg: "#E3F2FD", label: "Notre-Dame Print" },
+  "MTL-003": { emoji: "🏔️", bg: "#FFF8E1", label: "Mont-Royal Pin" },
+  // Québec City
+  "QBC-001": { emoji: "🏰", bg: "#FFF3E0", label: "Frontenac Pin" },
+  "QBC-002": { emoji: "🗺️", bg: "#E8F5E9", label: "Fortified City Map" },
+  "QBC-003": { emoji: "📓", bg: "#E0F7FA", label: "Brew Journal" },
+  // Baie-Saint-Paul
+  "BSP-001": { emoji: "🎨", bg: "#FCE4EC", label: "Charlevoix Print" },
+  "BSP-002": { emoji: "🎶", bg: "#FFF8E1", label: "Le Festif! Pin" },
+  "BSP-003": { emoji: "🗺️", bg: "#E8F5E9", label: "Trail Map" },
+  // Rimouski
+  "RIM-001": { emoji: "🌅", bg: "#E3F2FD", label: "Sunset Print" },
+  "RIM-002": { emoji: "🦭", bg: "#E0F7FA", label: "Bic Park Guide" },
+  "RIM-003": { emoji: "🧼", bg: "#E8F5E9", label: "Balsam Soap" },
+  // Jonquière
+  "JON-001": { emoji: "🏔️", bg: "#E3F2FD", label: "Fjord Print" },
+  "JON-002": { emoji: "🚴", bg: "#E8F5E9", label: "Bleuets Map" },
+  "JON-003": { emoji: "📌", bg: "#FFF8E1", label: "Brewery Pins" },
+  // La Tuque
+  "LAT-001": { emoji: "🍺", bg: "#FFF3E0", label: "Pécheresse Pin" },
+  "LAT-002": { emoji: "📓", bg: "#E8F5E9", label: "Wilderness Journal" },
+  "LAT-003": { emoji: "🎶", bg: "#FCE4EC", label: "Félix Leclerc Pin" },
+  // Senneterre
+  "SEN-001": { emoji: "🛶", bg: "#E0F7FA", label: "Canoe Route Map" },
+  "SEN-002": { emoji: "📌", bg: "#E8F5E9", label: "Mont Bell Pin" },
+  "SEN-003": { emoji: "🧼", bg: "#FFF8E1", label: "Abitibi Soap" },
   // Halifax
   "HAL-001": { emoji: "🍺", bg: "#FFF3E0", label: "Spruce Brew Kit" },
   "HAL-002": { emoji: "⚓", bg: "#E3F2FD", label: "Citadel Pin" },
