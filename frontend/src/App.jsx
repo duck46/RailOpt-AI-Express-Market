@@ -559,6 +559,19 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
     }
     setConfirmedOrderNumber(orderNum);
     setConfirmedTotal(total.toFixed(2));
+    // Persist to purchase history
+    const historyEntry = {
+      orderId: orderNum,
+      date: new Date().toISOString(),
+      total: total.toFixed(2),
+      status: "Confirmed",
+      items: cart.map((c) => {
+        const item = items.find((i) => i.id === c.id);
+        return { id: c.id, name: item?.name || c.id, qty: c.qty, price: item?.price_display || "" };
+      }),
+    };
+    const prev = JSON.parse(localStorage.getItem("railopt_orders") || "[]");
+    localStorage.setItem("railopt_orders", JSON.stringify([historyEntry, ...prev]));
     setCart([]);
     setOrderDeadline(null);
     setSyncing(false);
@@ -1229,6 +1242,44 @@ function Tab4({ onShopStation }) {
 const PREFERENCE_OPTIONS = ["Souvenirs", "Craft Goods", "Food & Snacks", "Books", "Art", "Wellness", "Clothing"];
 const CLASS_OPTIONS = ["Economy", "Business", "Sleeper Plus", "The Canadian Suite"];
 
+const STATUS_META = {
+  "Confirmed":   { color: "#16a34a", bg: "#f0fdf4", label: "Confirmed" },
+  "Preparing":   { color: "#b45309", bg: "#fffbeb", label: "Preparing" },
+  "On the Way":  { color: "#2563eb", bg: "#eff6ff", label: "On the Way" },
+  "Delivered":   { color: "#6b7280", bg: "#f9fafb", label: "Delivered" },
+  "Syncing":     { color: "#7c3aed", bg: "#f5f3ff", label: "Syncing…" },
+};
+
+const DEMO_MESSAGES = [
+  {
+    id: "msg-001",
+    from: "RailOpt Express",
+    avatar: "🚆",
+    subject: "Your order is being prepared",
+    body: "Your order ORD-1001 is currently being prepared by our onboard team. Estimated delivery to your seat in 8–12 minutes.",
+    time: "2 min ago",
+    read: false,
+  },
+  {
+    id: "msg-002",
+    from: "VIA Rail Concierge",
+    avatar: "👋",
+    subject: "Welcome aboard The Canadian!",
+    body: "Thank you for travelling with VIA Rail. Browse local artisan products from stations along your route. Use the Shop tab to explore and order.",
+    time: "14 min ago",
+    read: true,
+  },
+  {
+    id: "msg-003",
+    from: "RailOpt AI",
+    avatar: "⚡",
+    subject: "New products at your next stop",
+    body: "Based on your preferences, we found 4 new items available at Kingston station. Check out the Shop tab for Artisan Knitwear and Heritage Prints.",
+    time: "1 hr ago",
+    read: true,
+  },
+];
+
 function TabAccount() {
   const stored = () => JSON.parse(localStorage.getItem("railopt_account") || "{}");
   const [form, setForm] = useState({
@@ -1237,6 +1288,11 @@ function TabAccount() {
     ...stored(),
   });
   const [saved, setSaved] = useState(false);
+  const [section, setSection] = useState("profile");
+  const [orders, setOrders] = useState(() => JSON.parse(localStorage.getItem("railopt_orders") || "[]"));
+  const [expandedOrder, setExpandedOrder] = useState(null);
+  const [messages, setMessages] = useState(DEMO_MESSAGES);
+  const [openMsg, setOpenMsg] = useState(null);
 
   const set = (k, v) => setForm((p) => ({ ...p, [k]: v }));
 
@@ -1264,110 +1320,242 @@ function TabAccount() {
     </div>
   );
 
+  const unreadCount = messages.filter((m) => !m.read).length;
+
+  const SECTIONS = [
+    { id: "profile",  label: "Profile" },
+    { id: "orders",   label: "Purchase History" },
+    { id: "messages", label: `Messages${unreadCount > 0 ? ` (${unreadCount})` : ""}` },
+  ];
+
   return (
-    <div style={{ maxWidth: 560, margin: "0 auto", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+    <div style={{ maxWidth: 560, margin: "0 auto", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
 
-      {/* Profile card */}
-      <div className="card" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
-          <div style={{ background: "#FFCC00", borderRadius: "50%", width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "1.3rem", color: "#1c1917" }}>
-            {form.name ? form.name[0].toUpperCase() : "?"}
-          </div>
-          <div>
-            <div style={{ fontWeight: 800, fontSize: "1.05rem", color: "#111" }}>{form.name || "Your Name"}</div>
-            <div style={{ fontSize: "0.75rem", color: "#9ca3af" }}>{form.viaNumber ? `VIA Préférence #${form.viaNumber}` : "No VIA Préférence number"}</div>
-          </div>
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-          {field("Full Name", "name", "text", "Jane Smith")}
-          {field("Email", "email", "email", "jane@example.com")}
-          {field("VIA Préférence #", "viaNumber", "text", "123456789")}
-        </div>
+      {/* Section tabs */}
+      <div style={{ display: "flex", background: "#f5f5f4", borderRadius: 12, padding: 4, gap: 2 }}>
+        {SECTIONS.map((s) => (
+          <button key={s.id} onClick={() => setSection(s.id)} style={{
+            flex: 1, padding: "0.5rem 0.25rem", borderRadius: 9, border: "none", cursor: "pointer",
+            fontWeight: 700, fontSize: "0.78rem",
+            background: section === s.id ? "#fff" : "transparent",
+            color: section === s.id ? "#111" : "#9ca3af",
+            boxShadow: section === s.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
+            transition: "all 0.15s",
+          }}>{s.label}</button>
+        ))}
       </div>
 
-      {/* Journey details */}
-      <div className="card" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-        <h3 style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", display: "flex", alignItems: "center", gap: 7, margin: 0 }}>
-          <Train size={16} color="#FFCC00" /> Journey Details
-        </h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-          {field("Car Number", "seatCar", "text", "e.g. 4")}
-          {field("Seat Number", "seatNumber", "text", "e.g. 22A")}
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-          <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Travel Class</label>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {CLASS_OPTIONS.map((c) => (
-              <button key={c} onClick={() => set("trainClass", c)} style={{
-                padding: "0.35rem 0.85rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
-                background: form.trainClass === c ? "#FFCC00" : "#f5f5f4",
-                color: form.trainClass === c ? "#1c1917" : "#6b7280",
-                border: form.trainClass === c ? "1.5px solid #FFCC00" : "1.5px solid #e7e5e4",
-              }}>{c}</button>
-            ))}
+      {/* ── PROFILE ── */}
+      {section === "profile" && <>
+        <div className="card" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+            <div style={{ background: "#FFCC00", borderRadius: "50%", width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "1.3rem", color: "#1c1917" }}>
+              {form.name ? form.name[0].toUpperCase() : "?"}
+            </div>
+            <div>
+              <div style={{ fontWeight: 800, fontSize: "1.05rem", color: "#111" }}>{form.name || "Your Name"}</div>
+              <div style={{ fontSize: "0.75rem", color: "#9ca3af" }}>{form.viaNumber ? `VIA Préférence #${form.viaNumber}` : "No VIA Préférence number"}</div>
+            </div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            {field("Full Name", "name", "text", "Jane Smith")}
+            {field("Email", "email", "email", "jane@example.com")}
+            {field("VIA Préférence #", "viaNumber", "text", "123456789")}
           </div>
         </div>
-      </div>
 
-      {/* Preferences */}
-      <div className="card" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-        <h3 style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", display: "flex", alignItems: "center", gap: 7, margin: 0 }}>
-          <Star size={16} color="#FFCC00" /> Shopping Preferences
-        </h3>
-        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-          <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Interests (used for AI picks)</label>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {PREFERENCE_OPTIONS.map((p) => (
-              <button key={p} onClick={() => togglePref(p)} style={{
-                padding: "0.35rem 0.85rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
-                background: form.preferences.includes(p) ? "#FFCC00" : "#f5f5f4",
-                color: form.preferences.includes(p) ? "#1c1917" : "#6b7280",
-                border: form.preferences.includes(p) ? "1.5px solid #FFCC00" : "1.5px solid #e7e5e4",
-              }}>{p}</button>
-            ))}
+        <div className="card" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          <h3 style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", display: "flex", alignItems: "center", gap: 7, margin: 0 }}>
+            <Train size={16} color="#FFCC00" /> Journey Details
+          </h3>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            {field("Car Number", "seatCar", "text", "e.g. 4")}
+            {field("Seat Number", "seatNumber", "text", "e.g. 22A")}
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+            <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Travel Class</label>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {CLASS_OPTIONS.map((c) => (
+                <button key={c} onClick={() => set("trainClass", c)} style={{
+                  padding: "0.35rem 0.85rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
+                  background: form.trainClass === c ? "#FFCC00" : "#f5f5f4",
+                  color: form.trainClass === c ? "#1c1917" : "#6b7280",
+                  border: form.trainClass === c ? "1.5px solid #FFCC00" : "1.5px solid #e7e5e4",
+                }}>{c}</button>
+              ))}
+            </div>
           </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-          <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Dietary / Allergy Notes</label>
-          <textarea
-            value={form.dietaryNotes}
-            onChange={(e) => set("dietaryNotes", e.target.value)}
-            placeholder="e.g. nut-free, gluten-free…"
-            rows={2}
-            style={{ background: "#fafaf9", border: "1px solid #e7e5e4", borderRadius: 10, padding: "0.6rem 0.85rem", fontSize: "0.88rem", color: "#111", outline: "none", resize: "vertical", fontFamily: "inherit" }}
-          />
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-          <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Language</label>
-          <div style={{ display: "flex", gap: 8 }}>
-            {[["en", "🇨🇦 English"], ["fr", "🇨🇦 Français"]].map(([code, label]) => (
-              <button key={code} onClick={() => set("language", code)} style={{
-                padding: "0.35rem 0.9rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
-                background: form.language === code ? "#FFCC00" : "#f5f5f4",
-                color: form.language === code ? "#1c1917" : "#6b7280",
-                border: form.language === code ? "1.5px solid #FFCC00" : "1.5px solid #e7e5e4",
-              }}>{label}</button>
-            ))}
+
+        <div className="card" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+          <h3 style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", display: "flex", alignItems: "center", gap: 7, margin: 0 }}>
+            <Star size={16} color="#FFCC00" /> Shopping Preferences
+          </h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+            <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Interests (used for AI picks)</label>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              {PREFERENCE_OPTIONS.map((p) => (
+                <button key={p} onClick={() => togglePref(p)} style={{
+                  padding: "0.35rem 0.85rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
+                  background: form.preferences.includes(p) ? "#FFCC00" : "#f5f5f4",
+                  color: form.preferences.includes(p) ? "#1c1917" : "#6b7280",
+                  border: form.preferences.includes(p) ? "1.5px solid #FFCC00" : "1.5px solid #e7e5e4",
+                }}>{p}</button>
+              ))}
+            </div>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+            <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Dietary / Allergy Notes</label>
+            <textarea
+              value={form.dietaryNotes}
+              onChange={(e) => set("dietaryNotes", e.target.value)}
+              placeholder="e.g. nut-free, gluten-free…"
+              rows={2}
+              style={{ background: "#fafaf9", border: "1px solid #e7e5e4", borderRadius: 10, padding: "0.6rem 0.85rem", fontSize: "0.88rem", color: "#111", outline: "none", resize: "vertical", fontFamily: "inherit" }}
+            />
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+            <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Language</label>
+            <div style={{ display: "flex", gap: 8 }}>
+              {[["en", "🇨🇦 English"], ["fr", "🇨🇦 Français"]].map(([code, lbl]) => (
+                <button key={code} onClick={() => set("language", code)} style={{
+                  padding: "0.35rem 0.9rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
+                  background: form.language === code ? "#FFCC00" : "#f5f5f4",
+                  color: form.language === code ? "#1c1917" : "#6b7280",
+                  border: form.language === code ? "1.5px solid #FFCC00" : "1.5px solid #e7e5e4",
+                }}>{lbl}</button>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Save */}
-      <button
-        onClick={handleSave}
-        style={{
-          width: "100%", background: saved ? "#22c55e" : "#FFCC00", color: "#1c1917",
-          fontWeight: 800, fontSize: "1rem", border: "none", borderRadius: 50,
-          padding: "0.9rem", cursor: "pointer", display: "flex", alignItems: "center",
-          justifyContent: "center", gap: 8, transition: "background 0.25s",
-        }}
-      >
-        {saved ? <><CheckCircle size={18} /> Saved!</> : "Save Profile"}
-      </button>
+        <button
+          onClick={handleSave}
+          style={{
+            width: "100%", background: saved ? "#22c55e" : "#FFCC00", color: "#1c1917",
+            fontWeight: 800, fontSize: "1rem", border: "none", borderRadius: 50,
+            padding: "0.9rem", cursor: "pointer", display: "flex", alignItems: "center",
+            justifyContent: "center", gap: 8, transition: "background 0.25s",
+          }}
+        >
+          {saved ? <><CheckCircle size={18} /> Saved!</> : "Save Profile"}
+        </button>
+        <p style={{ textAlign: "center", fontSize: "0.72rem", color: "#9ca3af" }}>
+          Profile stored locally on this device. Not shared with VIA Rail.
+        </p>
+      </>}
 
-      <p style={{ textAlign: "center", fontSize: "0.72rem", color: "#9ca3af" }}>
-        Profile is stored locally on this device. Not shared with VIA Rail.
-      </p>
+      {/* ── PURCHASE HISTORY ── */}
+      {section === "orders" && <>
+        {orders.length === 0 ? (
+          <div className="card" style={{ padding: "3rem 1.5rem", textAlign: "center" }}>
+            <ShoppingCart size={36} style={{ margin: "0 auto 0.75rem", opacity: 0.2 }} />
+            <p style={{ fontWeight: 700, color: "#6b7280" }}>No orders yet</p>
+            <p style={{ fontSize: "0.8rem", color: "#9ca3af", marginTop: 4 }}>Place your first order from the Shop tab</p>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+            {orders.map((order) => {
+              const meta = STATUS_META[order.status] || STATUS_META["Confirmed"];
+              const isOpen = expandedOrder === order.orderId;
+              const dateStr = new Date(order.date).toLocaleDateString("en-CA", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+              return (
+                <div key={order.orderId} className="card" style={{ padding: "1rem 1.25rem", cursor: "pointer" }} onClick={() => setExpandedOrder(isOpen ? null : order.orderId)}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <span style={{ fontWeight: 800, fontSize: "0.9rem", color: "#111" }}>{order.orderId}</span>
+                        <span style={{ background: meta.bg, color: meta.color, borderRadius: 99, padding: "2px 9px", fontSize: "0.7rem", fontWeight: 700 }}>{meta.label}</span>
+                      </div>
+                      <div style={{ fontSize: "0.75rem", color: "#9ca3af", marginTop: 2 }}>{dateStr} · {order.items.length} item{order.items.length !== 1 ? "s" : ""}</div>
+                    </div>
+                    <div style={{ textAlign: "right" }}>
+                      <div style={{ fontWeight: 800, fontSize: "1rem", color: "#111" }}>${order.total}</div>
+                      <div style={{ fontSize: "0.7rem", color: "#9ca3af", marginTop: 2 }}>{isOpen ? "▲ Hide" : "▼ Details"}</div>
+                    </div>
+                  </div>
+
+                  {isOpen && (
+                    <div style={{ marginTop: "0.85rem", borderTop: "1px solid #f0f0f0", paddingTop: "0.85rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                      {order.items.map((it, i) => (
+                        <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <div>
+                            <span style={{ fontSize: "0.83rem", fontWeight: 600, color: "#111" }}>{it.name}</span>
+                            <span style={{ fontSize: "0.75rem", color: "#9ca3af", marginLeft: 6 }}>× {it.qty}</span>
+                          </div>
+                          <span style={{ fontSize: "0.83rem", fontWeight: 700, color: "#111" }}>{it.price}</span>
+                        </div>
+                      ))}
+                      <div style={{ borderTop: "1px solid #f0f0f0", paddingTop: "0.5rem", display: "flex", justifyContent: "space-between" }}>
+                        <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#6b7280" }}>Total</span>
+                        <span style={{ fontWeight: 800, color: "#111" }}>${order.total}</span>
+                      </div>
+                      {/* Simulate status progression for demo */}
+                      <div style={{ display: "flex", gap: 6, marginTop: 4, flexWrap: "wrap" }}>
+                        {["Confirmed", "Preparing", "On the Way", "Delivered"].map((st, idx) => {
+                          const steps = ["Confirmed", "Preparing", "On the Way", "Delivered"];
+                          const currentIdx = steps.indexOf(order.status);
+                          const done = idx <= currentIdx;
+                          return (
+                            <div key={st} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                              <div style={{ width: 10, height: 10, borderRadius: "50%", background: done ? "#FFCC00" : "#e5e7eb", border: done ? "2px solid #b45309" : "2px solid #d1d5db" }} />
+                              <span style={{ fontSize: "0.65rem", fontWeight: 600, color: done ? "#111" : "#9ca3af" }}>{st}</span>
+                              {idx < 3 && <div style={{ width: 16, height: 2, background: done && idx < currentIdx ? "#FFCC00" : "#e5e7eb" }} />}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            <button onClick={() => { localStorage.removeItem("railopt_orders"); setOrders([]); }} style={{ background: "none", border: "1px solid #fca5a5", color: "#ef4444", borderRadius: 10, padding: "0.5rem", fontSize: "0.75rem", fontWeight: 700, cursor: "pointer" }}>
+              Clear History
+            </button>
+          </div>
+        )}
+      </>}
+
+      {/* ── MESSAGES ── */}
+      {section === "messages" && <>
+        {openMsg ? (
+          <div className="card" style={{ padding: "1.25rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <button onClick={() => setOpenMsg(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "#6b7280", fontSize: "0.8rem", fontWeight: 700, textAlign: "left", padding: 0, display: "flex", alignItems: "center", gap: 5 }}>
+              ← Back to messages
+            </button>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ fontSize: "1.6rem" }}>{openMsg.avatar}</div>
+              <div>
+                <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111" }}>{openMsg.subject}</div>
+                <div style={{ fontSize: "0.72rem", color: "#9ca3af" }}>From {openMsg.from} · {openMsg.time}</div>
+              </div>
+            </div>
+            <p style={{ fontSize: "0.88rem", color: "#374151", lineHeight: 1.6, margin: 0 }}>{openMsg.body}</p>
+          </div>
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            {messages.map((msg) => (
+              <div
+                key={msg.id}
+                className="card"
+                onClick={() => { setOpenMsg(msg); setMessages((prev) => prev.map((m) => m.id === msg.id ? { ...m, read: true } : m)); }}
+                style={{ padding: "0.95rem 1.1rem", cursor: "pointer", display: "flex", alignItems: "flex-start", gap: 12, borderLeft: msg.read ? "3px solid transparent" : "3px solid #FFCC00" }}
+              >
+                <div style={{ fontSize: "1.4rem", flexShrink: 0 }}>{msg.avatar}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontWeight: msg.read ? 600 : 800, fontSize: "0.85rem", color: "#111" }}>{msg.subject}</span>
+                    <span style={{ fontSize: "0.7rem", color: "#9ca3af", flexShrink: 0, marginLeft: 8 }}>{msg.time}</span>
+                  </div>
+                  <div style={{ fontSize: "0.75rem", color: "#6b7280", marginTop: 2 }}>{msg.from}</div>
+                  <p style={{ fontSize: "0.78rem", color: "#9ca3af", margin: "4px 0 0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{msg.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </>}
     </div>
   );
 }
