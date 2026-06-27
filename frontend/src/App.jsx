@@ -30,6 +30,22 @@ const ITEM_VISUALS = {
   "KAM-001": { emoji: "☕", bg: "#FFF3E0", label: "Craft Coffee" },
   "KAM-002": { emoji: "🕯️", bg: "#FFF8E1", label: "Beeswax Candle" },
   "KAM-003": { emoji: "🐟", bg: "#E3F2FD", label: "Salmon Run Pin" },
+  // Winnipeg
+  "WPG-001": { emoji: "🖼️", bg: "#F3E5F5", label: "Mural Print" },
+  "WPG-002": { emoji: "🧵", bg: "#FFF8E1", label: "Métis Bookmarks" },
+  "WPG-003": { emoji: "🕯️", bg: "#E8F5E9", label: "Prairie Candle" },
+  // Thompson
+  "THO-001": { emoji: "📖", bg: "#E8F5E9", label: "Field Guide" },
+  "THO-002": { emoji: "📌", bg: "#FFF8E1", label: "Spirit Way Pin" },
+  "THO-003": { emoji: "🧼", bg: "#E0F7FA", label: "Boreal Soap" },
+  // The Pas
+  "PAS-001": { emoji: "🪡", bg: "#FCE4EC", label: "Beadwork Keychain" },
+  "PAS-002": { emoji: "📌", bg: "#FFF3E0", label: "Festival Pin" },
+  "PAS-003": { emoji: "📓", bg: "#E8F5E9", label: "Wilderness Journal" },
+  // Churchill
+  "CHU-001": { emoji: "🐻‍❄️", bg: "#E3F2FD", label: "Polar Bear Pin" },
+  "CHU-002": { emoji: "🎨", bg: "#FFF8E1", label: "Inuit Art Prints" },
+  "CHU-003": { emoji: "🌌", bg: "#EDE7F6", label: "Aurora Sky Map" },
   // Edmonton
   "EDM-001": { emoji: "🏒", bg: "#E3F2FD", label: "Oilers Pin" },
   "EDM-002": { emoji: "🌸", bg: "#E8F5E9", label: "Wildflower Kit" },
