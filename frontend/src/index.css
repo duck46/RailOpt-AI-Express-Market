@@ -4,45 +4,146 @@
 
 @layer base {
   html, body, #root {
-    @apply bg-stone-950 text-amber-100 min-h-screen m-0 p-0 w-full;
-    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', ui-monospace, monospace;
+    background-color: #0f1011;
+    color: #ffffff;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-family: 'Inter', system-ui, sans-serif;
   }
   * { box-sizing: border-box; }
   ::-webkit-scrollbar { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-track { background: #1c1917; }
-  ::-webkit-scrollbar-thumb { background: #78350f; border-radius: 2px; }
+  ::-webkit-scrollbar-track { background: #1a1c1e; }
+  ::-webkit-scrollbar-thumb { background: #4B4F54; border-radius: 2px; }
 }
 
 @layer components {
-  .cockpit-panel {
-    @apply bg-stone-900 border border-amber-900/40 rounded-lg;
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.07);
+  .via-panel {
+    background-color: #1a1c1e;
+    border: 1px solid #2e3135;
+    border-radius: 8px;
+    box-shadow: 0 0 24px rgba(255, 204, 0, 0.05);
   }
-  .cockpit-btn {
-    @apply bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-stone-950 font-bold px-4 py-2 rounded transition-all duration-150 text-sm tracking-wide cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed;
+
+  .via-panel-inner {
+    background-color: #23262a;
+    border: 1px solid #2e3135;
+    border-radius: 6px;
   }
-  .cockpit-btn-ghost {
-    @apply border border-amber-500/50 hover:border-amber-400 hover:bg-amber-500/10 text-amber-400 px-4 py-2 rounded transition-all duration-150 text-sm tracking-wide cursor-pointer disabled:opacity-40;
+
+  .via-btn {
+    background-color: #FFCC00;
+    color: #000000;
+    font-weight: 700;
+    font-size: 0.8125rem;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.15s, opacity 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
   }
-  .cockpit-input {
-    @apply bg-stone-800 border border-amber-900/50 focus:border-amber-500 text-amber-100 rounded px-3 py-2 text-sm outline-none transition-colors placeholder-stone-500 w-full;
+  .via-btn:hover { background-color: #e6b800; }
+  .via-btn:active { background-color: #cc9900; }
+  .via-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .via-btn-ghost {
+    background-color: transparent;
+    color: #FFCC00;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 204, 0, 0.4);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+  .via-btn-ghost:hover {
+    border-color: #FFCC00;
+    background-color: rgba(255, 204, 0, 0.08);
+  }
+  .via-btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .via-input {
+    background-color: #23262a;
+    border: 1px solid #2e3135;
+    color: #ffffff;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+    font-family: 'Inter', sans-serif;
+  }
+  .via-input:focus { border-color: #FFCC00; }
+  .via-input::placeholder { color: #4B4F54; }
+
+  .via-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7a7f85;
+  }
+
+  .via-badge-retail {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 99px;
+    background-color: rgba(255, 204, 0, 0.15);
+    color: #FFCC00;
+    border: 1px solid rgba(255, 204, 0, 0.35);
+  }
+
+  .via-badge-souvenir {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 99px;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #c0c4c8;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  /* Motion accent line — diagonal brand element */
+  .via-accent-bar {
+    width: 3px;
+    height: 2rem;
+    background: #FFCC00;
+    border-radius: 2px;
+    transform: skewX(-8deg);
+    flex-shrink: 0;
   }
 }
 
-@keyframes pulseAmber {
+@keyframes pulseYellow {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.45; }
+  50% { opacity: 0.4; }
 }
 @keyframes slideIn {
   from { opacity: 0; transform: translateY(-6px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes syncFlash {
-  0%   { background-color: rgba(22,163,74,0.18); }
-  60%  { background-color: rgba(22,163,74,0.35); }
+  0%   { background-color: rgba(34,197,94,0.15); }
+  60%  { background-color: rgba(34,197,94,0.28); }
   100% { background-color: transparent; }
 }
 
-.animate-pulse-amber { animation: pulseAmber 1.8s ease-in-out infinite; }
-.slide-in { animation: slideIn 0.22s ease-out; }
-.sync-flash { animation: syncFlash 1s ease-out; }
+.animate-pulse-via  { animation: pulseYellow 1.8s ease-in-out infinite; }
+.slide-in           { animation: slideIn 0.22s ease-out; }
+.sync-flash         { animation: syncFlash 1s ease-out; }
