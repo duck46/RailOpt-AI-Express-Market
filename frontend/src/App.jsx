@@ -1225,9 +1225,157 @@ function Tab4({ onShopStation }) {
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
+// ─── Tab: Account ─────────────────────────────────────────────────────────────
+const PREFERENCE_OPTIONS = ["Souvenirs", "Craft Goods", "Food & Snacks", "Books", "Art", "Wellness", "Clothing"];
+const CLASS_OPTIONS = ["Economy", "Business", "Sleeper Plus", "The Canadian Suite"];
+
+function TabAccount() {
+  const stored = () => JSON.parse(localStorage.getItem("railopt_account") || "{}");
+  const [form, setForm] = useState({
+    name: "", email: "", viaNumber: "", seatCar: "", seatNumber: "",
+    trainClass: "Economy", preferences: [], dietaryNotes: "", language: "en",
+    ...stored(),
+  });
+  const [saved, setSaved] = useState(false);
+
+  const set = (k, v) => setForm((p) => ({ ...p, [k]: v }));
+
+  const togglePref = (p) =>
+    set("preferences", form.preferences.includes(p)
+      ? form.preferences.filter((x) => x !== p)
+      : [...form.preferences, p]);
+
+  const handleSave = () => {
+    localStorage.setItem("railopt_account", JSON.stringify(form));
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
+  };
+
+  const field = (label, key, type = "text", placeholder = "") => (
+    <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+      <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</label>
+      <input
+        type={type}
+        value={form[key] || ""}
+        onChange={(e) => set(key, e.target.value)}
+        placeholder={placeholder}
+        style={{ background: "#fafaf9", border: "1px solid #e7e5e4", borderRadius: 10, padding: "0.6rem 0.85rem", fontSize: "0.88rem", color: "#111", outline: "none" }}
+      />
+    </div>
+  );
+
+  return (
+    <div style={{ maxWidth: 560, margin: "0 auto", display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+
+      {/* Profile card */}
+      <div className="card" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 4 }}>
+          <div style={{ background: "#FFCC00", borderRadius: "50%", width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "1.3rem", color: "#1c1917" }}>
+            {form.name ? form.name[0].toUpperCase() : "?"}
+          </div>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: "1.05rem", color: "#111" }}>{form.name || "Your Name"}</div>
+            <div style={{ fontSize: "0.75rem", color: "#9ca3af" }}>{form.viaNumber ? `VIA Préférence #${form.viaNumber}` : "No VIA Préférence number"}</div>
+          </div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          {field("Full Name", "name", "text", "Jane Smith")}
+          {field("Email", "email", "email", "jane@example.com")}
+          {field("VIA Préférence #", "viaNumber", "text", "123456789")}
+        </div>
+      </div>
+
+      {/* Journey details */}
+      <div className="card" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+        <h3 style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", display: "flex", alignItems: "center", gap: 7, margin: 0 }}>
+          <Train size={16} color="#FFCC00" /> Journey Details
+        </h3>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          {field("Car Number", "seatCar", "text", "e.g. 4")}
+          {field("Seat Number", "seatNumber", "text", "e.g. 22A")}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+          <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Travel Class</label>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {CLASS_OPTIONS.map((c) => (
+              <button key={c} onClick={() => set("trainClass", c)} style={{
+                padding: "0.35rem 0.85rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
+                background: form.trainClass === c ? "#FFCC00" : "#f5f5f4",
+                color: form.trainClass === c ? "#1c1917" : "#6b7280",
+                border: form.trainClass === c ? "1.5px solid #FFCC00" : "1.5px solid #e7e5e4",
+              }}>{c}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Preferences */}
+      <div className="card" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+        <h3 style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", display: "flex", alignItems: "center", gap: 7, margin: 0 }}>
+          <Star size={16} color="#FFCC00" /> Shopping Preferences
+        </h3>
+        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+          <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Interests (used for AI picks)</label>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+            {PREFERENCE_OPTIONS.map((p) => (
+              <button key={p} onClick={() => togglePref(p)} style={{
+                padding: "0.35rem 0.85rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
+                background: form.preferences.includes(p) ? "#FFCC00" : "#f5f5f4",
+                color: form.preferences.includes(p) ? "#1c1917" : "#6b7280",
+                border: form.preferences.includes(p) ? "1.5px solid #FFCC00" : "1.5px solid #e7e5e4",
+              }}>{p}</button>
+            ))}
+          </div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+          <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Dietary / Allergy Notes</label>
+          <textarea
+            value={form.dietaryNotes}
+            onChange={(e) => set("dietaryNotes", e.target.value)}
+            placeholder="e.g. nut-free, gluten-free…"
+            rows={2}
+            style={{ background: "#fafaf9", border: "1px solid #e7e5e4", borderRadius: 10, padding: "0.6rem 0.85rem", fontSize: "0.88rem", color: "#111", outline: "none", resize: "vertical", fontFamily: "inherit" }}
+          />
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+          <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Language</label>
+          <div style={{ display: "flex", gap: 8 }}>
+            {[["en", "🇨🇦 English"], ["fr", "🇨🇦 Français"]].map(([code, label]) => (
+              <button key={code} onClick={() => set("language", code)} style={{
+                padding: "0.35rem 0.9rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
+                background: form.language === code ? "#FFCC00" : "#f5f5f4",
+                color: form.language === code ? "#1c1917" : "#6b7280",
+                border: form.language === code ? "1.5px solid #FFCC00" : "1.5px solid #e7e5e4",
+              }}>{label}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Save */}
+      <button
+        onClick={handleSave}
+        style={{
+          width: "100%", background: saved ? "#22c55e" : "#FFCC00", color: "#1c1917",
+          fontWeight: 800, fontSize: "1rem", border: "none", borderRadius: 50,
+          padding: "0.9rem", cursor: "pointer", display: "flex", alignItems: "center",
+          justifyContent: "center", gap: 8, transition: "background 0.25s",
+        }}
+      >
+        {saved ? <><CheckCircle size={18} /> Saved!</> : "Save Profile"}
+      </button>
+
+      <p style={{ textAlign: "center", fontSize: "0.72rem", color: "#9ca3af" }}>
+        Profile is stored locally on this device. Not shared with VIA Rail.
+      </p>
+    </div>
+  );
+}
+
 const TABS = [
   { id: "retail",   emoji: "🛍️", label: "Shop" },
   { id: "discover", emoji: "🧭", label: "Discover" },
+  { id: "account",  emoji: "👤", label: "Account" },
 ];
 
 export default function App() {
@@ -1302,6 +1450,7 @@ export default function App() {
       <main style={{ maxWidth: 960, margin: "0 auto", padding: "1.25rem 1rem" }}>
         {tab === "retail"   && <Tab1 offline={offline} shopStation={shopStation} onStationHandled={() => setShopStation("All")} />}
         {tab === "discover" && <Tab4 onShopStation={handleShopStation} />}
+        {tab === "account"  && <TabAccount />}
       </main>
     </div>
   );
