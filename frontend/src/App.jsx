@@ -807,8 +807,6 @@ function Tab4({ onShopStation }) {
 const TABS = [
   { id: "retail",   emoji: "🛍️", label: "Shop" },
   { id: "discover", emoji: "🧭", label: "Discover" },
-  { id: "ops",      emoji: "🛠️", label: "Operations" },
-  { id: "trust",    emoji: "🔒", label: "Network" },
 ];
 
 export default function App() {
@@ -883,8 +881,6 @@ export default function App() {
       <main style={{ maxWidth: 960, margin: "0 auto", padding: "1.25rem 1rem" }}>
         {tab === "retail"   && <Tab1 offline={offline} shopStation={shopStation} onStationHandled={() => setShopStation("All")} />}
         {tab === "discover" && <Tab4 onShopStation={handleShopStation} />}
-        {tab === "ops"      && <Tab2 />}
-        {tab === "trust"    && <Tab3 />}
       </main>
     </div>
   );
