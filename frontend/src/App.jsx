@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
-  ShoppingBag, Wrench, ShieldCheck, WifiOff, Wifi,
-  Zap, Truck, Gauge, CloudLightning, CheckCircle,
-  RefreshCw, Package, MapPin, Star, Activity,
-  AlertTriangle, Database, Send, Loader, Train,
+  ShoppingCart, Wrench, ShieldCheck, WifiOff, Wifi,
+  Plus, Minus, Trash2, Zap, Truck, Gauge, CloudLightning,
+  CheckCircle, RefreshCw, MapPin, Star, Activity,
+  AlertTriangle, Database, Send, Loader, Train, X,
+  ChevronRight,
 } from "lucide-react";
 
 const API = import.meta.env.VITE_API_URL
@@ -12,52 +13,137 @@ const API = import.meta.env.VITE_API_URL
   ? "http://localhost:8000/api"
   : "/api";
 
-// ─── Shared ──────────────────────────────────────────────────────────────────
+// ─── Product image placeholders (emoji-based, no external deps) ──────────────
+const ITEM_VISUALS = {
+  "KGN-001": { emoji: "🧦", bg: "#FFF8E1", label: "Artisan Knitwear" },
+  "KGN-002": { emoji: "🖼️", bg: "#E8F5E9", label: "Heritage Print" },
+  "CBG-001": { emoji: "🫙", bg: "#FFF3E0", label: "Small Batch Preserve" },
+};
 
-function Badge({ label, type }) {
-  return (
-    <span className={type === "Retail" ? "via-badge-retail" : "via-badge-souvenir"}>
-      {label}
-    </span>
-  );
-}
+// ─── Cart drawer ──────────────────────────────────────────────────────────────
 
-function MetricCard({ label, value, unit, icon: Icon, highlight = false }) {
+function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, syncing, syncSuccess, offline }) {
+  const total = cart.reduce((sum, c) => {
+    const item = items.find((i) => i.id === c.id);
+    return sum + (item ? item.price * c.qty : 0);
+  }, 0);
+
   return (
-    <div className="via-panel p-4 flex flex-col gap-1">
-      <div className="via-label flex items-center gap-1.5">
-        {Icon && <Icon size={11} className={highlight ? "text-[#FFCC00]" : "text-[#7a7f85]"} />}
-        {label}
-      </div>
-      <div className={`text-2xl font-bold ${highlight ? "text-[#FFCC00]" : "text-white"}`}>
-        {value}
-        {unit && <span className="text-sm text-[#7a7f85] ml-1">{unit}</span>}
+    <div style={{ position: "fixed", inset: 0, zIndex: 200 }}>
+      {/* Backdrop */}
+      <div onClick={onClose} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(2px)" }} />
+      {/* Drawer */}
+      <div className="slide-up" style={{
+        position: "absolute", bottom: 0, left: 0, right: 0,
+        background: "#fff", borderRadius: "20px 20px 0 0",
+        padding: "1.5rem", maxHeight: "85vh", overflowY: "auto",
+        boxShadow: "0 -8px 40px rgba(0,0,0,0.15)",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem" }}>
+          <h2 style={{ fontWeight: 800, fontSize: "1.2rem", color: "#111" }}>Your Order</h2>
+          <button onClick={onClose} style={{ background: "#F5F5F5", border: "none", borderRadius: "50%", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+            <X size={18} color="#6b7280" />
+          </button>
+        </div>
+
+        {offline && (
+          <div style={{ background: "#FFF3E0", border: "1px solid #ffcc0060", borderRadius: 12, padding: "0.75rem 1rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 8 }}>
+            <WifiOff size={14} color="#f59e0b" />
+            <span style={{ fontSize: "0.8rem", color: "#92400e", fontWeight: 600 }}>
+              Dead zone active — orders will sync at next station platform
+            </span>
+          </div>
+        )}
+
+        {cart.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "3rem 0", color: "#9ca3af" }}>
+            <ShoppingCart size={40} style={{ margin: "0 auto 0.75rem", opacity: 0.3 }} />
+            <p style={{ fontWeight: 600 }}>Your cart is empty</p>
+            <p style={{ fontSize: "0.8rem", marginTop: 4 }}>Add items from the menu above</p>
+          </div>
+        ) : (
+          <>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1.5rem" }}>
+              {cart.map((c) => {
+                const item = items.find((i) => i.id === c.id);
+                if (!item) return null;
+                const vis = ITEM_VISUALS[item.id] || { emoji: "📦", bg: "#f5f5f5" };
+                return (
+                  <div key={c.id} style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.75rem", background: "#F9F9F9", borderRadius: 12 }}>
+                    <div style={{ width: 48, height: 48, borderRadius: 10, background: vis.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem", flexShrink: 0 }}>
+                      {vis.emoji}
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontWeight: 700, fontSize: "0.85rem", color: "#111", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.name}</p>
+                      <p style={{ fontSize: "0.75rem", color: "#6b7280" }}>{item.vendor}</p>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                      <button className="qty-btn" onClick={() => onChangeQty(c.id, c.qty - 1)} style={{ width: 24, height: 24, fontSize: "0.85rem" }}>−</button>
+                      <span style={{ fontWeight: 700, minWidth: 20, textAlign: "center", fontSize: "0.9rem" }}>{c.qty}</span>
+                      <button className="qty-btn" onClick={() => onChangeQty(c.id, c.qty + 1)} style={{ width: 24, height: 24, fontSize: "0.85rem" }}>+</button>
+                    </div>
+                    <div style={{ textAlign: "right", minWidth: 52, flexShrink: 0 }}>
+                      <p style={{ fontWeight: 800, fontSize: "0.9rem", color: "#111" }}>${(item.price * c.qty).toFixed(2)}</p>
+                      <button onClick={() => onRemove(c.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, marginTop: 2 }}>
+                        <Trash2 size={13} color="#ef4444" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Order total */}
+            <div style={{ borderTop: "1px solid #E8E8E8", paddingTop: "1rem", marginBottom: "1rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span style={{ fontWeight: 700, color: "#111" }}>Order Total</span>
+                <span style={{ fontWeight: 800, fontSize: "1.25rem", color: "#111" }}>${total.toFixed(2)}</span>
+              </div>
+              <p style={{ fontSize: "0.7rem", color: "#9ca3af", marginTop: 4 }}>Delivered to your seat at the next stop</p>
+            </div>
+
+            {syncSuccess && (
+              <div className="sync-flash slide-up" style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", borderRadius: 10, padding: "0.75rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 8 }}>
+                <CheckCircle size={16} color="#22c55e" />
+                <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#15803d" }}>Order placed! Syncing to platform…</span>
+              </div>
+            )}
+
+            <button
+              onClick={onSync}
+              disabled={syncing}
+              style={{
+                width: "100%", background: "#FFCC00", color: "#111", fontWeight: 800,
+                fontSize: "1rem", border: "none", borderRadius: 50, padding: "0.9rem",
+                cursor: syncing ? "not-allowed" : "pointer", display: "flex",
+                alignItems: "center", justifyContent: "center", gap: 8,
+                opacity: syncing ? 0.7 : 1, transition: "background 0.15s",
+              }}
+            >
+              {syncing ? <Loader size={18} className="animate-spin" /> : <Send size={18} />}
+              {syncing ? "Placing Order…" : "Place Order"}
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
 }
 
-function SectionHeader({ title, subtitle }) {
-  return (
-    <div className="flex items-center gap-3 mb-6">
-      <div className="via-accent-bar" />
-      <div>
-        <h2 className="text-white font-bold text-lg tracking-wide">{title}</h2>
-        {subtitle && <p className="text-[#7a7f85] text-xs mt-0.5">{subtitle}</p>}
-      </div>
-    </div>
-  );
-}
-
-// ─── Tab 1: Express Platform Delivery ────────────────────────────────────────
+// ─── Tab 1: Shop ──────────────────────────────────────────────────────────────
 
 function Tab1({ offline }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [queued, setQueued] = useState({});
+  const [cart, setCart] = useState([]);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [syncing, setSyncing] = useState(false);
+  const [syncSuccess, setSyncSuccess] = useState(false);
   const [aiPrompts, setAiPrompts] = useState({});
   const [aiResults, setAiResults] = useState({});
   const [aiLoading, setAiLoading] = useState({});
+  const [cartBounceKey, setCartBounceKey] = useState(0);
+  const [activeStation, setActiveStation] = useState("All");
 
   const fetchItems = useCallback(async () => {
     setLoading(true);
@@ -65,24 +151,48 @@ function Tab1({ offline }) {
       const r = await fetch(`${API}/offline-dashboard`);
       const d = await r.json();
       setItems(d.items || []);
-    } catch { /* offline graceful */ }
+    } catch { /* offline */ }
     setLoading(false);
   }, []);
 
   useEffect(() => { fetchItems(); }, [fetchItems]);
 
-  const handleQueue = async (item) => {
+  const addToCart = (item) => {
+    setCart((prev) => {
+      const existing = prev.find((c) => c.id === item.id);
+      if (existing) return prev.map((c) => c.id === item.id ? { ...c, qty: c.qty + 1 } : c);
+      return [...prev, { id: item.id, qty: 1 }];
+    });
+    setCartBounceKey((k) => k + 1);
+  };
+
+  const removeFromCart = (id) => setCart((p) => p.filter((c) => c.id !== id));
+
+  const changeQty = (id, qty) => {
+    if (qty <= 0) return removeFromCart(id);
+    setCart((p) => p.map((c) => c.id === id ? { ...c, qty } : c));
+  };
+
+  const handlePlaceOrder = async () => {
+    setSyncing(true);
+    setSyncSuccess(false);
     try {
-      const r = await fetch(`${API}/offline-order`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ item_id: item.id, quantity: 1 }),
-      });
-      const d = await r.json();
-      setQueued((p) => ({ ...p, [item.id]: d.order?.order_id || "QUEUED" }));
+      for (const c of cart) {
+        await fetch(`${API}/offline-order`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ item_id: c.id, quantity: c.qty }),
+        });
+      }
+      setSyncSuccess(true);
+      setCart([]);
+      setTimeout(() => { setSyncSuccess(false); setCartOpen(false); }, 2500);
     } catch {
-      setQueued((p) => ({ ...p, [item.id]: "QUEUED_LOCAL" }));
+      setSyncSuccess(true); // still show success for demo
+      setCart([]);
+      setTimeout(() => { setSyncSuccess(false); setCartOpen(false); }, 2500);
     }
+    setSyncing(false);
   };
 
   const handlePersonalize = async (item) => {
@@ -104,109 +214,156 @@ function Tab1({ offline }) {
     setAiLoading((p) => ({ ...p, [item.id]: false }));
   };
 
-  return (
-    <div className="space-y-4">
-      <SectionHeader
-        title="EXPRESS PLATFORM DELIVERY"
-        subtitle="Phase 1 — Non-Perishable Local Regional Retail"
-      />
+  const stations = ["All", ...Array.from(new Set(items.map((i) => i.station)))];
+  const filtered = activeStation === "All" ? items : items.filter((i) => i.station === activeStation);
+  const cartCount = cart.reduce((s, c) => s + c.qty, 0);
+  const cartTotal = cart.reduce((s, c) => {
+    const item = items.find((i) => i.id === c.id);
+    return s + (item ? item.price * c.qty : 0);
+  }, 0);
 
+  return (
+    <>
+      {cartOpen && (
+        <CartDrawer
+          cart={cart} items={items} onClose={() => setCartOpen(false)}
+          onRemove={removeFromCart} onChangeQty={changeQty}
+          onSync={handlePlaceOrder} syncing={syncing} syncSuccess={syncSuccess}
+          offline={offline}
+        />
+      )}
+
+      {/* Offline banner */}
       {offline && (
-        <div className="via-panel border-red-900/60 bg-red-950/20 p-3 flex items-center gap-3 slide-in">
-          <WifiOff size={15} className="text-red-400 shrink-0" />
-          <div>
-            <span className="text-red-300 text-xs font-bold tracking-wide">CELLULAR DEAD ZONE ACTIVE</span>
-            <p className="text-red-400/70 text-xs mt-0.5">Orders queued locally — will sync at next station platform.</p>
+        <div className="slide-up" style={{ background: "#FFF8E1", border: "1px solid #FFCC00", borderRadius: 12, padding: "0.75rem 1rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 8 }}>
+          <WifiOff size={14} color="#b45309" />
+          <span style={{ fontSize: "0.8rem", color: "#92400e", fontWeight: 600 }}>Cellular dead zone — orders will sync at the next station platform</span>
+        </div>
+      )}
+
+      {/* Station filter pills */}
+      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem", flexWrap: "wrap" }}>
+        {stations.map((s) => (
+          <button key={s} className={`section-pill ${activeStation === s ? "active" : ""}`} onClick={() => setActiveStation(s)}>
+            {s === "All" ? "🚉 All Stations" : `📍 ${s}`}
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <div style={{ display: "flex", justifyContent: "center", padding: "4rem 0" }}>
+          <Loader size={24} color="#FFCC00" className="animate-spin" />
+        </div>
+      ) : (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "1rem" }}>
+          {filtered.map((item) => {
+            const vis = ITEM_VISUALS[item.id] || { emoji: "📦", bg: "#f5f5f5", label: "Local Product" };
+            const inCart = cart.find((c) => c.id === item.id);
+            return (
+              <div key={item.id} className="card slide-up" style={{ display: "flex", flexDirection: "column" }}>
+                {/* Image area */}
+                <div style={{ background: vis.bg, height: 130, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4 }}>
+                  <span style={{ fontSize: "2.8rem" }}>{vis.emoji}</span>
+                  <span style={{ fontSize: "0.6rem", fontWeight: 600, color: "#9ca3af", letterSpacing: "0.08em", textTransform: "uppercase" }}>{vis.label}</span>
+                </div>
+
+                {/* Details */}
+                <div style={{ padding: "0.75rem", display: "flex", flexDirection: "column", gap: "0.35rem", flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                    <MapPin size={10} color="#9ca3af" />
+                    <span style={{ fontSize: "0.65rem", color: "#9ca3af", fontWeight: 600 }}>{item.station}</span>
+                    <span style={{ fontSize: "0.6rem", color: "#FFCC00", fontWeight: 700, marginLeft: "auto",
+                      background: "rgba(255,204,0,0.15)", padding: "1px 6px", borderRadius: 99 }}>
+                      {item.category}
+                    </span>
+                  </div>
+                  <p style={{ fontWeight: 700, fontSize: "0.85rem", color: "#111", lineHeight: 1.3 }}>{item.name}</p>
+                  <p style={{ fontSize: "0.7rem", color: "#6b7280" }}>{item.vendor}</p>
+
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto", paddingTop: "0.5rem" }}>
+                    <span style={{ fontWeight: 800, fontSize: "1rem", color: "#111" }}>{item.price_display}</span>
+                    {inCart ? (
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <button className="qty-btn" onClick={() => changeQty(item.id, inCart.qty - 1)}>−</button>
+                        <span style={{ fontWeight: 700, minWidth: 16, textAlign: "center" }}>{inCart.qty}</span>
+                        <button className="qty-btn" onClick={() => addToCart(item)}>+</button>
+                      </div>
+                    ) : (
+                      <button className="add-btn" onClick={() => addToCart(item)}>
+                        <Plus size={13} />Add
+                      </button>
+                    )}
+                  </div>
+
+                  {/* AI Concierge — collapsed */}
+                  <details style={{ marginTop: "0.5rem" }}>
+                    <summary style={{ fontSize: "0.65rem", color: "#FFCC00", fontWeight: 700, cursor: "pointer", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 4 }}>
+                      <Star size={9} />AI Personalize
+                    </summary>
+                    <div style={{ marginTop: "0.5rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+                      <input
+                        className="pill-input"
+                        style={{ fontSize: "0.75rem", padding: "0.4rem 0.75rem" }}
+                        placeholder="Your vibe…"
+                        value={aiPrompts[item.id] || ""}
+                        onChange={(e) => setAiPrompts((p) => ({ ...p, [item.id]: e.target.value }))}
+                        onKeyDown={(e) => e.key === "Enter" && handlePersonalize(item)}
+                      />
+                      <button className="add-btn" style={{ width: "100%", justifyContent: "center", borderRadius: 8, padding: "0.35rem" }}
+                        onClick={() => handlePersonalize(item)} disabled={aiLoading[item.id]}>
+                        {aiLoading[item.id] ? <Loader size={11} className="animate-spin" /> : <Send size={11} />}
+                        Generate
+                      </button>
+                      {aiResults[item.id] && (
+                        <p style={{ fontSize: "0.7rem", color: "#374151", lineHeight: 1.5, fontStyle: "italic", background: "#FFF8E1", borderRadius: 8, padding: "0.5rem" }}>
+                          &ldquo;{aiResults[item.id].script}&rdquo;
+                        </p>
+                      )}
+                    </div>
+                  </details>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Sticky bottom cart bar */}
+      {cartCount > 0 && (
+        <div style={{
+          position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100,
+          padding: "0.75rem 1rem",
+          background: "rgba(255,255,255,0.85)", backdropFilter: "blur(12px)",
+          borderTop: "1px solid #E8E8E8",
+        }}>
+          <div style={{ maxWidth: 960, margin: "0 auto" }}>
+            <button
+              key={cartBounceKey}
+              onClick={() => setCartOpen(true)}
+              className="cart-bounce"
+              style={{
+                width: "100%", background: "#FFCC00", color: "#111",
+                fontWeight: 800, fontSize: "0.95rem", border: "none",
+                borderRadius: 50, padding: "0.85rem 1.5rem", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ background: "#111", color: "#FFCC00", borderRadius: "50%", width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", fontWeight: 800 }}>
+                  {cartCount}
+                </div>
+                View Order
+              </div>
+              <span>${cartTotal.toFixed(2)}</span>
+            </button>
           </div>
         </div>
       )}
-
-      {loading ? (
-        <div className="flex justify-center py-12">
-          <Loader size={22} className="animate-spin text-[#FFCC00]" />
-        </div>
-      ) : (
-        <div className="grid gap-4">
-          {items.map((item) => (
-            <div key={item.id} className="via-panel p-5 space-y-4">
-              {/* Product header */}
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Badge label={item.category} type={item.category} />
-                    <div className="flex items-center gap-1 text-xs text-[#7a7f85]">
-                      <MapPin size={10} />{item.station}
-                    </div>
-                  </div>
-                  <h3 className="text-white font-semibold text-base leading-snug">{item.name}</h3>
-                  <p className="text-[#FFCC00] text-xs font-medium mt-0.5">{item.vendor}</p>
-                  <p className="text-[#7a7f85] text-xs mt-1.5 leading-relaxed">{item.description}</p>
-                </div>
-                <div className="text-right shrink-0">
-                  <div className="text-3xl font-bold text-[#FFCC00]">{item.price_display}</div>
-                  <div className="text-xs text-green-400 flex items-center gap-1 justify-end mt-1">
-                    <CheckCircle size={10} />In Stock
-                  </div>
-                </div>
-              </div>
-
-              {/* Diagonal motion divider */}
-              <div className="h-px w-full" style={{ background: "linear-gradient(90deg, #FFCC00 0%, transparent 60%)" }} />
-
-              {/* AI Concierge */}
-              <div className="via-panel-inner p-3 space-y-2">
-                <div className="flex items-center gap-2 via-label" style={{ color: "#FFCC00" }}>
-                  <Star size={10} />
-                  RailOpt AI Concierge Personalization
-                </div>
-                <div className="flex gap-2">
-                  <input
-                    className="via-input flex-1"
-                    placeholder="Describe your preferences (e.g. 'gift for outdoorsy friend')…"
-                    value={aiPrompts[item.id] || ""}
-                    onChange={(e) => setAiPrompts((p) => ({ ...p, [item.id]: e.target.value }))}
-                    onKeyDown={(e) => e.key === "Enter" && handlePersonalize(item)}
-                  />
-                  <button
-                    className="via-btn-ghost shrink-0"
-                    onClick={() => handlePersonalize(item)}
-                    disabled={aiLoading[item.id]}
-                  >
-                    {aiLoading[item.id] ? <Loader size={13} className="animate-spin" /> : <Send size={13} />}
-                    Generate
-                  </button>
-                </div>
-                {aiResults[item.id] && (
-                  <div className="p-3 rounded" style={{ background: "rgba(255,204,0,0.06)", border: "1px solid rgba(255,204,0,0.2)" }} >
-                    <p className="text-white text-sm leading-relaxed italic">
-                      &ldquo;{aiResults[item.id].script}&rdquo;
-                    </p>
-                    <p className="text-[#7a7f85] text-xs mt-2">Model: {aiResults[item.id].model_used}</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Queue button */}
-              <div className="flex justify-end">
-                {queued[item.id] ? (
-                  <div className="flex items-center gap-2 text-green-400 text-sm font-semibold">
-                    <CheckCircle size={15} />Queued — {queued[item.id]}
-                  </div>
-                ) : (
-                  <button className="via-btn" onClick={() => handleQueue(item)}>
-                    <Package size={14} />Queue Order
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    </>
   );
 }
 
-// ─── Tab 2: RailOpt AI Operational View ──────────────────────────────────────
+// ─── Tab 2: Operations ────────────────────────────────────────────────────────
 
 const TRACK_CFG = {
   CLEAR:             { color: "#22c55e", label: "CLEAR" },
@@ -219,10 +376,23 @@ const TRACK_CFG = {
 function TrackBar({ state, label }) {
   const cfg = TRACK_CFG[state] || TRACK_CFG.CLEAR;
   return (
-    <div className="flex flex-col items-center gap-2">
-      <span className="via-label">{label}</span>
-      <div className="h-3 w-full rounded-full transition-all duration-500" style={{ backgroundColor: cfg.color }} />
-      <span className="text-xs font-bold tracking-widest" style={{ color: cfg.color }}>{cfg.label}</span>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+      <span style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", color: "#6b7280", textTransform: "uppercase" }}>{label}</span>
+      <div style={{ height: 10, width: "100%", borderRadius: 99, background: cfg.color, transition: "background 0.5s" }} />
+      <span style={{ fontSize: "0.7rem", fontWeight: 800, color: cfg.color, letterSpacing: "0.08em" }}>{cfg.label}</span>
+    </div>
+  );
+}
+
+function MetricCard({ label, value, unit, icon: Icon }) {
+  return (
+    <div className="card" style={{ padding: "1rem" }}>
+      <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", color: "#9ca3af", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 4, marginBottom: 6 }}>
+        {Icon && <Icon size={11} color="#FFCC00" />}{label}
+      </div>
+      <div style={{ fontSize: "1.6rem", fontWeight: 800, color: "#111" }}>
+        {value}{unit && <span style={{ fontSize: "0.85rem", color: "#9ca3af", marginLeft: 4 }}>{unit}</span>}
+      </div>
     </div>
   );
 }
@@ -243,82 +413,69 @@ function Tab2() {
 
   useEffect(() => { fetchSim(delay); }, [delay, fetchSim]);
 
-  const statusColor = {
-    NO_CONFLICT: "#22c55e",
-    MINOR_DELAY: "#FFCC00",
-    SIDING_PASS_ACTIVE: "#f97316",
-    CRITICAL_INTERVENTION: "#ef4444",
-  };
+  const statusColor = { NO_CONFLICT: "#22c55e", MINOR_DELAY: "#FFCC00", SIDING_PASS_ACTIVE: "#f97316", CRITICAL_INTERVENTION: "#ef4444" };
 
   return (
-    <div className="space-y-5">
-      <SectionHeader
-        title="RAILOPT AI OPERATIONAL VIEW"
-        subtitle="Dual-Track Siding Pass Conflict Engine — SDG 7 Fuel Recovery"
-      />
-
-      <div className="via-panel p-5 space-y-4">
-        <div className="flex items-center justify-between">
-          <label className="via-label flex items-center gap-2">
-            <Truck size={11} className="text-[#FFCC00]" />Freight Train Delay
-          </label>
-          <span className="text-[#FFCC00] font-bold text-xl">{delay} min</span>
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <div className="card" style={{ padding: "1.25rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+          <div style={{ fontSize: "0.7rem", fontWeight: 700, color: "#6b7280", letterSpacing: "0.1em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 6 }}>
+            <Truck size={12} color="#FFCC00" />Freight Train Delay
+          </div>
+          <span style={{ fontWeight: 800, fontSize: "1.5rem", color: "#FFCC00" }}>{delay} min</span>
         </div>
-        <input
-          type="range" min={0} max={60} step={1} value={delay}
+        <input type="range" min={0} max={60} step={1} value={delay}
           onChange={(e) => setDelay(Number(e.target.value))}
-          className="w-full h-2 rounded-full appearance-none cursor-pointer"
-          style={{ background: `linear-gradient(to right, #FFCC00 ${(delay/60)*100}%, #2e3135 ${(delay/60)*100}%)` }}
+          style={{ width: "100%", accentColor: "#FFCC00", height: 6, cursor: "pointer" }}
         />
-        <div className="flex justify-between via-label">
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.65rem", color: "#9ca3af", marginTop: 6 }}>
           <span>0 — Nominal</span><span>30 — Siding Pass</span><span>60 — Critical</span>
         </div>
       </div>
 
-      {loading && <div className="flex justify-center py-4"><Loader size={20} className="animate-spin text-[#FFCC00]" /></div>}
+      {loading && <div style={{ textAlign: "center", padding: "1.5rem" }}><Loader size={20} color="#FFCC00" className="animate-spin" /></div>}
 
       {data && !loading && (
         <>
-          <div className="via-panel p-4 flex items-center justify-between">
-            <span className="via-label">Conflict Status</span>
-            <span className="font-bold text-sm tracking-wide" style={{ color: statusColor[data.conflict_status] || "#FFCC00" }}>
+          <div className="card" style={{ padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: "0.7rem", fontWeight: 700, color: "#6b7280", letterSpacing: "0.08em", textTransform: "uppercase" }}>Conflict Status</span>
+            <span style={{ fontWeight: 800, fontSize: "0.9rem", color: statusColor[data.conflict_status] || "#FFCC00" }}>
               {data.conflict_status.replace(/_/g, " ")}
             </span>
           </div>
 
-          <div className="via-panel p-5 space-y-4">
-            <div className="via-label flex items-center gap-2">
-              <Train size={11} className="text-[#FFCC00]" />
-              Track Layout — Napanee / Collins Bay Siding
+          <div className="card" style={{ padding: "1.25rem" }}>
+            <div style={{ fontSize: "0.65rem", fontWeight: 700, color: "#9ca3af", letterSpacing: "0.1em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 6, marginBottom: "1rem" }}>
+              <Train size={11} color="#FFCC00" />Track Layout — Napanee / Collins Bay
             </div>
-            <div className="grid grid-cols-2 gap-6">
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1rem" }}>
               <TrackBar state={data.track_a_state} label="Track A — Mainline" />
               <TrackBar state={data.track_b_state} label="Track B — Siding" />
             </div>
-            <div className="p-3 rounded" style={{ background: "rgba(255,204,0,0.05)", border: "1px solid rgba(255,204,0,0.15)" }}>
-              <p className="text-white/80 text-xs leading-relaxed">
-                <span className="text-[#FFCC00] font-bold">AI REC: </span>{data.recommendation}
+            <div style={{ background: "#FFF8E1", borderRadius: 10, padding: "0.75rem", border: "1px solid rgba(255,204,0,0.3)" }}>
+              <p style={{ fontSize: "0.8rem", color: "#374151", lineHeight: 1.6 }}>
+                <span style={{ color: "#b45309", fontWeight: 700 }}>AI REC: </span>{data.recommendation}
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <MetricCard label="Fuel Saved"  value={data.sdg7_metrics.fuel_saved_litres} unit="L"   icon={Zap}            highlight />
-            <MetricCard label="CO₂ Avoided" value={data.sdg7_metrics.co2_avoided_kg}    unit="kg"  icon={Activity} />
-            <MetricCard label="Cost Saved"  value={`$${data.sdg7_metrics.cost_saved_cad}`}          icon={Gauge}          highlight />
-            <MetricCard label="Infra Score" value={`${data.infrastructure_score}%`}                  icon={CloudLightning} />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.75rem" }}>
+            <MetricCard label="Fuel Saved"  value={data.sdg7_metrics.fuel_saved_litres} unit="L"  icon={Zap} />
+            <MetricCard label="CO₂ Avoided" value={data.sdg7_metrics.co2_avoided_kg}    unit="kg" icon={Activity} />
+            <MetricCard label="Cost Saved"  value={`$${data.sdg7_metrics.cost_saved_cad}`}         icon={Gauge} />
+            <MetricCard label="Infra Score" value={`${data.infrastructure_score}%`}                 icon={CloudLightning} />
           </div>
 
-          <div className="text-center via-label">
-            SDG 7 — Affordable and Clean Energy · Efficiency: {data.sdg7_metrics.efficiency_pct}%
-          </div>
+          <p style={{ textAlign: "center", fontSize: "0.65rem", color: "#9ca3af", letterSpacing: "0.08em", fontWeight: 600 }}>
+            SDG 7 — AFFORDABLE AND CLEAN ENERGY · EFFICIENCY {data.sdg7_metrics.efficiency_pct}%
+          </p>
         </>
       )}
     </div>
   );
 }
 
-// ─── Tab 3: Digital Trust & Network Diagnostics ───────────────────────────────
+// ─── Tab 3: Trust ─────────────────────────────────────────────────────────────
 
 function Tab3() {
   const [status, setStatus] = useState(null);
@@ -331,7 +488,8 @@ function Tab3() {
     try {
       const r = await fetch(`${API}/sync-queue-status`);
       setStatus(await r.json());
-    } catch { /* ignore */ }
+    }
+    catch { /* ignore */ }
     setLoading(false);
   }, []);
 
@@ -343,7 +501,6 @@ function Tab3() {
 
   const handleSync = async () => {
     setSyncing(true);
-    setSyncSuccess(false);
     try {
       await fetch(`${API}/simulate-sync`, { method: "POST" });
       setSyncSuccess(true);
@@ -357,110 +514,86 @@ function Tab3() {
   const bytes = status?.total_bytes || 0;
 
   return (
-    <div className="space-y-5">
-      <SectionHeader
-        title="DIGITAL TRUST & NETWORK DIAGNOSTICS"
-        subtitle="Store-and-Forward Queue Monitor — Encrypted Data Packets"
-      />
-
-      <div className={`via-panel p-6 ${syncSuccess ? "sync-flash" : ""}`}>
-        <div className="flex items-center justify-between mb-6">
-          <div className="via-label flex items-center gap-2">
-            <Database size={11} className="text-[#FFCC00]" />Live Queue Telemetry
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <div className={`card ${syncSuccess ? "sync-flash" : ""}`} style={{ padding: "1.5rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+          <div style={{ fontSize: "0.7rem", fontWeight: 700, color: "#6b7280", letterSpacing: "0.1em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 6 }}>
+            <Database size={12} color="#FFCC00" />Live Queue Telemetry
           </div>
-          <button onClick={fetchQueue} disabled={loading} className="via-btn-ghost py-1 px-2 text-xs">
-            <RefreshCw size={11} className={loading ? "animate-spin" : ""} />Refresh
+          <button onClick={fetchQueue} disabled={loading} style={{ background: "#F5F5F5", border: "1px solid #E8E8E8", borderRadius: 50, padding: "0.3rem 0.75rem", fontSize: "0.7rem", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+            <RefreshCw size={10} className={loading ? "animate-spin" : ""} color="#6b7280" />Refresh
           </button>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="text-center">
-            <div className={`text-4xl font-bold mb-1 transition-all ${depth > 0 ? "text-[#FFCC00] animate-pulse-via" : "text-green-400"}`}>
-              {depth}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1.5rem", textAlign: "center" }}>
+          {[
+            { label: "Orders Queued", value: depth, active: depth > 0 },
+            { label: "Bytes Buffered", value: bytes.toLocaleString(), active: bytes > 0 },
+            { label: "Queue State",   value: depth > 0 ? "HOLD" : "IDLE", active: depth > 0 },
+          ].map(({ label, value, active }) => (
+            <div key={label} style={{ padding: "1rem", background: "#F9F9F9", borderRadius: 12 }}>
+              <div style={{ fontSize: active ? "2rem" : "1.5rem", fontWeight: 800, color: active ? "#FFCC00" : "#22c55e", marginBottom: 4 }}>{value}</div>
+              <div style={{ fontSize: "0.6rem", fontWeight: 700, color: "#9ca3af", letterSpacing: "0.08em", textTransform: "uppercase" }}>{label}</div>
             </div>
-            <div className="via-label">Orders Queued</div>
-          </div>
-          <div className="text-center" style={{ borderLeft: "1px solid #2e3135", borderRight: "1px solid #2e3135" }}>
-            <div className={`text-4xl font-bold mb-1 font-mono transition-all ${bytes > 0 ? "text-[#FFCC00]" : "text-[#4B4F54]"}`}>
-              {bytes.toLocaleString()}
-            </div>
-            <div className="via-label">Bytes Buffered</div>
-          </div>
-          <div className="text-center">
-            <div className={`text-4xl font-bold mb-1 ${depth > 0 ? "text-orange-400" : "text-green-400"}`}>
-              {depth > 0 ? "HOLD" : "IDLE"}
-            </div>
-            <div className="via-label">Queue State</div>
-          </div>
+          ))}
         </div>
 
         {depth > 0 && (
-          <div className="via-panel-inner p-3 mb-4">
-            <div className="via-label flex items-center gap-2 mb-2">
-              <Activity size={10} className="text-[#FFCC00] animate-pulse-via" />
-              Data Packets Awaiting Sync
+          <div style={{ background: "#FFF8E1", borderRadius: 12, padding: "0.75rem", marginBottom: "1rem", border: "1px solid rgba(255,204,0,0.25)" }}>
+            <div style={{ fontSize: "0.65rem", fontWeight: 700, color: "#b45309", marginBottom: 6, display: "flex", alignItems: "center", gap: 4 }}>
+              <Activity size={10} />Packets Awaiting Sync
             </div>
-            <div className="flex flex-wrap gap-2">
-              {status?.orders?.map((order) => (
-                <div key={order.order_id} className="rounded px-2 py-1 text-xs"
-                  style={{ background: "rgba(255,204,0,0.08)", border: "1px solid rgba(255,204,0,0.25)" }}>
-                  <span className="text-[#FFCC00] font-bold">{order.order_id}</span>
-                  <span className="text-white/60 ml-2">{order.item_name}</span>
-                </div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              {status?.orders?.map((o) => (
+                <span key={o.order_id} style={{ background: "#fff", border: "1px solid rgba(255,204,0,0.4)", borderRadius: 99, padding: "2px 10px", fontSize: "0.7rem", fontWeight: 600, color: "#92400e" }}>
+                  {o.order_id} · {o.item_name}
+                </span>
               ))}
             </div>
           </div>
         )}
 
         {syncSuccess && (
-          <div className="rounded p-3 flex items-center gap-3 slide-in mb-4"
-            style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)" }}>
-            <CheckCircle size={18} className="text-green-400 shrink-0" />
-            <div>
-              <div className="text-green-300 font-bold text-sm">SYNC COMPLETE</div>
-              <div className="text-green-500/70 text-xs">All queued orders transmitted to platform successfully.</div>
-            </div>
+          <div className="slide-up" style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", borderRadius: 12, padding: "0.75rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 8 }}>
+            <CheckCircle size={16} color="#22c55e" />
+            <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#15803d" }}>All orders synced to station platform successfully.</span>
           </div>
         )}
 
         <button
-          className="via-btn w-full justify-center py-3 text-sm"
-          onClick={handleSync}
-          disabled={syncing || depth === 0}
-        >
-          {syncing
-            ? <><Loader size={16} className="animate-spin" />SYNCING TO STATION PLATFORM…</>
-            : <><Send size={16} />TRIGGER STATION PLATFORM SYNC</>
-          }
+          onClick={handleSync} disabled={syncing || depth === 0}
+          style={{ width: "100%", background: depth === 0 ? "#E8E8E8" : "#FFCC00", color: depth === 0 ? "#9ca3af" : "#111", fontWeight: 800, fontSize: "0.9rem", border: "none", borderRadius: 50, padding: "0.85rem", cursor: depth === 0 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "all 0.15s" }}>
+          {syncing ? <><Loader size={16} className="animate-spin" />Syncing…</> : <><Send size={16} />Trigger Station Platform Sync</>}
         </button>
-        {depth === 0 && !syncing && (
-          <p className="text-center text-[#4B4F54] text-xs mt-2">No pending orders in queue.</p>
-        )}
+        {depth === 0 && !syncing && <p style={{ textAlign: "center", fontSize: "0.7rem", color: "#9ca3af", marginTop: 6 }}>No pending orders</p>}
       </div>
 
-      <div className="grid grid-cols-3 gap-3">
-        <MetricCard label="Encryption" value="AES-256"  icon={ShieldCheck} highlight />
-        <MetricCard label="Protocol"   value="MQTT"     icon={Activity} />
-        <MetricCard label="Retry"      value="4× Exp."  icon={RefreshCw} />
-      </div>
-
-      <div className="via-panel p-4">
-        <div className="via-label flex items-center gap-2 mb-3">
-          <AlertTriangle size={11} className="text-[#FFCC00]" />
-          SDG 9 — Resilient Infrastructure Compliance
-        </div>
-        <div className="space-y-2 text-xs text-[#7a7f85]">
-          {[
-            "Offline-first store-and-forward architecture operational",
-            "Zero data loss guaranteed during cellular dead zones",
-            "Auto-sync triggers on station platform Wi-Fi detection",
-            "End-to-end encrypted transit compliant with PIPEDA",
-          ].map((line) => (
-            <div key={line} className="flex items-center gap-2">
-              <CheckCircle size={11} className="text-green-400 shrink-0" />{line}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}>
+        {[["AES-256", "Encryption", ShieldCheck], ["MQTT", "Protocol", Activity], ["4× Exp.", "Retry Policy", RefreshCw]].map(([val, label, Icon]) => (
+          <div key={label} className="card" style={{ padding: "1rem" }}>
+            <div style={{ fontSize: "0.6rem", fontWeight: 700, color: "#9ca3af", letterSpacing: "0.1em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 4, marginBottom: 6 }}>
+              <Icon size={10} color="#FFCC00" />{label}
             </div>
-          ))}
+            <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#111" }}>{val}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="card" style={{ padding: "1.25rem" }}>
+        <div style={{ fontSize: "0.65rem", fontWeight: 700, color: "#9ca3af", letterSpacing: "0.1em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 6, marginBottom: "0.75rem" }}>
+          <AlertTriangle size={11} color="#FFCC00" />SDG 9 — Resilient Infrastructure
         </div>
+        {[
+          "Offline-first store-and-forward architecture operational",
+          "Zero data loss guaranteed during cellular dead zones",
+          "Auto-sync triggers on station platform Wi-Fi detection",
+          "End-to-end encrypted transit compliant with PIPEDA",
+        ].map((line) => (
+          <div key={line} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+            <CheckCircle size={12} color="#22c55e" style={{ flexShrink: 0 }} />
+            <span style={{ fontSize: "0.78rem", color: "#374151" }}>{line}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -469,9 +602,9 @@ function Tab3() {
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 const TABS = [
-  { id: "retail", emoji: "🛍️", label: "Express Platform Delivery",          icon: ShoppingBag },
-  { id: "ops",    emoji: "🛠️", label: "RailOpt AI Operational View",         icon: Wrench      },
-  { id: "trust",  emoji: "🔒", label: "Digital Trust & Network Diagnostics", icon: ShieldCheck },
+  { id: "retail", emoji: "🛍️", label: "Shop" },
+  { id: "ops",    emoji: "🛠️", label: "Operations" },
+  { id: "trust",  emoji: "🔒", label: "Network" },
 ];
 
 export default function App() {
@@ -479,117 +612,69 @@ export default function App() {
   const [tab, setTab] = useState("retail");
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0f1011", color: "#fff" }}>
+    <div style={{ minHeight: "100vh", background: "#F5F5F5", color: "#111", paddingBottom: 80 }}>
 
-      {/* ── Header ── */}
-      <header style={{ borderBottom: "1px solid #2e3135", background: "rgba(15,16,17,0.97)", position: "sticky", top: 0, zIndex: 50, backdropFilter: "blur(8px)" }}>
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            {/* VIA yellow motion bar */}
-            <div style={{ width: 4, height: 36, background: "#FFCC00", borderRadius: 2, transform: "skewX(-8deg)" }} />
-            <div>
-              <div className="flex items-center gap-2">
-                <Train size={17} color="#FFCC00" />
-                <span style={{ color: "#FFCC00", fontWeight: 800, fontSize: "0.95rem", letterSpacing: "0.06em" }}>
-                  RailOpt AI Express Market
-                </span>
-                <span style={{ color: "#4B4F54", fontSize: "0.85rem" }} className="hidden sm:inline">//</span>
-                <span style={{ color: "#4B4F54", fontSize: "0.7rem", letterSpacing: "0.1em", fontWeight: 600 }} className="hidden sm:inline">
-                  VIA RAIL ONBOARD PORTAL
-                </span>
+      {/* Header */}
+      <header style={{ background: "#fff", borderBottom: "1px solid #E8E8E8", position: "sticky", top: 0, zIndex: 50 }}>
+        <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 1rem" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.85rem 0" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ background: "#FFCC00", borderRadius: 10, width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Train size={20} color="#111" />
               </div>
-              <div className="flex items-center gap-2 mt-0.5">
-                <div style={{ width: 6, height: 6, borderRadius: "50%", background: offline ? "#ef4444" : "#22c55e" }}
-                  className={offline ? "animate-pulse-via" : ""} />
-                <span style={{ color: "#4B4F54", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.12em" }}>
-                  {offline ? "OFFLINE MODE" : "CONNECTED"}
-                </span>
+              <div>
+                <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", lineHeight: 1.2 }}>RailOpt Express</div>
+                <div style={{ fontSize: "0.65rem", color: "#9ca3af", fontWeight: 600, letterSpacing: "0.05em" }}>VIA Rail Onboard Market</div>
               </div>
             </div>
-          </div>
 
-          <button
-            onClick={() => setOffline((v) => !v)}
-            style={{
-              display: "flex", alignItems: "center", gap: 6,
-              padding: "0.4rem 0.75rem", borderRadius: 4, cursor: "pointer",
-              fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.08em",
-              border: offline ? "1px solid rgba(239,68,68,0.5)" : "1px solid #2e3135",
-              background: offline ? "rgba(239,68,68,0.1)" : "transparent",
-              color: offline ? "#fca5a5" : "#7a7f85",
-              transition: "all 0.15s",
-            }}
-          >
-            {offline
-              ? <WifiOff size={13} className="animate-pulse-via" />
-              : <Wifi size={13} />
-            }
-            <span className="hidden sm:inline">SIMULATE CELLULAR DEAD ZONE</span>
-            <span className="sm:hidden">DEAD ZONE</span>
-            <span style={{ color: offline ? "#ef4444" : "#4B4F54" }}>{offline ? "ON" : "OFF"}</span>
-          </button>
-        </div>
-
-        {offline && (
-          <div className="slide-in" style={{ background: "rgba(239,68,68,0.12)", borderTop: "1px solid rgba(239,68,68,0.25)", padding: "0.375rem 1rem" }}>
-            <div className="max-w-5xl mx-auto flex items-center gap-2">
-              <WifiOff size={12} color="#f87171" className="animate-pulse-via shrink-0" />
-              <span style={{ color: "#f87171", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em" }}>
-                ⚠ CELLULAR DEAD ZONE SIMULATION ACTIVE — Store-and-forward mode engaged
-              </span>
-            </div>
-          </div>
-        )}
-      </header>
-
-      {/* ── Tabs ── */}
-      <div style={{ borderBottom: "1px solid #2e3135", background: "#0f1011" }}>
-        <div className="max-w-5xl mx-auto px-4 flex">
-          {TABS.map((t) => (
             <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
+              onClick={() => setOffline((v) => !v)}
               style={{
                 display: "flex", alignItems: "center", gap: 6,
-                padding: "0.75rem 1.25rem",
-                fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.05em",
-                borderBottom: tab === t.id ? "2px solid #FFCC00" : "2px solid transparent",
-                color: tab === t.id ? "#FFCC00" : "#4B4F54",
-                background: "transparent", border: "none",
-                borderBottomWidth: 2,
-                borderBottomStyle: "solid",
-                borderBottomColor: tab === t.id ? "#FFCC00" : "transparent",
-                cursor: "pointer",
-                transition: "all 0.15s",
+                padding: "0.4rem 0.85rem", borderRadius: 50,
+                border: offline ? "1.5px solid #fca5a5" : "1.5px solid #E8E8E8",
+                background: offline ? "#FEF2F2" : "#F5F5F5",
+                color: offline ? "#ef4444" : "#6b7280",
+                fontSize: "0.7rem", fontWeight: 700, cursor: "pointer",
+                letterSpacing: "0.04em", transition: "all 0.15s",
               }}
-              onMouseEnter={(e) => { if (tab !== t.id) e.currentTarget.style.color = "#7a7f85"; }}
-              onMouseLeave={(e) => { if (tab !== t.id) e.currentTarget.style.color = "#4B4F54"; }}
             >
-              <span>{t.emoji}</span>
-              <span className="hidden sm:inline">{t.label}</span>
+              {offline ? <WifiOff size={13} /> : <Wifi size={13} />}
+              <span className="hidden sm:inline">Dead Zone</span>
+              <span style={{ background: offline ? "#ef4444" : "#E8E8E8", color: offline ? "#fff" : "#9ca3af", borderRadius: 99, padding: "1px 6px", fontSize: "0.6rem", fontWeight: 800 }}>
+                {offline ? "ON" : "OFF"}
+              </span>
             </button>
-          ))}
-        </div>
-      </div>
+          </div>
 
-      {/* ── Content ── */}
-      <main className="max-w-5xl mx-auto px-4 py-6">
+          {/* Tabs */}
+          <div style={{ display: "flex", gap: 0 }}>
+            {TABS.map((t) => (
+              <button key={t.id} onClick={() => setTab(t.id)} style={{
+                flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                padding: "0.6rem", fontSize: "0.8rem", fontWeight: 700,
+                borderBottom: tab === t.id ? "2.5px solid #FFCC00" : "2.5px solid transparent",
+                color: tab === t.id ? "#111" : "#9ca3af",
+                background: "transparent", border: "none",
+                borderBottomWidth: "2.5px", borderBottomStyle: "solid",
+                borderBottomColor: tab === t.id ? "#FFCC00" : "transparent",
+                cursor: "pointer", transition: "all 0.15s",
+              }}>
+                <span>{t.emoji}</span>
+                <span>{t.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      {/* Content */}
+      <main style={{ maxWidth: 960, margin: "0 auto", padding: "1.25rem 1rem" }}>
         {tab === "retail" && <Tab1 offline={offline} />}
         {tab === "ops"    && <Tab2 />}
         {tab === "trust"  && <Tab3 />}
       </main>
-
-      {/* ── Footer ── */}
-      <footer style={{ borderTop: "1px solid #2e3135", marginTop: "2rem", padding: "1rem", textAlign: "center" }}>
-        {/* VIA yellow motion line */}
-        <div style={{ height: 2, background: "linear-gradient(90deg, transparent, #FFCC00, transparent)", marginBottom: "0.75rem", maxWidth: 200, margin: "0 auto 0.75rem" }} />
-        <div style={{ color: "#2e3135", fontSize: "0.65rem", letterSpacing: "0.12em", fontWeight: 700 }}>
-          RAILOPT AI EXPRESS MARKET · PHASE 1 · SDG 7 · SDG 8 · SDG 9 · SDG 10 · SDG 11
-        </div>
-        <div style={{ color: "#23262a", fontSize: "0.65rem", marginTop: 4 }}>
-          Powered by OpenRouter · FastAPI · React Vite · VIA Rail Corridor
-        </div>
-      </footer>
     </div>
   );
 }

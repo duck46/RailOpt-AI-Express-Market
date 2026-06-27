@@ -4,8 +4,8 @@
 
 @layer base {
   html, body, #root {
-    background-color: #0f1011;
-    color: #ffffff;
+    background-color: #F5F5F5;
+    color: #111111;
     min-height: 100vh;
     margin: 0;
     padding: 0;
@@ -13,137 +13,116 @@
     font-family: 'Inter', system-ui, sans-serif;
   }
   * { box-sizing: border-box; }
-  ::-webkit-scrollbar { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-track { background: #1a1c1e; }
-  ::-webkit-scrollbar-thumb { background: #4B4F54; border-radius: 2px; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #f0f0f0; }
+  ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
 }
 
 @layer components {
-  .via-panel {
-    background-color: #1a1c1e;
-    border: 1px solid #2e3135;
-    border-radius: 8px;
-    box-shadow: 0 0 24px rgba(255, 204, 0, 0.05);
+  .card {
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #E8E8E8;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
   }
 
-  .via-panel-inner {
-    background-color: #23262a;
-    border: 1px solid #2e3135;
-    border-radius: 6px;
-  }
-
-  .via-btn {
-    background-color: #FFCC00;
-    color: #000000;
+  .add-btn {
+    background: #FFCC00;
+    color: #111;
     font-weight: 700;
-    font-size: 0.8125rem;
-    letter-spacing: 0.05em;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
+    font-size: 0.8rem;
     border: none;
+    border-radius: 50px;
+    padding: 0.4rem 0.9rem;
     cursor: pointer;
-    transition: background-color 0.15s, opacity 0.15s;
+    transition: background 0.15s, transform 0.1s;
     display: inline-flex;
     align-items: center;
-    gap: 0.375rem;
+    gap: 4px;
+    white-space: nowrap;
   }
-  .via-btn:hover { background-color: #e6b800; }
-  .via-btn:active { background-color: #cc9900; }
-  .via-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .add-btn:hover { background: #e6b800; }
+  .add-btn:active { transform: scale(0.96); }
+  .add-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  .via-btn-ghost {
-    background-color: transparent;
-    color: #FFCC00;
-    font-weight: 600;
-    font-size: 0.8125rem;
-    letter-spacing: 0.04em;
+  .qty-btn {
+    background: #FFCC00;
+    color: #111;
+    font-weight: 800;
+    font-size: 1rem;
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+  .qty-btn:hover { background: #e6b800; }
+
+  .pill-input {
+    background: #F5F5F5;
+    border: 1.5px solid #E8E8E8;
+    border-radius: 50px;
     padding: 0.5rem 1rem;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 204, 0, 0.4);
-    cursor: pointer;
-    transition: all 0.15s;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.375rem;
-  }
-  .via-btn-ghost:hover {
-    border-color: #FFCC00;
-    background-color: rgba(255, 204, 0, 0.08);
-  }
-  .via-btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .via-input {
-    background-color: #23262a;
-    border: 1px solid #2e3135;
-    color: #ffffff;
-    border-radius: 4px;
-    padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
+    font-family: 'Inter', sans-serif;
+    color: #111;
     outline: none;
     width: 100%;
     transition: border-color 0.15s;
-    font-family: 'Inter', sans-serif;
   }
-  .via-input:focus { border-color: #FFCC00; }
-  .via-input::placeholder { color: #4B4F54; }
+  .pill-input:focus { border-color: #FFCC00; }
+  .pill-input::placeholder { color: #9ca3af; }
 
-  .via-label {
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #7a7f85;
+  .section-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #fff;
+    border: 1.5px solid #E8E8E8;
+    border-radius: 50px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.15s;
   }
-
-  .via-badge-retail {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.2rem 0.5rem;
-    border-radius: 99px;
-    background-color: rgba(255, 204, 0, 0.15);
-    color: #FFCC00;
-    border: 1px solid rgba(255, 204, 0, 0.35);
-  }
-
-  .via-badge-souvenir {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.2rem 0.5rem;
-    border-radius: 99px;
-    background-color: rgba(255, 255, 255, 0.08);
-    color: #c0c4c8;
-    border: 1px solid rgba(255,255,255,0.15);
-  }
-
-  /* Motion accent line — diagonal brand element */
-  .via-accent-bar {
-    width: 3px;
-    height: 2rem;
+  .section-pill.active {
     background: #FFCC00;
-    border-radius: 2px;
-    transform: skewX(-8deg);
-    flex-shrink: 0;
+    border-color: #FFCC00;
+    color: #111;
+  }
+  .section-pill:hover:not(.active) {
+    border-color: #FFCC00;
+    color: #111;
   }
 }
 
-@keyframes pulseYellow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(-6px); }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+@keyframes cartBounce {
+  0%,100% { transform: scale(1); }
+  40%     { transform: scale(1.18); }
+}
 @keyframes syncFlash {
-  0%   { background-color: rgba(34,197,94,0.15); }
-  60%  { background-color: rgba(34,197,94,0.28); }
-  100% { background-color: transparent; }
+  0%   { background: rgba(34,197,94,0.12); }
+  60%  { background: rgba(34,197,94,0.22); }
+  100% { background: transparent; }
 }
 
-.animate-pulse-via  { animation: pulseYellow 1.8s ease-in-out infinite; }
-.slide-in           { animation: slideIn 0.22s ease-out; }
-.sync-flash         { animation: syncFlash 1s ease-out; }
+.slide-up   { animation: slideUp 0.25s ease-out; }
+.cart-bounce { animation: cartBounce 0.35s ease-out; }
+.sync-flash { animation: syncFlash 1s ease-out; }

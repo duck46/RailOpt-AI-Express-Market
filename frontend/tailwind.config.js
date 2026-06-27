@@ -10,21 +10,16 @@ export default {
       colors: {
         via: {
           yellow:   "#FFCC00",
-          yellowDim:"#CC9900",
+          yellowHover: "#e6b800",
           charcoal: "#4B4F54",
-          black:    "#000000",
-          white:    "#FFFFFF",
-          // Dark UI surfaces built on charcoal
-          bg:       "#0f1011",   // near-black base
-          surface:  "#1a1c1e",   // slightly lighter panel
-          panel:    "#23262a",   // card surface
-          border:   "#2e3135",   // subtle border
-          muted:    "#7a7f85",   // muted text
+          black:    "#111111",
+          bg:       "#F5F5F5",
+          surface:  "#FFFFFF",
+          border:   "#E8E8E8",
+          muted:    "#9ca3af",
+          text:     "#111111",
+          subtext:  "#6b7280",
         },
-      },
-      boxShadow: {
-        via:    "0 0 24px rgba(255, 204, 0, 0.12)",
-        "via-lg":"0 0 48px rgba(255, 204, 0, 0.18)",
       },
     },
   },
