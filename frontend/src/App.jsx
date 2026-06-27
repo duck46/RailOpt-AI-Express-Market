@@ -50,107 +50,161 @@ const ITEM_VISUALS = {
 
 // ─── Cart drawer ──────────────────────────────────────────────────────────────
 
-function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, syncing, syncSuccess, offline }) {
+function OrderConfirmation({ orderNumber, total, itemCount, offline, onClose }) {
+  return (
+    <div style={{ textAlign: "center", padding: "2rem 1rem 1rem" }}>
+      {/* Success icon */}
+      <div style={{ width: 72, height: 72, borderRadius: "50%", background: "#F0FDF4", border: "2px solid #22c55e", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 1.25rem" }}>
+        <CheckCircle size={36} color="#22c55e" />
+      </div>
+
+      <h2 style={{ fontWeight: 800, fontSize: "1.4rem", color: "#111", margin: "0 0 0.35rem" }}>Order Confirmed!</h2>
+      <p style={{ fontSize: "0.85rem", color: "#6b7280", margin: "0 0 1.5rem" }}>
+        {itemCount} item{itemCount !== 1 ? "s" : ""} · <span style={{ fontWeight: 700, color: "#111" }}>${total}</span>
+      </p>
+
+      {/* Order number */}
+      <div style={{ background: "#F9F9F9", border: "1px solid #E8E8E8", borderRadius: 14, padding: "1rem", marginBottom: "1.25rem" }}>
+        <p style={{ fontSize: "0.65rem", fontWeight: 700, color: "#9ca3af", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4 }}>Order Number</p>
+        <p style={{ fontSize: "1.4rem", fontWeight: 800, color: "#111", letterSpacing: "0.05em" }}>{orderNumber}</p>
+      </div>
+
+      {/* Delivery info */}
+      <div style={{ background: "#FFF8E1", border: "1px solid rgba(255,204,0,0.4)", borderRadius: 14, padding: "1rem", marginBottom: "1.5rem", display: "flex", alignItems: "flex-start", gap: 10, textAlign: "left" }}>
+        <Train size={18} color="#b45309" style={{ flexShrink: 0, marginTop: 2 }} />
+        <div>
+          <p style={{ fontWeight: 700, fontSize: "0.85rem", color: "#92400e", margin: "0 0 2px" }}>Delivered to your seat</p>
+          <p style={{ fontSize: "0.78rem", color: "#b45309", margin: 0, lineHeight: 1.5 }}>
+            A VIA Rail crew member will bring your items to your seat at the next platform stop.
+          </p>
+        </div>
+      </div>
+
+      {offline && (
+        <div style={{ background: "#FFF3E0", border: "1px solid #ffcc0060", borderRadius: 12, padding: "0.75rem 1rem", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: 8 }}>
+          <WifiOff size={14} color="#f59e0b" />
+          <span style={{ fontSize: "0.78rem", color: "#92400e", fontWeight: 600 }}>
+            Dead zone active — order queued and will sync at the next station platform
+          </span>
+        </div>
+      )}
+
+      <button
+        onClick={onClose}
+        style={{ width: "100%", background: "#FFCC00", color: "#111", fontWeight: 800, fontSize: "1rem", border: "none", borderRadius: 50, padding: "0.9rem", cursor: "pointer" }}
+      >
+        Done
+      </button>
+    </div>
+  );
+}
+
+function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, syncing, confirmed, orderNumber, orderTotal, offline }) {
   const total = cart.reduce((sum, c) => {
     const item = items.find((i) => i.id === c.id);
     return sum + (item ? item.price * c.qty : 0);
   }, 0);
+  const itemCount = cart.reduce((s, c) => s + c.qty, 0);
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 200 }}>
       {/* Backdrop */}
-      <div onClick={onClose} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(2px)" }} />
+      <div onClick={confirmed ? onClose : undefined} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(2px)" }} />
       {/* Drawer */}
       <div className="slide-up" style={{
         position: "absolute", bottom: 0, left: 0, right: 0,
         background: "#fff", borderRadius: "20px 20px 0 0",
-        padding: "1.5rem", maxHeight: "85vh", overflowY: "auto",
+        padding: confirmed ? "1.5rem" : "1.5rem", maxHeight: "85vh", overflowY: "auto",
         boxShadow: "0 -8px 40px rgba(0,0,0,0.15)",
       }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem" }}>
-          <h2 style={{ fontWeight: 800, fontSize: "1.2rem", color: "#111" }}>Your Order</h2>
-          <button onClick={onClose} style={{ background: "#F5F5F5", border: "none", borderRadius: "50%", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-            <X size={18} color="#6b7280" />
-          </button>
-        </div>
-
-        {offline && (
-          <div style={{ background: "#FFF3E0", border: "1px solid #ffcc0060", borderRadius: 12, padding: "0.75rem 1rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 8 }}>
-            <WifiOff size={14} color="#f59e0b" />
-            <span style={{ fontSize: "0.8rem", color: "#92400e", fontWeight: 600 }}>
-              Dead zone active — orders will sync at next station platform
-            </span>
-          </div>
-        )}
-
-        {cart.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "3rem 0", color: "#9ca3af" }}>
-            <ShoppingCart size={40} style={{ margin: "0 auto 0.75rem", opacity: 0.3 }} />
-            <p style={{ fontWeight: 600 }}>Your cart is empty</p>
-            <p style={{ fontSize: "0.8rem", marginTop: 4 }}>Add items from the menu above</p>
-          </div>
+        {confirmed ? (
+          <OrderConfirmation
+            orderNumber={orderNumber}
+            total={orderTotal}
+            itemCount={itemCount}
+            offline={offline}
+            onClose={onClose}
+          />
         ) : (
           <>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1.5rem" }}>
-              {cart.map((c) => {
-                const item = items.find((i) => i.id === c.id);
-                if (!item) return null;
-                const vis = ITEM_VISUALS[item.id] || { emoji: "📦", bg: "#f5f5f5" };
-                return (
-                  <div key={c.id} style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.75rem", background: "#F9F9F9", borderRadius: 12 }}>
-                    <div style={{ width: 48, height: 48, borderRadius: 10, background: vis.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem", flexShrink: 0 }}>
-                      {vis.emoji}
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontWeight: 700, fontSize: "0.85rem", color: "#111", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.name}</p>
-                      <p style={{ fontSize: "0.75rem", color: "#6b7280" }}>{item.vendor}</p>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
-                      <button className="qty-btn" onClick={() => onChangeQty(c.id, c.qty - 1)} style={{ width: 24, height: 24, fontSize: "0.85rem" }}>−</button>
-                      <span style={{ fontWeight: 700, minWidth: 20, textAlign: "center", fontSize: "0.9rem" }}>{c.qty}</span>
-                      <button className="qty-btn" onClick={() => onChangeQty(c.id, c.qty + 1)} style={{ width: 24, height: 24, fontSize: "0.85rem" }}>+</button>
-                    </div>
-                    <div style={{ textAlign: "right", minWidth: 52, flexShrink: 0 }}>
-                      <p style={{ fontWeight: 800, fontSize: "0.9rem", color: "#111" }}>${(item.price * c.qty).toFixed(2)}</p>
-                      <button onClick={() => onRemove(c.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, marginTop: 2 }}>
-                        <Trash2 size={13} color="#ef4444" />
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem" }}>
+              <h2 style={{ fontWeight: 800, fontSize: "1.2rem", color: "#111" }}>Your Order</h2>
+              <button onClick={onClose} style={{ background: "#F5F5F5", border: "none", borderRadius: "50%", width: 36, height: 36, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+                <X size={18} color="#6b7280" />
+              </button>
             </div>
 
-            {/* Order total */}
-            <div style={{ borderTop: "1px solid #E8E8E8", paddingTop: "1rem", marginBottom: "1rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span style={{ fontWeight: 700, color: "#111" }}>Order Total</span>
-                <span style={{ fontWeight: 800, fontSize: "1.25rem", color: "#111" }}>${total.toFixed(2)}</span>
-              </div>
-              <p style={{ fontSize: "0.7rem", color: "#9ca3af", marginTop: 4 }}>Delivered to your seat at the next stop</p>
-            </div>
-
-            {syncSuccess && (
-              <div className="sync-flash slide-up" style={{ background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)", borderRadius: 10, padding: "0.75rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 8 }}>
-                <CheckCircle size={16} color="#22c55e" />
-                <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#15803d" }}>Order placed! Syncing to platform…</span>
+            {offline && (
+              <div style={{ background: "#FFF3E0", border: "1px solid #ffcc0060", borderRadius: 12, padding: "0.75rem 1rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 8 }}>
+                <WifiOff size={14} color="#f59e0b" />
+                <span style={{ fontSize: "0.8rem", color: "#92400e", fontWeight: 600 }}>
+                  Dead zone active — orders will sync at next station platform
+                </span>
               </div>
             )}
 
-            <button
-              onClick={onSync}
-              disabled={syncing}
-              style={{
-                width: "100%", background: "#FFCC00", color: "#111", fontWeight: 800,
-                fontSize: "1rem", border: "none", borderRadius: 50, padding: "0.9rem",
-                cursor: syncing ? "not-allowed" : "pointer", display: "flex",
-                alignItems: "center", justifyContent: "center", gap: 8,
-                opacity: syncing ? 0.7 : 1, transition: "background 0.15s",
-              }}
-            >
-              {syncing ? <Loader size={18} className="animate-spin" /> : <Send size={18} />}
-              {syncing ? "Placing Order…" : "Place Order"}
-            </button>
+            {cart.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "3rem 0", color: "#9ca3af" }}>
+                <ShoppingCart size={40} style={{ margin: "0 auto 0.75rem", opacity: 0.3 }} />
+                <p style={{ fontWeight: 600 }}>Your cart is empty</p>
+                <p style={{ fontSize: "0.8rem", marginTop: 4 }}>Add items from the menu above</p>
+              </div>
+            ) : (
+              <>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1.5rem" }}>
+                  {cart.map((c) => {
+                    const item = items.find((i) => i.id === c.id);
+                    if (!item) return null;
+                    const vis = ITEM_VISUALS[item.id] || { emoji: "📦", bg: "#f5f5f5" };
+                    return (
+                      <div key={c.id} style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.75rem", background: "#F9F9F9", borderRadius: 12 }}>
+                        <div style={{ width: 48, height: 48, borderRadius: 10, background: vis.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem", flexShrink: 0 }}>
+                          {vis.emoji}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ fontWeight: 700, fontSize: "0.85rem", color: "#111", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.name}</p>
+                          <p style={{ fontSize: "0.75rem", color: "#6b7280" }}>{item.vendor}</p>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                          <button className="qty-btn" onClick={() => onChangeQty(c.id, c.qty - 1)} style={{ width: 24, height: 24, fontSize: "0.85rem" }}>−</button>
+                          <span style={{ fontWeight: 700, minWidth: 20, textAlign: "center", fontSize: "0.9rem" }}>{c.qty}</span>
+                          <button className="qty-btn" onClick={() => onChangeQty(c.id, c.qty + 1)} style={{ width: 24, height: 24, fontSize: "0.85rem" }}>+</button>
+                        </div>
+                        <div style={{ textAlign: "right", minWidth: 52, flexShrink: 0 }}>
+                          <p style={{ fontWeight: 800, fontSize: "0.9rem", color: "#111" }}>${(item.price * c.qty).toFixed(2)}</p>
+                          <button onClick={() => onRemove(c.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, marginTop: 2 }}>
+                            <Trash2 size={13} color="#ef4444" />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div style={{ borderTop: "1px solid #E8E8E8", paddingTop: "1rem", marginBottom: "1rem" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span style={{ fontWeight: 700, color: "#111" }}>Order Total</span>
+                    <span style={{ fontWeight: 800, fontSize: "1.25rem", color: "#111" }}>${total.toFixed(2)}</span>
+                  </div>
+                  <p style={{ fontSize: "0.7rem", color: "#9ca3af", marginTop: 4 }}>Delivered to your seat at the next stop</p>
+                </div>
+
+                <button
+                  onClick={onSync}
+                  disabled={syncing}
+                  style={{
+                    width: "100%", background: "#FFCC00", color: "#111", fontWeight: 800,
+                    fontSize: "1rem", border: "none", borderRadius: 50, padding: "0.9rem",
+                    cursor: syncing ? "not-allowed" : "pointer", display: "flex",
+                    alignItems: "center", justifyContent: "center", gap: 8,
+                    opacity: syncing ? 0.7 : 1, transition: "background 0.15s",
+                  }}
+                >
+                  {syncing ? <Loader size={18} className="animate-spin" /> : <Send size={18} />}
+                  {syncing ? "Placing Order…" : "Place Order"}
+                </button>
+              </>
+            )}
           </>
         )}
       </div>
@@ -166,7 +220,9 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
   const [cart, setCart] = useState([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [syncing, setSyncing] = useState(false);
-  const [syncSuccess, setSyncSuccess] = useState(false);
+  const [confirmed, setConfirmed] = useState(false);
+  const [confirmedOrderNumber, setConfirmedOrderNumber] = useState("");
+  const [confirmedTotal, setConfirmedTotal] = useState("0.00");
   const [aiPrompts, setAiPrompts] = useState({});
   const [aiResults, setAiResults] = useState({});
   const [aiLoading, setAiLoading] = useState({});
@@ -210,24 +266,29 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
 
   const handlePlaceOrder = async () => {
     setSyncing(true);
-    setSyncSuccess(false);
+    const total = cart.reduce((s, c) => {
+      const item = items.find((i) => i.id === c.id);
+      return s + (item ? item.price * c.qty : 0);
+    }, 0);
+    let orderNum = "";
     try {
       for (const c of cart) {
-        await fetch(`${API}/offline-order`, {
+        const r = await fetch(`${API}/offline-order`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ item_id: c.id, quantity: c.qty }),
         });
+        const d = await r.json();
+        if (!orderNum) orderNum = d.order?.order_id || "ORD-0001";
       }
-      setSyncSuccess(true);
-      setCart([]);
-      setTimeout(() => { setSyncSuccess(false); setCartOpen(false); }, 2500);
     } catch {
-      setSyncSuccess(true); // still show success for demo
-      setCart([]);
-      setTimeout(() => { setSyncSuccess(false); setCartOpen(false); }, 2500);
+      orderNum = `ORD-${String(Math.floor(Math.random() * 9000) + 1000)}`;
     }
+    setConfirmedOrderNumber(orderNum);
+    setConfirmedTotal(total.toFixed(2));
+    setCart([]);
     setSyncing(false);
+    setConfirmed(true);
   };
 
   const handlePersonalize = async (item) => {
@@ -261,9 +322,11 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
     <>
       {cartOpen && (
         <CartDrawer
-          cart={cart} items={items} onClose={() => setCartOpen(false)}
+          cart={cart} items={items}
+          onClose={() => { setCartOpen(false); setConfirmed(false); }}
           onRemove={removeFromCart} onChangeQty={changeQty}
-          onSync={handlePlaceOrder} syncing={syncing} syncSuccess={syncSuccess}
+          onSync={handlePlaceOrder} syncing={syncing}
+          confirmed={confirmed} orderNumber={confirmedOrderNumber} orderTotal={confirmedTotal}
           offline={offline}
         />
       )}
