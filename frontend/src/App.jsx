@@ -3,8 +3,70 @@ import {
   ShoppingCart, Wrench, ShieldCheck, WifiOff, Wifi,
   Plus, Trash2, Zap, Truck, Gauge, CloudLightning,
   CheckCircle, RefreshCw, MapPin, Star, Activity,
-  AlertTriangle, Database, Send, Loader, Train, X, Compass,
+  AlertTriangle, Database, Send, Loader, Train, X, Compass, Navigation,
 } from "lucide-react";
+
+// ─── Station coordinates (lat, lng) for nearest-station detection ─────────────
+const STATION_COORDS = {
+  "Toronto":        [43.6452, -79.3806],
+  "Ottawa":         [45.4235, -75.6979],
+  "Montréal":       [45.4995, -73.5602],
+  "Québec":         [46.8139, -71.2082],
+  "Kingston":       [44.2334, -76.4814],
+  "Cobourg":        [43.9593, -78.1658],
+  "Belleville":     [44.1642, -77.3832],
+  "Cornwall":       [45.0289, -74.7319],
+  "Hamilton":       [43.2557, -79.8711],
+  "Kitchener":      [43.4516, -80.4925],
+  "London":         [42.9849, -81.2453],
+  "Niagara Falls":  [43.1065, -79.0686],
+  "Sarnia":         [42.9745, -82.4066],
+  "Sudbury":        [46.4917, -80.9930],
+  "Windsor":        [42.3149, -83.0364],
+  "Halifax":        [44.6488, -63.5752],
+  "New Glasgow":    [45.5860, -62.6458],
+  "Truro":          [45.3650, -63.2825],
+  "Amherst":        [45.8315, -64.2160],
+  "Moncton":        [46.0878, -64.7782],
+  "Campbellton":    [48.0057, -66.6725],
+  "Bathurst":       [47.6165, -65.6499],
+  "Miramichi":      [47.0036, -65.5032],
+  "Winnipeg":       [49.8951, -97.1384],
+  "Thompson":       [55.7435, -97.8553],
+  "The Pas":        [53.8244, -101.2533],
+  "Churchill":      [58.7684, -94.1650],
+  "Saskatoon":      [52.1332, -106.6700],
+  "Regina":         [50.4452, -104.6189],
+  "Edmonton":       [53.5461, -113.4938],
+  "Jasper":         [52.8737, -118.0814],
+  "Banff":          [51.1784, -115.5708],
+  "Vancouver":      [49.2827, -123.1207],
+  "Prince George":  [53.9171, -122.7497],
+  "Prince Rupert":  [54.3150, -130.3208],
+  "Kamloops":       [50.6745, -120.3273],
+  "Baie-Saint-Paul":[47.4454, -70.4906],
+  "Rimouski":       [48.4477, -68.5311],
+  "Jonquière":      [48.4199, -71.2345],
+  "La Tuque":       [47.4571, -72.7898],
+  "Senneterre":     [48.3901, -77.2278],
+};
+
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371, d2r = Math.PI / 180;
+  const dLat = (lat2 - lat1) * d2r, dLon = (lon2 - lon1) * d2r;
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * d2r) * Math.cos(lat2 * d2r) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function findNearestStation(lat, lon) {
+  let nearest = null, minDist = Infinity;
+  for (const [name, [slat, slon]] of Object.entries(STATION_COORDS)) {
+    const d = haversineKm(lat, lon, slat, slon);
+    if (d < minDist) { minDist = d; nearest = name; }
+  }
+  return { station: nearest, distanceKm: Math.round(minDist) };
+}
 
 const API = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api`
@@ -356,6 +418,13 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
   const [aiLoading, setAiLoading] = useState({});
   const [cartBounceKey, setCartBounceKey] = useState(0);
   const [activeStation, setActiveStation] = useState("All");
+  const [locating, setLocating] = useState(false);
+  const [locationDismissed, setLocationDismissed] = useState(false);
+  const [nearestStation, setNearestStation] = useState(null);
+  const [nearestDistanceKm, setNearestDistanceKm] = useState(null);
+  const [aiQuery, setAiQuery] = useState("");
+  const [aiRecommending, setAiRecommending] = useState(false);
+  const [recommendedIds, setRecommendedIds] = useState([]);
 
   useEffect(() => {
     if (shopStation && shopStation !== "All") {
@@ -363,6 +432,40 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
       onStationHandled?.();
     }
   }, [shopStation]);
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { station, distanceKm } = findNearestStation(pos.coords.latitude, pos.coords.longitude);
+        setNearestStation(station);
+        setNearestDistanceKm(distanceKm);
+        setActiveStation(station);
+        setLocating(false);
+      },
+      () => setLocating(false),
+      { timeout: 8000 }
+    );
+  };
+
+  const handleAiRecommend = async () => {
+    if (!aiQuery.trim()) return;
+    setAiRecommending(true);
+    setRecommendedIds([]);
+    try {
+      const r = await fetch(`${API}/ai/recommend`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: aiQuery, station: nearestStation || undefined, distance_km: nearestDistanceKm || undefined }),
+      });
+      const d = await r.json();
+      setRecommendedIds(d.recommended_ids || []);
+    } catch {
+      setRecommendedIds([]);
+    }
+    setAiRecommending(false);
+  };
 
   const fetchItems = useCallback(async () => {
     setLoading(true);
@@ -467,6 +570,55 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
         </div>
       )}
 
+      {/* Location detection banner */}
+      {!locationDismissed && !nearestStation && (
+        <div className="slide-up" style={{ background: "#FFFBF0", border: "1px solid #FFCC00", borderRadius: 12, padding: "0.75rem 1rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <Navigation size={15} color="#b45309" />
+          <span style={{ fontSize: "0.82rem", color: "#78350f", fontWeight: 600, flex: 1, minWidth: 140 }}>Find products near your train stop</span>
+          <button
+            onClick={handleDetectLocation}
+            disabled={locating}
+            style={{ background: "#FFCC00", border: "none", borderRadius: 8, padding: "0.35rem 0.85rem", fontSize: "0.8rem", fontWeight: 700, color: "#1c1917", cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}
+          >
+            {locating ? <Loader size={12} className="animate-spin" /> : <MapPin size={12} />}
+            {locating ? "Detecting…" : "Use My Location"}
+          </button>
+          <button onClick={() => setLocationDismissed(true)} style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af", padding: 2 }}><X size={14} /></button>
+        </div>
+      )}
+
+      {/* Nearest station chip */}
+      {nearestStation && (
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.75rem", flexWrap: "wrap" }}>
+          <span style={{ background: "#FFCC00", borderRadius: 20, padding: "0.25rem 0.75rem", fontSize: "0.78rem", fontWeight: 700, color: "#1c1917", display: "flex", alignItems: "center", gap: 5 }}>
+            <MapPin size={11} /> Nearest: {nearestStation} (~{nearestDistanceKm} km)
+          </span>
+          <button onClick={() => { setNearestStation(null); setActiveStation("All"); setRecommendedIds([]); }} style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af", fontSize: "0.75rem" }}>✕ Clear</button>
+        </div>
+      )}
+
+      {/* AI recommendation panel */}
+      <div style={{ marginBottom: "1.25rem", display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+        <input
+          value={aiQuery}
+          onChange={(e) => setAiQuery(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleAiRecommend()}
+          placeholder="What are you looking for? (e.g. 'a gift for my mom')"
+          style={{ flex: 1, minWidth: 220, background: "#fafaf9", border: "1px solid #e7e5e4", borderRadius: 10, padding: "0.55rem 0.85rem", fontSize: "0.82rem", outline: "none", color: "#1c1917" }}
+        />
+        <button
+          onClick={handleAiRecommend}
+          disabled={aiRecommending || !aiQuery.trim()}
+          style={{ background: aiRecommending || !aiQuery.trim() ? "#e5e7eb" : "#FFCC00", border: "none", borderRadius: 10, padding: "0.55rem 1rem", fontSize: "0.82rem", fontWeight: 700, color: "#1c1917", cursor: aiRecommending || !aiQuery.trim() ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}
+        >
+          {aiRecommending ? <Loader size={13} className="animate-spin" /> : <Zap size={13} />}
+          {aiRecommending ? "Finding…" : "AI Picks"}
+        </button>
+        {recommendedIds.length > 0 && (
+          <button onClick={() => setRecommendedIds([])} style={{ background: "none", border: "1px solid #e5e7eb", borderRadius: 10, padding: "0.5rem 0.75rem", fontSize: "0.78rem", color: "#6b7280", cursor: "pointer" }}>Clear picks</button>
+        )}
+      </div>
+
       {/* Station filter pills */}
       <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem", flexWrap: "wrap" }}>
         {stations.map((s) => (
@@ -482,13 +634,35 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: "1rem" }}>
-          {filtered.map((item) => {
+          {recommendedIds.length > 0 && (
+            <div style={{ gridColumn: "1 / -1", display: "flex", alignItems: "center", gap: 8, margin: "0.25rem 0 0.5rem" }}>
+              <Zap size={14} color="#b45309" />
+              <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#78350f" }}>AI picks for "{aiQuery}"</span>
+            </div>
+          )}
+          {(recommendedIds.length > 0
+            ? [...filtered].sort((a, b) => {
+                const ai = recommendedIds.indexOf(a.id);
+                const bi = recommendedIds.indexOf(b.id);
+                if (ai !== -1 && bi !== -1) return ai - bi;
+                if (ai !== -1) return -1;
+                if (bi !== -1) return 1;
+                return 0;
+              })
+            : filtered
+          ).map((item) => {
             const vis = ITEM_VISUALS[item.id] || { emoji: "📦", bg: "#f5f5f5", label: "Local Product" };
             const inCart = cart.find((c) => c.id === item.id);
+            const isAiPick = recommendedIds.includes(item.id);
             return (
-              <div key={item.id} className="card slide-up" style={{ display: "flex", flexDirection: "column" }}>
+              <div key={item.id} className="card slide-up" style={{ display: "flex", flexDirection: "column", ...(isAiPick ? { border: "2px solid #FFCC00", boxShadow: "0 0 0 3px rgba(255,204,0,0.18)" } : {}) }}>
                 {/* Image area */}
-                <div style={{ background: vis.bg, height: 130, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4 }}>
+                <div style={{ background: vis.bg, height: 130, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, position: "relative" }}>
+                  {isAiPick && (
+                    <span style={{ position: "absolute", top: 6, right: 6, background: "#FFCC00", borderRadius: 6, padding: "2px 7px", fontSize: "0.62rem", fontWeight: 800, color: "#1c1917", display: "flex", alignItems: "center", gap: 3 }}>
+                      <Zap size={9} /> AI Pick
+                    </span>
+                  )}
                   <span style={{ fontSize: "2.8rem" }}>{vis.emoji}</span>
                   <span style={{ fontSize: "0.6rem", fontWeight: 600, color: "#9ca3af", letterSpacing: "0.08em", textTransform: "uppercase" }}>{vis.label}</span>
                 </div>

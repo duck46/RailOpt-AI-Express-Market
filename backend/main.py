@@ -2522,6 +2522,53 @@ async def _call_openrouter(model: str, prompt: str) -> str:
         return data["choices"][0]["message"]["content"].strip()
 
 
+class RecommendRequest(BaseModel):
+    query: str
+    station: Optional[str] = None
+    distance_km: Optional[int] = None
+
+
+@app.post("/api/ai/recommend")
+async def ai_recommend(req: RecommendRequest):
+    catalogue_lines = [
+        f"- [{i['id']}] {i['name']} by {i['vendor']} ({i['station']}, {i['province']}) — {i['price_display']}"
+        for i in RETAIL_ITEMS
+    ]
+    location_ctx = f"The passenger is near {req.station} station (~{req.distance_km} km away). " if req.station else ""
+    prompt = (
+        f"You are RailOpt AI Concierge on a VIA Rail train. "
+        f"{location_ctx}"
+        f"A passenger said: \"{req.query}\". "
+        f"From the catalogue below, recommend the 3 most relevant items. "
+        f"Reply with ONLY a JSON array of exactly 3 item IDs, e.g. [\"KGN-001\",\"TOR-002\"]. "
+        f"No explanation, no markdown, just the JSON array.\n\nCATALOGUE:\n" + "\n".join(catalogue_lines)
+    )
+    if not OPENROUTER_API_KEY:
+        pool = [i for i in RETAIL_ITEMS if i["station"] == req.station] if req.station else RETAIL_ITEMS
+        return {"recommended_ids": [i["id"] for i in pool[:3]], "model_used": "DEMO_MODE"}
+    model_used = PRIMARY_MODEL
+    try:
+        raw = await _call_openrouter(PRIMARY_MODEL, prompt)
+    except Exception:
+        try:
+            model_used = FALLBACK_MODEL
+            raw = await _call_openrouter(FALLBACK_MODEL, prompt)
+        except Exception as e:
+            raise HTTPException(status_code=502, detail=f"AI service unavailable: {str(e)}")
+    import re as _re
+    m = _re.search(r'\[.*?\]', raw, _re.DOTALL)
+    if m:
+        try:
+            ids = json.loads(m.group())
+            valid = [x for x in ids if any(i["id"] == x for i in RETAIL_ITEMS)]
+            if valid:
+                return {"recommended_ids": valid[:3], "model_used": model_used}
+        except Exception:
+            pass
+    pool = [i for i in RETAIL_ITEMS if i["station"] == req.station] if req.station else RETAIL_ITEMS
+    return {"recommended_ids": [i["id"] for i in pool[:3]], "model_used": model_used}
+
+
 @app.post("/api/ai/personalize")
 async def ai_personalize(req: PersonalizeRequest):
     item = next((i for i in RETAIL_ITEMS if i["id"] == req.item_id), None)
