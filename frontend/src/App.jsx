@@ -289,7 +289,7 @@ function OrderConfirmation({ orderNumber, total, itemCount, offline, onClose }) 
   );
 }
 
-function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, syncing, confirmed, orderNumber, orderTotal, offline }) {
+function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, syncing, confirmed, orderNumber, orderTotal, offline, deadlineSecondsLeft }) {
   const total = cart.reduce((sum, c) => {
     const item = items.find((i) => i.id === c.id);
     return sum + (item ? item.price * c.qty : 0);
@@ -330,6 +330,26 @@ function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, synci
                 <span style={{ fontSize: "0.8rem", color: "#92400e", fontWeight: 600 }}>
                   Dead zone active — orders will sync at next station platform
                 </span>
+              </div>
+            )}
+
+            {deadlineSecondsLeft !== null && deadlineSecondsLeft > 0 && cart.length > 0 && (() => {
+              const mins = Math.floor(deadlineSecondsLeft / 60);
+              const secs = deadlineSecondsLeft % 60;
+              const urgent = deadlineSecondsLeft <= 120;
+              return (
+                <div style={{ background: urgent ? "#FEF2F2" : "#FFFBF0", border: `1px solid ${urgent ? "#fca5a5" : "#FFCC00"}`, borderRadius: 12, padding: "0.65rem 1rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 8 }}>
+                  <Train size={14} color={urgent ? "#ef4444" : "#b45309"} />
+                  <span style={{ fontSize: "0.8rem", fontWeight: 700, color: urgent ? "#991b1b" : "#78350f", flex: 1 }}>
+                    Order in the next <span style={{ fontVariantNumeric: "tabular-nums" }}>{mins}:{String(secs).padStart(2, "0")}</span> to receive before next stop
+                  </span>
+                </div>
+              );
+            })()}
+            {deadlineSecondsLeft === 0 && cart.length > 0 && (
+              <div style={{ background: "#FEF2F2", border: "1px solid #fca5a5", borderRadius: 12, padding: "0.65rem 1rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 8 }}>
+                <AlertTriangle size={14} color="#ef4444" />
+                <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#991b1b" }}>Order window closed — your order may arrive at a later stop</span>
               </div>
             )}
 
@@ -425,6 +445,20 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
   const [aiQuery, setAiQuery] = useState("");
   const [aiRecommending, setAiRecommending] = useState(false);
   const [recommendedIds, setRecommendedIds] = useState([]);
+  const [aiNoMatch, setAiNoMatch] = useState(false);
+  const [orderDeadline, setOrderDeadline] = useState(null);
+  const [deadlineSecondsLeft, setDeadlineSecondsLeft] = useState(null);
+
+  useEffect(() => {
+    if (orderDeadline === null) { setDeadlineSecondsLeft(null); return; }
+    const tick = () => {
+      const s = Math.round((orderDeadline - Date.now()) / 1000);
+      setDeadlineSecondsLeft(s > 0 ? s : 0);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [orderDeadline]);
 
   useEffect(() => {
     if (shopStation && shopStation !== "All") {
@@ -453,6 +487,7 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
     if (!aiQuery.trim()) return;
     setAiRecommending(true);
     setRecommendedIds([]);
+    setAiNoMatch(false);
     try {
       const r = await fetch(`${API}/ai/recommend`, {
         method: "POST",
@@ -461,8 +496,10 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
       });
       const d = await r.json();
       setRecommendedIds(d.recommended_ids || []);
+      setAiNoMatch(!!(d.no_match || (d.recommended_ids || []).length === 0));
     } catch {
       setRecommendedIds([]);
+      setAiNoMatch(true);
     }
     setAiRecommending(false);
   };
@@ -482,8 +519,13 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
   const addToCart = (item) => {
     setCart((prev) => {
       const existing = prev.find((c) => c.id === item.id);
-      if (existing) return prev.map((c) => c.id === item.id ? { ...c, qty: c.qty + 1 } : c);
-      return [...prev, { id: item.id, qty: 1 }];
+      const next = existing
+        ? prev.map((c) => c.id === item.id ? { ...c, qty: c.qty + 1 } : c)
+        : [...prev, { id: item.id, qty: 1 }];
+      if (prev.length === 0 && next.length > 0) {
+        setOrderDeadline(Date.now() + 8 * 60 * 1000);
+      }
+      return next;
     });
     setCartBounceKey((k) => k + 1);
   };
@@ -518,6 +560,7 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
     setConfirmedOrderNumber(orderNum);
     setConfirmedTotal(total.toFixed(2));
     setCart([]);
+    setOrderDeadline(null);
     setSyncing(false);
     setConfirmed(true);
   };
@@ -558,7 +601,7 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
           onRemove={removeFromCart} onChangeQty={changeQty}
           onSync={handlePlaceOrder} syncing={syncing}
           confirmed={confirmed} orderNumber={confirmedOrderNumber} orderTotal={confirmedTotal}
-          offline={offline}
+          offline={offline} deadlineSecondsLeft={deadlineSecondsLeft}
         />
       )}
 
@@ -593,7 +636,7 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
           <span style={{ background: "#FFCC00", borderRadius: 20, padding: "0.25rem 0.75rem", fontSize: "0.78rem", fontWeight: 700, color: "#1c1917", display: "flex", alignItems: "center", gap: 5 }}>
             <MapPin size={11} /> Nearest: {nearestStation} (~{nearestDistanceKm} km)
           </span>
-          <button onClick={() => { setNearestStation(null); setActiveStation("All"); setRecommendedIds([]); }} style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af", fontSize: "0.75rem" }}>✕ Clear</button>
+          <button onClick={() => { setNearestStation(null); setActiveStation("All"); setRecommendedIds([]); setAiNoMatch(false); }} style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af", fontSize: "0.75rem" }}>✕ Clear</button>
         </div>
       )}
 
@@ -614,8 +657,8 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
           {aiRecommending ? <Loader size={13} className="animate-spin" /> : <Zap size={13} />}
           {aiRecommending ? "Finding…" : "AI Picks"}
         </button>
-        {recommendedIds.length > 0 && (
-          <button onClick={() => setRecommendedIds([])} style={{ background: "none", border: "1px solid #e5e7eb", borderRadius: 10, padding: "0.5rem 0.75rem", fontSize: "0.78rem", color: "#6b7280", cursor: "pointer" }}>Clear picks</button>
+        {(recommendedIds.length > 0 || aiNoMatch) && (
+          <button onClick={() => { setRecommendedIds([]); setAiNoMatch(false); }} style={{ background: "none", border: "1px solid #e5e7eb", borderRadius: 10, padding: "0.5rem 0.75rem", fontSize: "0.78rem", color: "#6b7280", cursor: "pointer" }}>Clear</button>
         )}
       </div>
 
@@ -638,6 +681,12 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
             <div style={{ gridColumn: "1 / -1", display: "flex", alignItems: "center", gap: 8, margin: "0.25rem 0 0.5rem" }}>
               <Zap size={14} color="#b45309" />
               <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#78350f" }}>AI picks for "{aiQuery}"</span>
+            </div>
+          )}
+          {aiNoMatch && recommendedIds.length === 0 && (
+            <div style={{ gridColumn: "1 / -1", background: "#fef9c3", border: "1px solid #fde047", borderRadius: 12, padding: "0.85rem 1rem", display: "flex", alignItems: "center", gap: 10, margin: "0.25rem 0 0.5rem" }}>
+              <AlertTriangle size={15} color="#a16207" />
+              <span style={{ fontSize: "0.82rem", color: "#78350f", fontWeight: 600 }}>No catalogue items match "{aiQuery}" — try a different search or browse by station.</span>
             </div>
           )}
           {(recommendedIds.length > 0
@@ -754,7 +803,14 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
                 </div>
                 View Order
               </div>
-              <span>${cartTotal.toFixed(2)}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                {deadlineSecondsLeft !== null && deadlineSecondsLeft > 0 && (
+                  <span style={{ fontSize: "0.75rem", fontWeight: 700, opacity: 0.75, fontVariantNumeric: "tabular-nums" }}>
+                    ⏱ {Math.floor(deadlineSecondsLeft / 60)}:{String(deadlineSecondsLeft % 60).padStart(2, "0")}
+                  </span>
+                )}
+                <span>${cartTotal.toFixed(2)}</span>
+              </div>
             </button>
           </div>
         </div>
