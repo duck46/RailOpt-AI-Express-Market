@@ -2539,13 +2539,13 @@ async def ai_recommend(req: RecommendRequest):
         f"You are RailOpt AI Concierge on a VIA Rail train. "
         f"{location_ctx}"
         f"A passenger said: \"{req.query}\". "
-        f"From the catalogue below, recommend the 3 most relevant items. "
-        f"Reply with ONLY a JSON array of exactly 3 item IDs, e.g. [\"KGN-001\",\"TOR-002\"]. "
+        f"From the catalogue below, pick up to 3 items that are genuinely relevant to the request. "
+        f"If nothing in the catalogue is a reasonable match, return an empty array []. "
+        f"Reply with ONLY a JSON array of item IDs, e.g. [\"KGN-001\",\"TOR-002\"]. "
         f"No explanation, no markdown, just the JSON array.\n\nCATALOGUE:\n" + "\n".join(catalogue_lines)
     )
     if not OPENROUTER_API_KEY:
-        pool = [i for i in RETAIL_ITEMS if i["station"] == req.station] if req.station else RETAIL_ITEMS
-        return {"recommended_ids": [i["id"] for i in pool[:3]], "model_used": "DEMO_MODE"}
+        return {"recommended_ids": [], "model_used": "DEMO_MODE", "no_match": True}
     model_used = PRIMARY_MODEL
     try:
         raw = await _call_openrouter(PRIMARY_MODEL, prompt)
@@ -2561,12 +2561,10 @@ async def ai_recommend(req: RecommendRequest):
         try:
             ids = json.loads(m.group())
             valid = [x for x in ids if any(i["id"] == x for i in RETAIL_ITEMS)]
-            if valid:
-                return {"recommended_ids": valid[:3], "model_used": model_used}
+            return {"recommended_ids": valid[:3], "model_used": model_used, "no_match": len(valid) == 0}
         except Exception:
             pass
-    pool = [i for i in RETAIL_ITEMS if i["station"] == req.station] if req.station else RETAIL_ITEMS
-    return {"recommended_ids": [i["id"] for i in pool[:3]], "model_used": model_used}
+    return {"recommended_ids": [], "model_used": model_used, "no_match": True}
 
 
 @app.post("/api/ai/personalize")

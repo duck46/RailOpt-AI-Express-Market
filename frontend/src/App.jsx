@@ -425,6 +425,7 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
   const [aiQuery, setAiQuery] = useState("");
   const [aiRecommending, setAiRecommending] = useState(false);
   const [recommendedIds, setRecommendedIds] = useState([]);
+  const [aiNoMatch, setAiNoMatch] = useState(false);
 
   useEffect(() => {
     if (shopStation && shopStation !== "All") {
@@ -453,6 +454,7 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
     if (!aiQuery.trim()) return;
     setAiRecommending(true);
     setRecommendedIds([]);
+    setAiNoMatch(false);
     try {
       const r = await fetch(`${API}/ai/recommend`, {
         method: "POST",
@@ -461,8 +463,10 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
       });
       const d = await r.json();
       setRecommendedIds(d.recommended_ids || []);
+      setAiNoMatch(!!(d.no_match || (d.recommended_ids || []).length === 0));
     } catch {
       setRecommendedIds([]);
+      setAiNoMatch(true);
     }
     setAiRecommending(false);
   };
@@ -593,7 +597,7 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
           <span style={{ background: "#FFCC00", borderRadius: 20, padding: "0.25rem 0.75rem", fontSize: "0.78rem", fontWeight: 700, color: "#1c1917", display: "flex", alignItems: "center", gap: 5 }}>
             <MapPin size={11} /> Nearest: {nearestStation} (~{nearestDistanceKm} km)
           </span>
-          <button onClick={() => { setNearestStation(null); setActiveStation("All"); setRecommendedIds([]); }} style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af", fontSize: "0.75rem" }}>✕ Clear</button>
+          <button onClick={() => { setNearestStation(null); setActiveStation("All"); setRecommendedIds([]); setAiNoMatch(false); }} style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af", fontSize: "0.75rem" }}>✕ Clear</button>
         </div>
       )}
 
@@ -614,8 +618,8 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
           {aiRecommending ? <Loader size={13} className="animate-spin" /> : <Zap size={13} />}
           {aiRecommending ? "Finding…" : "AI Picks"}
         </button>
-        {recommendedIds.length > 0 && (
-          <button onClick={() => setRecommendedIds([])} style={{ background: "none", border: "1px solid #e5e7eb", borderRadius: 10, padding: "0.5rem 0.75rem", fontSize: "0.78rem", color: "#6b7280", cursor: "pointer" }}>Clear picks</button>
+        {(recommendedIds.length > 0 || aiNoMatch) && (
+          <button onClick={() => { setRecommendedIds([]); setAiNoMatch(false); }} style={{ background: "none", border: "1px solid #e5e7eb", borderRadius: 10, padding: "0.5rem 0.75rem", fontSize: "0.78rem", color: "#6b7280", cursor: "pointer" }}>Clear</button>
         )}
       </div>
 
@@ -638,6 +642,12 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
             <div style={{ gridColumn: "1 / -1", display: "flex", alignItems: "center", gap: 8, margin: "0.25rem 0 0.5rem" }}>
               <Zap size={14} color="#b45309" />
               <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#78350f" }}>AI picks for "{aiQuery}"</span>
+            </div>
+          )}
+          {aiNoMatch && recommendedIds.length === 0 && (
+            <div style={{ gridColumn: "1 / -1", background: "#fef9c3", border: "1px solid #fde047", borderRadius: 12, padding: "0.85rem 1rem", display: "flex", alignItems: "center", gap: 10, margin: "0.25rem 0 0.5rem" }}>
+              <AlertTriangle size={15} color="#a16207" />
+              <span style={{ fontSize: "0.82rem", color: "#78350f", fontWeight: 600 }}>No catalogue items match "{aiQuery}" — try a different search or browse by station.</span>
             </div>
           )}
           {(recommendedIds.length > 0
