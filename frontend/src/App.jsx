@@ -30,6 +30,22 @@ const ITEM_VISUALS = {
   "KAM-001": { emoji: "☕", bg: "#FFF3E0", label: "Craft Coffee" },
   "KAM-002": { emoji: "🕯️", bg: "#FFF8E1", label: "Beeswax Candle" },
   "KAM-003": { emoji: "🐟", bg: "#E3F2FD", label: "Salmon Run Pin" },
+  // Halifax
+  "HAL-001": { emoji: "🍺", bg: "#FFF3E0", label: "Spruce Brew Kit" },
+  "HAL-002": { emoji: "⚓", bg: "#E3F2FD", label: "Citadel Pin" },
+  "HAL-003": { emoji: "🗺️", bg: "#E0F7FA", label: "Harbour Chart" },
+  // New Glasgow
+  "NGL-001": { emoji: "🎶", bg: "#FCE4EC", label: "Jubilee Pin" },
+  "NGL-002": { emoji: "🗺️", bg: "#E8F5E9", label: "Cabot Trail Map" },
+  "NGL-003": { emoji: "🫙", bg: "#FFF8E1", label: "Lip Balm Set" },
+  // Truro
+  "TRU-001": { emoji: "🌊", bg: "#E3F2FD", label: "Tidal Bore Print" },
+  "TRU-002": { emoji: "🌸", bg: "#E8F5E9", label: "Wildflower Kit" },
+  "TRU-003": { emoji: "🧶", bg: "#FFF8E1", label: "Hooked Coasters" },
+  // Amherst
+  "AMH-001": { emoji: "🍵", bg: "#FFF3E0", label: "Victorian Tea" },
+  "AMH-002": { emoji: "🐦", bg: "#E8F5E9", label: "Bird Guide" },
+  "AMH-003": { emoji: "📌", bg: "#E3F2FD", label: "Fort Beauséjour Pin" },
   // Campbellton
   "CAM-001": { emoji: "🐟", bg: "#E0F7FA", label: "Salmon Pin" },
   "CAM-002": { emoji: "🗺️", bg: "#E8F5E9", label: "Trail Bandana" },
