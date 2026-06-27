@@ -30,6 +30,18 @@ const ITEM_VISUALS = {
   "KAM-001": { emoji: "☕", bg: "#FFF3E0", label: "Craft Coffee" },
   "KAM-002": { emoji: "🕯️", bg: "#FFF8E1", label: "Beeswax Candle" },
   "KAM-003": { emoji: "🐟", bg: "#E3F2FD", label: "Salmon Run Pin" },
+  // Edmonton
+  "EDM-001": { emoji: "🏒", bg: "#E3F2FD", label: "Oilers Pin" },
+  "EDM-002": { emoji: "🌸", bg: "#E8F5E9", label: "Wildflower Kit" },
+  "EDM-003": { emoji: "📓", bg: "#FFF8E1", label: "Field Notes" },
+  // Jasper
+  "JSP-001": { emoji: "🌌", bg: "#EDE7F6", label: "Star Chart" },
+  "JSP-002": { emoji: "🧂", bg: "#E0F7FA", label: "Glacier Salts" },
+  "JSP-003": { emoji: "🍺", bg: "#FFF3E0", label: "Brew Journal" },
+  // Banff
+  "BNF-001": { emoji: "🎨", bg: "#E0F7FA", label: "Watercolour Print" },
+  "BNF-002": { emoji: "🛁", bg: "#F3E5F5", label: "Alpine Soak" },
+  "BNF-003": { emoji: "🗺️", bg: "#E8F5E9", label: "Trail Guide" },
   // Vancouver
   "VAN-001": { emoji: "🍯", bg: "#FFF8E1", label: "Wild Honey" },
   "VAN-002": { emoji: "📖", bg: "#E8F5E9", label: "Field Guide" },
