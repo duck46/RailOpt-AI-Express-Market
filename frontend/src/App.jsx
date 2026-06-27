@@ -30,6 +30,22 @@ const ITEM_VISUALS = {
   "KAM-001": { emoji: "☕", bg: "#FFF3E0", label: "Craft Coffee" },
   "KAM-002": { emoji: "🕯️", bg: "#FFF8E1", label: "Beeswax Candle" },
   "KAM-003": { emoji: "🐟", bg: "#E3F2FD", label: "Salmon Run Pin" },
+  // Campbellton
+  "CAM-001": { emoji: "🐟", bg: "#E0F7FA", label: "Salmon Pin" },
+  "CAM-002": { emoji: "🗺️", bg: "#E8F5E9", label: "Trail Bandana" },
+  "CAM-003": { emoji: "🧼", bg: "#FFF8E1", label: "Balsam Soap" },
+  // Bathurst
+  "BTH-001": { emoji: "🎨", bg: "#E3F2FD", label: "Chaleur Print" },
+  "BTH-002": { emoji: "🐦", bg: "#E8F5E9", label: "Bird Guide" },
+  "BTH-003": { emoji: "🕯️", bg: "#FFF3E0", label: "Cedar Candle" },
+  // Miramichi
+  "MIR-001": { emoji: "☘️", bg: "#E8F5E9", label: "Irish Festival Pin" },
+  "MIR-002": { emoji: "📓", bg: "#FFF8E1", label: "Mi'gmaq Journal" },
+  "MIR-003": { emoji: "🎣", bg: "#E0F7FA", label: "Fly Tying Kit" },
+  // Moncton
+  "MON-001": { emoji: "🪨", bg: "#E3F2FD", label: "Hopewell Print" },
+  "MON-002": { emoji: "🧂", bg: "#FFF8E1", label: "Acadian Sea Salt" },
+  "MON-003": { emoji: "📮", bg: "#FCE4EC", label: "Postcard Set" },
   // Winnipeg
   "WPG-001": { emoji: "🖼️", bg: "#F3E5F5", label: "Mural Print" },
   "WPG-002": { emoji: "🧵", bg: "#FFF8E1", label: "Métis Bookmarks" },
