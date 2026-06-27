@@ -1,10 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   ShoppingCart, Wrench, ShieldCheck, WifiOff, Wifi,
-  Plus, Minus, Trash2, Zap, Truck, Gauge, CloudLightning,
+  Plus, Trash2, Zap, Truck, Gauge, CloudLightning,
   CheckCircle, RefreshCw, MapPin, Star, Activity,
-  AlertTriangle, Database, Send, Loader, Train, X,
-  ChevronRight,
+  AlertTriangle, Database, Send, Loader, Train, X, Compass,
 } from "lucide-react";
 
 const API = import.meta.env.VITE_API_URL
@@ -13,11 +12,28 @@ const API = import.meta.env.VITE_API_URL
   ? "http://localhost:8000/api"
   : "/api";
 
-// ─── Product image placeholders (emoji-based, no external deps) ──────────────
+// ─── Product image placeholders ───────────────────────────────────────────────
 const ITEM_VISUALS = {
+  // Ontario
   "KGN-001": { emoji: "🧦", bg: "#FFF8E1", label: "Artisan Knitwear" },
   "KGN-002": { emoji: "🖼️", bg: "#E8F5E9", label: "Heritage Print" },
   "CBG-001": { emoji: "🫙", bg: "#FFF3E0", label: "Small Batch Preserve" },
+  // Prince George
+  "PG-001":  { emoji: "🧼", bg: "#E8F5E9", label: "Boreal Soap" },
+  "PG-002":  { emoji: "📌", bg: "#FFF8E1", label: "Enamel Pins" },
+  "PG-003":  { emoji: "🍄", bg: "#F3E5F5", label: "Wild Forage" },
+  // Prince Rupert
+  "PR-001":  { emoji: "🎨", bg: "#E3F2FD", label: "Indigenous Art" },
+  "PR-002":  { emoji: "🌊", bg: "#E0F7FA", label: "Sea Harvest" },
+  "PR-003":  { emoji: "🗺️", bg: "#E8F5E9", label: "Trail Map" },
+  // Kamloops
+  "KAM-001": { emoji: "☕", bg: "#FFF3E0", label: "Craft Coffee" },
+  "KAM-002": { emoji: "🕯️", bg: "#FFF8E1", label: "Beeswax Candle" },
+  "KAM-003": { emoji: "🐟", bg: "#E3F2FD", label: "Salmon Run Pin" },
+  // Vancouver
+  "VAN-001": { emoji: "🍯", bg: "#FFF8E1", label: "Wild Honey" },
+  "VAN-002": { emoji: "📖", bg: "#E8F5E9", label: "Field Guide" },
+  "VAN-003": { emoji: "🏙️", bg: "#E3F2FD", label: "Linocut Print" },
 };
 
 // ─── Cart drawer ──────────────────────────────────────────────────────────────
@@ -132,7 +148,7 @@ function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, synci
 
 // ─── Tab 1: Shop ──────────────────────────────────────────────────────────────
 
-function Tab1({ offline }) {
+function Tab1({ offline, shopStation = "All", onStationHandled }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [cart, setCart] = useState([]);
@@ -144,6 +160,13 @@ function Tab1({ offline }) {
   const [aiLoading, setAiLoading] = useState({});
   const [cartBounceKey, setCartBounceKey] = useState(0);
   const [activeStation, setActiveStation] = useState("All");
+
+  useEffect(() => {
+    if (shopStation && shopStation !== "All") {
+      setActiveStation(shopStation);
+      onStationHandled?.();
+    }
+  }, [shopStation]);
 
   const fetchItems = useCallback(async () => {
     setLoading(true);
@@ -599,17 +622,192 @@ function Tab3() {
   );
 }
 
+// ─── Tab 4: Discover ─────────────────────────────────────────────────────────
+
+function Tab4({ onShopStation }) {
+  const [destinations, setDestinations] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [detail, setDetail] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [detailLoading, setDetailLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`${API}/destinations`)
+      .then((r) => r.json())
+      .then((d) => setDestinations(d.destinations || []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
+  const openDestination = async (dest) => {
+    setSelected(dest);
+    setDetailLoading(true);
+    try {
+      const r = await fetch(`${API}/destinations/${dest.id}`);
+      setDetail(await r.json());
+    } catch { setDetail(dest); }
+    setDetailLoading(false);
+  };
+
+  const closeDetail = () => { setSelected(null); setDetail(null); };
+
+  // Province grouping
+  const byProvince = destinations.reduce((acc, d) => {
+    (acc[d.province] = acc[d.province] || []).push(d);
+    return acc;
+  }, {});
+
+  if (loading) return (
+    <div style={{ display: "flex", justifyContent: "center", padding: "4rem 0" }}>
+      <Loader size={24} color="#FFCC00" className="animate-spin" />
+    </div>
+  );
+
+  return (
+    <>
+      {/* Destination detail drawer */}
+      {selected && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 200 }}>
+          <div onClick={closeDetail} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(2px)" }} />
+          <div className="slide-up" style={{
+            position: "absolute", bottom: 0, left: 0, right: 0,
+            background: "#fff", borderRadius: "20px 20px 0 0",
+            maxHeight: "88vh", overflowY: "auto",
+            boxShadow: "0 -8px 40px rgba(0,0,0,0.18)",
+          }}>
+            {/* Hero */}
+            <div style={{ background: selected.hero_color, padding: "2rem 1.5rem 1.5rem", position: "relative" }}>
+              <button onClick={closeDetail} style={{ position: "absolute", top: "1rem", right: "1rem", background: "rgba(255,255,255,0.15)", border: "none", borderRadius: "50%", width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+                <X size={16} color="#fff" />
+              </button>
+              <div style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>{selected.emoji}</div>
+              <h2 style={{ color: "#fff", fontWeight: 800, fontSize: "1.5rem", margin: 0 }}>{selected.name}</h2>
+              <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", margin: "0.25rem 0 0" }}>{selected.tagline}</p>
+              {/* Vibe tags */}
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: "0.85rem" }}>
+                {selected.vibe?.map((v) => (
+                  <span key={v} style={{ background: "rgba(255,255,255,0.15)", color: "#fff", fontSize: "0.7rem", fontWeight: 600, padding: "3px 10px", borderRadius: 99 }}>{v}</span>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ padding: "1.25rem 1.5rem" }}>
+              {/* Highlights */}
+              <h3 style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", marginBottom: "0.75rem" }}>Top Highlights</h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: "1.5rem" }}>
+                {selected.highlights?.map((h) => (
+                  <div key={h} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#FFCC00", marginTop: 6, flexShrink: 0 }} />
+                    <span style={{ fontSize: "0.85rem", color: "#374151", lineHeight: 1.5 }}>{h}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Popular routes */}
+              {selected.popular_routes?.length > 0 && (
+                <>
+                  <h3 style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", marginBottom: "0.75rem" }}>Popular Routes</h3>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: "1.5rem" }}>
+                    {selected.popular_routes.map((r) => (
+                      <span key={r} style={{ background: "#F5F5F5", border: "1px solid #E8E8E8", borderRadius: 99, padding: "4px 12px", fontSize: "0.75rem", fontWeight: 600, color: "#374151", display: "flex", alignItems: "center", gap: 5 }}>
+                        <Train size={11} color="#FFCC00" />{r}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {/* Station products */}
+              {detailLoading ? (
+                <div style={{ textAlign: "center", padding: "1rem" }}><Loader size={18} color="#FFCC00" className="animate-spin" /></div>
+              ) : detail?.items?.length > 0 && (
+                <>
+                  <h3 style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", marginBottom: "0.75rem" }}>
+                    🛍️ Local Products at {selected.name}
+                  </h3>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: "1.5rem" }}>
+                    {detail.items.map((item) => {
+                      const vis = ITEM_VISUALS[item.id] || { emoji: "📦", bg: "#f5f5f5" };
+                      return (
+                        <div key={item.id} style={{ display: "flex", alignItems: "center", gap: 12, padding: "0.75rem", background: "#F9F9F9", borderRadius: 12 }}>
+                          <div style={{ width: 44, height: 44, borderRadius: 10, background: vis.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.4rem", flexShrink: 0 }}>
+                            {vis.emoji}
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <p style={{ fontWeight: 700, fontSize: "0.85rem", color: "#111", margin: 0 }}>{item.name}</p>
+                            <p style={{ fontSize: "0.7rem", color: "#6b7280", margin: "2px 0 0" }}>{item.vendor}</p>
+                          </div>
+                          <span style={{ fontWeight: 800, color: "#111", fontSize: "0.9rem", flexShrink: 0 }}>{item.price_display}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <button
+                    onClick={() => { closeDetail(); onShopStation(selected.name); }}
+                    style={{ width: "100%", background: "#FFCC00", color: "#111", fontWeight: 800, fontSize: "0.95rem", border: "none", borderRadius: 50, padding: "0.85rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}
+                  >
+                    <ShoppingCart size={18} />Shop {selected.name} Products
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Destination cards by province */}
+      {Object.entries(byProvince).map(([province, dests]) => (
+        <div key={province} style={{ marginBottom: "2rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.75rem" }}>
+            <MapPin size={13} color="#FFCC00" />
+            <span style={{ fontWeight: 800, fontSize: "0.8rem", color: "#6b7280", letterSpacing: "0.08em", textTransform: "uppercase" }}>{province}</span>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))", gap: "0.85rem" }}>
+            {dests.map((dest) => (
+              <button key={dest.id} className="card" onClick={() => openDestination(dest)}
+                style={{ textAlign: "left", padding: 0, border: "none", cursor: "pointer", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+                {/* Hero strip */}
+                <div style={{ background: dest.hero_color, padding: "1.25rem 1rem 0.85rem", display: "flex", flexDirection: "column", gap: 4 }}>
+                  <span style={{ fontSize: "2rem" }}>{dest.emoji}</span>
+                  <span style={{ color: "#fff", fontWeight: 800, fontSize: "0.95rem", lineHeight: 1.2 }}>{dest.name}</span>
+                </div>
+                {/* Body */}
+                <div style={{ padding: "0.75rem 1rem", flex: 1 }}>
+                  <p style={{ fontSize: "0.7rem", color: "#6b7280", margin: 0, lineHeight: 1.4 }}>{dest.tagline}</p>
+                  <div style={{ marginTop: "0.5rem", display: "flex", flexWrap: "wrap", gap: 3 }}>
+                    {dest.vibe?.slice(0, 2).map((v) => (
+                      <span key={v} style={{ fontSize: "0.58rem", background: "#F5F5F5", color: "#374151", padding: "2px 6px", borderRadius: 99, fontWeight: 600 }}>{v}</span>
+                    ))}
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      ))}
+    </>
+  );
+}
+
 // ─── Root ─────────────────────────────────────────────────────────────────────
 
 const TABS = [
-  { id: "retail", emoji: "🛍️", label: "Shop" },
-  { id: "ops",    emoji: "🛠️", label: "Operations" },
-  { id: "trust",  emoji: "🔒", label: "Network" },
+  { id: "retail",   emoji: "🛍️", label: "Shop" },
+  { id: "discover", emoji: "🧭", label: "Discover" },
+  { id: "ops",      emoji: "🛠️", label: "Operations" },
+  { id: "trust",    emoji: "🔒", label: "Network" },
 ];
 
 export default function App() {
   const [offline, setOffline] = useState(false);
   const [tab, setTab] = useState("retail");
+  const [shopStation, setShopStation] = useState("All");
+
+  const handleShopStation = (stationName) => {
+    setShopStation(stationName);
+    setTab("retail");
+  };
 
   return (
     <div style={{ minHeight: "100vh", background: "#F5F5F5", color: "#111", paddingBottom: 80 }}>
@@ -671,9 +869,10 @@ export default function App() {
 
       {/* Content */}
       <main style={{ maxWidth: 960, margin: "0 auto", padding: "1.25rem 1rem" }}>
-        {tab === "retail" && <Tab1 offline={offline} />}
-        {tab === "ops"    && <Tab2 />}
-        {tab === "trust"  && <Tab3 />}
+        {tab === "retail"   && <Tab1 offline={offline} shopStation={shopStation} onStationHandled={() => setShopStation("All")} />}
+        {tab === "discover" && <Tab4 onShopStation={handleShopStation} />}
+        {tab === "ops"      && <Tab2 />}
+        {tab === "trust"    && <Tab3 />}
       </main>
     </div>
   );

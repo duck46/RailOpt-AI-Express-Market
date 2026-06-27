@@ -25,9 +25,11 @@ app.add_middleware(
 order_queue: list[dict] = []
 
 RETAIL_ITEMS = [
+    # ── Ontario Corridor ──────────────────────────────────────────────────────
     {
         "id": "KGN-001",
         "station": "Kingston",
+        "province": "Ontario",
         "vendor": "Limestone City Craft Co.",
         "name": "Handmade Cozy Cabin Bear Socks",
         "price": 24.00,
@@ -40,6 +42,7 @@ RETAIL_ITEMS = [
     {
         "id": "KGN-002",
         "station": "Kingston",
+        "province": "Ontario",
         "vendor": "Kingston Heritage Press",
         "name": "Hand-Pressed Waterfront Postcards",
         "price": 12.50,
@@ -52,6 +55,7 @@ RETAIL_ITEMS = [
     {
         "id": "CBG-001",
         "station": "Cobourg",
+        "province": "Ontario",
         "vendor": "Last Mountain Farms",
         "name": "Old Fashioned Saskatoon Berry Jam",
         "price": 14.00,
@@ -61,6 +65,274 @@ RETAIL_ITEMS = [
         "in_stock": True,
         "perishable": False,
     },
+    # ── British Columbia — Prince George ─────────────────────────────────────
+    {
+        "id": "PG-001",
+        "station": "Prince George",
+        "province": "British Columbia",
+        "vendor": "Nechako River Trading Co.",
+        "name": "Northern Rainforest Cedar Soap Bar",
+        "price": 11.00,
+        "price_display": "$11.00",
+        "category": "Retail",
+        "description": "Cold-pressed cedar and spruce soap hand-crafted in Prince George's boreal rainforest tradition.",
+        "in_stock": True,
+        "perishable": False,
+    },
+    {
+        "id": "PG-002",
+        "station": "Prince George",
+        "province": "British Columbia",
+        "vendor": "Central BC Railway Museum Shop",
+        "name": "Heritage Railway Enamel Pin Set",
+        "price": 18.00,
+        "price_display": "$18.00",
+        "category": "Souvenirs",
+        "description": "Set of 3 enamel pins celebrating the locomotives that shaped Northern BC's forestry era.",
+        "in_stock": True,
+        "perishable": False,
+    },
+    {
+        "id": "PG-003",
+        "station": "Prince George",
+        "province": "British Columbia",
+        "vendor": "Teapot Mountain Provisions",
+        "name": "Wild Boreal Mushroom Seasoning Blend",
+        "price": 13.50,
+        "price_display": "$13.50",
+        "category": "Retail",
+        "description": "Dried wild mushroom and herb seasoning foraged from the Nechako River valley woodlands.",
+        "in_stock": True,
+        "perishable": False,
+    },
+    # ── British Columbia — Prince Rupert ─────────────────────────────────────
+    {
+        "id": "PR-001",
+        "station": "Prince Rupert",
+        "province": "British Columbia",
+        "vendor": "Cow Bay Collective",
+        "name": "Ts'msyen Coastal Art Print",
+        "price": 22.00,
+        "price_display": "$22.00",
+        "category": "Souvenirs",
+        "description": "Archival giclée print by a local Ts'msyen artist celebrating the Pacific North Coast's indigenous heritage.",
+        "in_stock": True,
+        "perishable": False,
+    },
+    {
+        "id": "PR-002",
+        "station": "Prince Rupert",
+        "province": "British Columbia",
+        "vendor": "North Pacific Cannery Co-op",
+        "name": "Pacific Coast Kelp & Sea Salt Flakes",
+        "price": 9.50,
+        "price_display": "$9.50",
+        "category": "Retail",
+        "description": "Hand-harvested bull kelp dried with Pacific sea salt from the Khutzeymateen shoreline.",
+        "in_stock": True,
+        "perishable": False,
+    },
+    {
+        "id": "PR-003",
+        "station": "Prince Rupert",
+        "province": "British Columbia",
+        "vendor": "Kaien Island Outfitters",
+        "name": "Grizzly Sanctuary Trail Map Bandana",
+        "price": 16.00,
+        "price_display": "$16.00",
+        "category": "Souvenirs",
+        "description": "Cotton bandana printed with an illustrated map of the Khutzeymateen Grizzly Sanctuary trails.",
+        "in_stock": True,
+        "perishable": False,
+    },
+    # ── British Columbia — Kamloops ───────────────────────────────────────────
+    {
+        "id": "KAM-001",
+        "station": "Kamloops",
+        "province": "British Columbia",
+        "vendor": "Thompson Rivers Craft Roasters",
+        "name": "Interior BC Wildfire Roast Coffee",
+        "price": 19.00,
+        "price_display": "$19.00",
+        "category": "Retail",
+        "description": "Bold dark roast whole-bean coffee from a Kamloops micro-roaster, inspired by the sun-baked canyon landscape.",
+        "in_stock": True,
+        "perishable": False,
+    },
+    {
+        "id": "KAM-002",
+        "station": "Kamloops",
+        "province": "British Columbia",
+        "vendor": "Lac du Bois Artisans",
+        "name": "Grasslands Beeswax Candle",
+        "price": 17.50,
+        "price_display": "$17.50",
+        "category": "Retail",
+        "description": "100% pure beeswax candle with a sage and pine scent profile, poured by Kamloops artisans.",
+        "in_stock": True,
+        "perishable": False,
+    },
+    {
+        "id": "KAM-003",
+        "station": "Kamloops",
+        "province": "British Columbia",
+        "vendor": "Kamloops Farmers' Market Collective",
+        "name": "Sockeye Salmon Run Commemorative Pin",
+        "price": 12.00,
+        "price_display": "$12.00",
+        "category": "Souvenirs",
+        "description": "Limited edition enamel pin marking the Adams River Sockeye Salmon run — one of BC's greatest natural spectacles.",
+        "in_stock": True,
+        "perishable": False,
+    },
+    # ── British Columbia — Vancouver ──────────────────────────────────────────
+    {
+        "id": "VAN-001",
+        "station": "Vancouver",
+        "province": "British Columbia",
+        "vendor": "Granville Island Market Co.",
+        "name": "Pacific Coast Wildflower Honey",
+        "price": 16.00,
+        "price_display": "$16.00",
+        "category": "Retail",
+        "description": "Raw, unfiltered wildflower honey sourced from apiaries along the BC Pacific Coast.",
+        "in_stock": True,
+        "perishable": False,
+    },
+    {
+        "id": "VAN-002",
+        "station": "Vancouver",
+        "province": "British Columbia",
+        "vendor": "Stanley Park Naturalist Society",
+        "name": "Rainforest Trail Pocket Field Guide",
+        "price": 14.00,
+        "price_display": "$14.00",
+        "category": "Retail",
+        "description": "Compact illustrated field guide to Stanley Park's 1,000-acre temperate rainforest ecosystem.",
+        "in_stock": True,
+        "perishable": False,
+    },
+    {
+        "id": "VAN-003",
+        "station": "Vancouver",
+        "province": "British Columbia",
+        "vendor": "Chinatown Artisan Press",
+        "name": "Vancouver Skyline Linocut Print",
+        "price": 26.00,
+        "price_display": "$26.00",
+        "category": "Souvenirs",
+        "description": "Hand-carved linocut print of Vancouver's skyline framed by the North Shore mountains, made in Chinatown.",
+        "in_stock": True,
+        "perishable": False,
+    },
+]
+
+# ── Destination content ────────────────────────────────────────────────────────
+
+DESTINATIONS = [
+    {
+        "id": "prince-george",
+        "name": "Prince George",
+        "province": "British Columbia",
+        "tagline": "Northern BC's boreal hub",
+        "emoji": "🌲",
+        "hero_color": "#1a3a2a",
+        "highlights": [
+            "Prince George Astronomical Observatory — breathtaking celestial views",
+            "Two Rivers Gallery — immerse yourself in Canadian art",
+            "Central BC Railway & Forestry Museum — the industries that shaped the north",
+            "Teapot Mountain — 360° view of surrounding forests and wetlands",
+            "Cottonwood Island Nature Park — walk along the Nechako River shoreline",
+        ],
+        "vibe": ["🎨 Arts & Culture", "🥾 Hiking", "🌿 Nature", "🚂 Rail Heritage"],
+        "popular_routes": ["Jasper → Prince George", "Prince George → Prince Rupert"],
+    },
+    {
+        "id": "prince-rupert",
+        "name": "Prince Rupert",
+        "province": "British Columbia",
+        "tagline": "Wild Pacific North Coast",
+        "emoji": "🐻",
+        "hero_color": "#0d2233",
+        "highlights": [
+            "Khutzeymateen Grizzly Sanctuary — watch brown bears in their natural habitat",
+            "Museum of Northern BC — home of the Ts'msyen People's history",
+            "North Pacific Cannery National Historic Site (May–Sep)",
+            "Humpback whale watching tours from the harbour",
+            "Mount Hayes — panoramic view of the Pacific Ocean and nearby islands",
+        ],
+        "vibe": ["🐋 Wildlife", "🏔️ Adventure", "🎣 Fishing", "🏛️ Indigenous Culture"],
+        "popular_routes": ["Jasper → Prince Rupert"],
+    },
+    {
+        "id": "kamloops",
+        "name": "Kamloops",
+        "province": "British Columbia",
+        "tagline": "Sunny interior at the river junction",
+        "emoji": "🚵",
+        "hero_color": "#2d1f0a",
+        "highlights": [
+            "Kamloops Farmers' Markets — fresh local produce on Sat & Wed",
+            "Kweseltken Artisan Market — traditional foods and handmade goods",
+            "Kamloops Bike Ranch — world-class mountain biking trails",
+            "Adams River Sockeye Salmon Run — waters turn red (late Sep–mid Oct)",
+            "Tsútswecw Provincial Park — 26 km of trails",
+        ],
+        "vibe": ["🚵 Mountain Biking", "🎭 Arts", "🍺 Craft Beer", "🐟 Nature"],
+        "popular_routes": ["Vancouver → Kamloops", "Edmonton → Kamloops", "Toronto → Kamloops"],
+    },
+    {
+        "id": "vancouver",
+        "name": "Vancouver",
+        "province": "British Columbia",
+        "tagline": "Pacific metropolis between ocean and mountains",
+        "emoji": "🌊",
+        "hero_color": "#0a1f2d",
+        "highlights": [
+            "Stanley Park — 1,000-acre rainforest with 10 km ocean seawall",
+            "Granville Island Public Market — fresh local produce and artisan goods",
+            "Museum of Anthropology — 50,000+ works from cultures worldwide",
+            "Canada's largest Chinatown — Dr. Sun Yat-Sen Classical Chinese Garden",
+            "Capilano Suspension Bridge and Grouse Mountain (North Vancouver)",
+        ],
+        "vibe": ["🏙️ Urban", "🌊 Ocean", "🎨 Culture", "🌿 Green Spaces"],
+        "popular_routes": ["Toronto → Vancouver", "Edmonton → Vancouver", "Montréal → Vancouver"],
+    },
+    # Ontario stations
+    {
+        "id": "kingston",
+        "name": "Kingston",
+        "province": "Ontario",
+        "tagline": "Limestone City on Lake Ontario",
+        "emoji": "🏰",
+        "hero_color": "#1a1a0d",
+        "highlights": [
+            "Fort Henry National Historic Site — Canada's greatest 19th-century fort",
+            "Historic downtown waterfront — boutiques and independent restaurants",
+            "Kingston Penitentiary tours — Canada's most notorious prison",
+            "Thousand Islands boat cruises — world-famous archipelago",
+            "Queen's University campus — stunning limestone architecture",
+        ],
+        "vibe": ["🏛️ History", "🛍️ Shopping", "⛵ Boating", "🍺 Local Eats"],
+        "popular_routes": ["Toronto → Kingston", "Montréal → Kingston"],
+    },
+    {
+        "id": "cobourg",
+        "name": "Cobourg",
+        "province": "Ontario",
+        "tagline": "Northumberland's hidden gem",
+        "emoji": "🌾",
+        "hero_color": "#1a0f0a",
+        "highlights": [
+            "Cobourg Beach — one of Ontario's finest sandy beaches",
+            "Victoria Hall — ornate 1860 courthouse and concert hall",
+            "Northumberland Farmers' Market — local produce and artisan goods",
+            "Ganaraska Forest — hiking and cross-country skiing",
+            "Historic downtown — boutique shops and local restaurants",
+        ],
+        "vibe": ["🏖️ Beach", "🌿 Nature", "🛍️ Artisan", "🏛️ Heritage"],
+        "popular_routes": ["Toronto → Cobourg", "Cobourg → Montréal"],
+    },
 ]
 
 
@@ -68,12 +340,29 @@ RETAIL_ITEMS = [
 
 @app.get("/api/offline-dashboard")
 def get_offline_dashboard():
+    stations = sorted(set(i["station"] for i in RETAIL_ITEMS))
     return {
         "status": "ok",
         "phase": "Phase 1 — Non-Perishable Local Regional Retail",
-        "stations": ["Kingston", "Cobourg"],
+        "stations": stations,
         "items": RETAIL_ITEMS,
     }
+
+
+# --- Destinations ---
+
+@app.get("/api/destinations")
+def get_destinations():
+    return {"destinations": DESTINATIONS}
+
+
+@app.get("/api/destinations/{destination_id}")
+def get_destination(destination_id: str):
+    dest = next((d for d in DESTINATIONS if d["id"] == destination_id), None)
+    if not dest:
+        raise HTTPException(status_code=404, detail="Destination not found")
+    items = [i for i in RETAIL_ITEMS if i["station"].lower().replace(" ", "-") == destination_id]
+    return {**dest, "items": items}
 
 
 # --- Offline Order Queue ---
