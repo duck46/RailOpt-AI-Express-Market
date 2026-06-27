@@ -14,6 +14,50 @@ const API = import.meta.env.VITE_API_URL
 
 // ─── Product image placeholders ───────────────────────────────────────────────
 const ITEM_VISUALS = {
+  // Toronto
+  "TOR-001": { emoji: "🏭", bg: "#E8F5E9", label: "Distillery Print" },
+  "TOR-002": { emoji: "🗼", bg: "#E3F2FD", label: "CN Tower Pin" },
+  "TOR-003": { emoji: "🌿", bg: "#FFF8E1", label: "Herb & Spice Kit" },
+  // Ottawa
+  "OTT-001": { emoji: "🍁", bg: "#FCE4EC", label: "Parliament Pin" },
+  "OTT-002": { emoji: "🎨", bg: "#E3F2FD", label: "Rideau Canal Print" },
+  "OTT-003": { emoji: "📓", bg: "#FFF8E1", label: "Group of Seven Notes" },
+  // Belleville
+  "BVL-001": { emoji: "📮", bg: "#E8F5E9", label: "Victorian Postcards" },
+  "BVL-002": { emoji: "🕯️", bg: "#FFF3E0", label: "Beeswax Candle" },
+  "BVL-003": { emoji: "📓", bg: "#E0F7FA", label: "Quinte Journal" },
+  // Cornwall
+  "CRN-001": { emoji: "🍺", bg: "#FFF3E0", label: "Rurban Pin" },
+  "CRN-002": { emoji: "🗺️", bg: "#E3F2FD", label: "St. Lawrence Map" },
+  "CRN-003": { emoji: "🚴", bg: "#E8F5E9", label: "Trail Bandana" },
+  // Hamilton
+  "HAM-001": { emoji: "🌸", bg: "#E8F5E9", label: "Wildflower Kit" },
+  "HAM-002": { emoji: "🖼️", bg: "#F3E5F5", label: "Mural Postcards" },
+  "HAM-003": { emoji: "🗺️", bg: "#FFF8E1", label: "Escarpment Map" },
+  // Kitchener
+  "KIT-001": { emoji: "🍺", bg: "#FFF3E0", label: "Oktoberfest Pin" },
+  "KIT-002": { emoji: "🍯", bg: "#FFF8E1", label: "Clover Honey" },
+  "KIT-003": { emoji: "📓", bg: "#E8F5E9", label: "Victorian Journal" },
+  // London
+  "LON-001": { emoji: "🗺️", bg: "#E8F5E9", label: "Trail Map" },
+  "LON-002": { emoji: "🕯️", bg: "#E0F7FA", label: "Forest Candle" },
+  "LON-003": { emoji: "🌳", bg: "#FFF8E1", label: "City Map Print" },
+  // Niagara Falls
+  "NIA-001": { emoji: "💧", bg: "#E0F7FA", label: "Horseshoe Pin" },
+  "NIA-002": { emoji: "🧼", bg: "#FFF3E0", label: "Ice Wine Soap" },
+  "NIA-003": { emoji: "📌", bg: "#E8F5E9", label: "Fort George Pin" },
+  // Sarnia
+  "SAR-001": { emoji: "📖", bg: "#E8F5E9", label: "Dunes Guide" },
+  "SAR-002": { emoji: "🌅", bg: "#FFF8E1", label: "Grand Bend Print" },
+  "SAR-003": { emoji: "🦴", bg: "#FFF3E0", label: "Fossil Pendant" },
+  // Sudbury
+  "SUD-001": { emoji: "🪙", bg: "#E3F2FD", label: "Big Nickel Pin" },
+  "SUD-002": { emoji: "🎨", bg: "#E8F5E9", label: "Shield Lake Print" },
+  "SUD-003": { emoji: "🕯️", bg: "#FFF8E1", label: "Boreal Candle" },
+  // Windsor
+  "WIN-001": { emoji: "🌉", bg: "#E3F2FD", label: "Skyline Print" },
+  "WIN-002": { emoji: "🗺️", bg: "#FFF8E1", label: "Walkerville Map" },
+  "WIN-003": { emoji: "🛁", bg: "#F3E5F5", label: "Vine Bath Soak" },
   // Ontario
   "KGN-001": { emoji: "🧦", bg: "#FFF8E1", label: "Artisan Knitwear" },
   "KGN-002": { emoji: "🖼️", bg: "#E8F5E9", label: "Heritage Print" },
