@@ -1290,6 +1290,7 @@ function TabAccount() {
   const [form, setForm] = useState({
     name: "", email: "", viaNumber: "", seatCar: "", seatNumber: "",
     trainClass: "Economy", preferences: [], dietaryNotes: "", language: "en",
+    consentAiTraining: false, consentPersonalization: true,
     ...stored(),
   });
   const [saved, setSaved] = useState(false);
@@ -1431,6 +1432,67 @@ function TabAccount() {
                 }}>{lbl}</button>
               ))}
             </div>
+          </div>
+        </div>
+
+        {/* Privacy & Data */}
+        <div className="card" style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "1.1rem" }}>
+          <h3 style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", display: "flex", alignItems: "center", gap: 7, margin: 0 }}>
+            🔒 Privacy & Data
+          </h3>
+
+          {/* Toggle row helper */}
+          {[
+            {
+              key: "consentPersonalization",
+              title: "Personalized recommendations",
+              desc: "Allow RailOpt AI to use your stated interests and language preference to tailor product suggestions. This data never leaves your device.",
+            },
+            {
+              key: "consentAiTraining",
+              title: "Contribute to route intelligence",
+              desc: "Share anonymous, aggregated purchase patterns (never your name or identity) to help improve onboard stock predictions for your route. You can withdraw this at any time.",
+            },
+          ].map(({ key, title, desc }) => (
+            <div key={key} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+              <div
+                onClick={() => set(key, !form[key])}
+                style={{
+                  flexShrink: 0, width: 44, height: 24, borderRadius: 12, cursor: "pointer",
+                  background: form[key] ? "#22c55e" : "#d1d5db",
+                  position: "relative", transition: "background 0.2s",
+                }}
+              >
+                <div style={{
+                  position: "absolute", top: 3, left: form[key] ? 23 : 3,
+                  width: 18, height: 18, borderRadius: "50%", background: "#fff",
+                  transition: "left 0.2s", boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                }} />
+              </div>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: "0.83rem", color: "#111" }}>{title}</div>
+                <div style={{ fontSize: "0.72rem", color: "#6b7280", marginTop: 2, lineHeight: 1.5 }}>{desc}</div>
+              </div>
+            </div>
+          ))}
+
+          <div style={{ borderTop: "1px solid #f0f0f0", paddingTop: "1rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <p style={{ fontSize: "0.72rem", color: "#6b7280", margin: 0, lineHeight: 1.6 }}>
+              🇨🇦 Compliant with <strong>PIPEDA</strong> and Canada's incoming <strong>Consumer Privacy Protection Act (Bill C-27)</strong>.
+              Your data is <strong>never sold or shared with advertisers or third parties.</strong>
+            </p>
+            <button
+              onClick={() => {
+                if (window.confirm("Delete all your local data? This cannot be undone.")) {
+                  localStorage.removeItem("railopt_account");
+                  localStorage.removeItem("railopt_orders");
+                  window.location.reload();
+                }
+              }}
+              style={{ alignSelf: "flex-start", background: "none", border: "1px solid #fca5a5", color: "#dc2626", borderRadius: 8, padding: "0.35rem 0.85rem", fontSize: "0.75rem", fontWeight: 700, cursor: "pointer" }}
+            >
+              🗑 Delete all my data
+            </button>
           </div>
         </div>
 
