@@ -1622,11 +1622,11 @@ const INSTACART_CATALOGUE = {
 };
 
 const ORDER_STEPS = [
-  { icon: "🛒", label: "Order placed",           detail: "Sent to Instacart network" },
-  { icon: "🏪", label: "Shopper picking",         detail: "At store near your stop" },
-  { icon: "🚗", label: "En route to station",     detail: "Heading to platform" },
-  { icon: "🤝", label: "Handoff to VIA staff",    detail: "Staff signed & received" },
-  { icon: "🚆", label: "Delivered to your seat",  detail: "Enjoy your order!" },
+  { icon: "🛒", label: "Order placed",              detail: "Sent to Instacart Rail network" },
+  { icon: "🏅", label: "Rail Certified shopper",    detail: "Assigned — trained for platform handoff" },
+  { icon: "🏪", label: "Picking your order",        detail: "At a store near your stop" },
+  { icon: "🚉", label: "Shopper at platform",       detail: "Waiting at your car door on arrival" },
+  { icon: "✅", label: "Collected — enjoy!",        detail: "Step off, grab your bag, step back on" },
 ];
 
 // Stores operate 7am–10pm local time (covers pharmacy, grocery, gift shops)
@@ -1715,11 +1715,11 @@ function TabInstacart() {
           <span style={{ fontSize: "1.5rem" }}>🛒</span>
           <div>
             <div style={{ fontWeight: 800, fontSize: "1.05rem" }}>Station Pickup via Instacart</div>
-            <div style={{ fontSize: "0.75rem", opacity: 0.8 }}>Order from any local store. VIA Rail staff deliver to your seat.</div>
+            <div style={{ fontSize: "0.75rem", opacity: 0.8 }}>Order from any local store. Rail Certified shopper meets you at the platform.</div>
           </div>
         </div>
         <div style={{ display: "flex", gap: 16, marginTop: "0.75rem", flexWrap: "wrap" }}>
-          {[["🏪", "Any local store"], ["🤝", "VIA staff handoff"], ["🚆", "Seat delivery"]].map(([icon, label]) => (
+          {[["🏪", "Any local store"], ["🏅", "Rail Certified shopper"], ["🚉", "Platform handoff"]].map(([icon, label]) => (
             <div key={label} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.75rem", opacity: 0.9 }}>
               <span>{icon}</span><span>{label}</span>
             </div>
@@ -1832,6 +1832,32 @@ function TabInstacart() {
             </div>
           );
         })}
+      </div>
+
+      {/* Phase 2 AI Intelligence teaser */}
+      <div style={{ background: "linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)", borderRadius: 16, padding: "1.25rem 1.5rem", marginBottom: "1.25rem", color: "#fff" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.6rem" }}>
+          <span style={{ fontSize: "1.2rem" }}>🧠</span>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: "0.92rem" }}>Phase 2 — AI Onboard Intelligence</div>
+            <div style={{ fontSize: "0.72rem", opacity: 0.75 }}>Coming soon · Powered by your purchase data</div>
+          </div>
+        </div>
+        <p style={{ fontSize: "0.78rem", opacity: 0.9, margin: "0 0 0.85rem 0", lineHeight: 1.5 }}>
+          Every Instacart order you place teaches our AI what passengers on your route actually want.
+          Once we have enough signal, popular items get stocked <strong>onboard</strong> — and delivered right to your seat by VIA Rail staff, no platform stop required.
+        </p>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          {[
+            ["📊", "AI learns demand per route, time, and season"],
+            ["🚆", "VIA Rail stocks smarter based on predicted orders"],
+            ["💺", "Seat delivery unlocked — no platform step needed"],
+          ].map(([icon, text]) => (
+            <div key={text} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "0.76rem", opacity: 0.9 }}>
+              <span>{icon}</span><span>{text}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* How it works */}
