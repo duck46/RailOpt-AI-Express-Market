@@ -447,6 +447,7 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
   const [recommendedIds, setRecommendedIds] = useState([]);
   const [aiNoMatch, setAiNoMatch] = useState(false);
   const [orderDeadline, setOrderDeadline] = useState(null);
+  const [ecoOnly, setEcoOnly] = useState(false);
   const [deadlineSecondsLeft, setDeadlineSecondsLeft] = useState(null);
 
   useEffect(() => {
@@ -597,8 +598,12 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
     setAiLoading((p) => ({ ...p, [item.id]: false }));
   };
 
+  // CO₂ savings vs driving: car ~0.21 kg/km, VIA Rail ~0.04 kg/km/passenger → 0.17 kg/km saved
+  const co2Saved = nearestDistanceKm ? Math.round(nearestDistanceKm * 0.17) : null;
+
   const stations = ["All", ...Array.from(new Set(items.map((i) => i.station)))];
-  const filtered = activeStation === "All" ? items : items.filter((i) => i.station === activeStation);
+  const filtered = (activeStation === "All" ? items : items.filter((i) => i.station === activeStation))
+    .filter((i) => !ecoOnly || i.sustainable);
   const cartCount = cart.reduce((s, c) => s + c.qty, 0);
   const cartTotal = cart.reduce((s, c) => {
     const item = items.find((i) => i.id === c.id);
@@ -643,14 +648,24 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
         </div>
       )}
 
-      {/* Nearest station chip */}
+      {/* Nearest station chip + CO₂ banner */}
       {nearestStation && (
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.75rem", flexWrap: "wrap" }}>
-          <span style={{ background: "#FFCC00", borderRadius: 20, padding: "0.25rem 0.75rem", fontSize: "0.78rem", fontWeight: 700, color: "#1c1917", display: "flex", alignItems: "center", gap: 5 }}>
-            <MapPin size={11} /> Nearest: {nearestStation} (~{nearestDistanceKm} km)
-          </span>
-          <button onClick={() => { setNearestStation(null); setActiveStation("All"); setRecommendedIds([]); setAiNoMatch(false); }} style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af", fontSize: "0.75rem" }}>✕ Clear</button>
-        </div>
+        <>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.6rem", flexWrap: "wrap" }}>
+            <span style={{ background: "#FFCC00", borderRadius: 20, padding: "0.25rem 0.75rem", fontSize: "0.78rem", fontWeight: 700, color: "#1c1917", display: "flex", alignItems: "center", gap: 5 }}>
+              <MapPin size={11} /> Nearest: {nearestStation} (~{nearestDistanceKm} km)
+            </span>
+            <button onClick={() => { setNearestStation(null); setActiveStation("All"); setRecommendedIds([]); setAiNoMatch(false); }} style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af", fontSize: "0.75rem" }}>✕ Clear</button>
+          </div>
+          {co2Saved !== null && (
+            <div className="slide-up" style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 12, padding: "0.65rem 1rem", marginBottom: "0.75rem", display: "flex", alignItems: "center", gap: 9 }}>
+              <span style={{ fontSize: "1.1rem" }}>🌿</span>
+              <span style={{ fontSize: "0.8rem", color: "#166534", fontWeight: 600 }}>
+                By taking the train you've avoided ~<strong>{co2Saved} kg CO₂</strong> vs. driving this distance — equivalent to planting {Math.max(1, Math.round(co2Saved / 21))} tree{Math.round(co2Saved / 21) !== 1 ? "s" : ""}.
+              </span>
+            </div>
+          )}
+        </>
       )}
 
       {/* AI recommendation panel */}
@@ -675,8 +690,19 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
         )}
       </div>
 
-      {/* Station filter pills */}
+      {/* Station filter pills + eco toggle */}
       <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem", flexWrap: "wrap" }}>
+        <button
+          onClick={() => setEcoOnly((v) => !v)}
+          style={{
+            padding: "0.35rem 0.85rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
+            background: ecoOnly ? "#dcfce7" : "#f5f5f4",
+            color: ecoOnly ? "#166534" : "#6b7280",
+            border: ecoOnly ? "1.5px solid #86efac" : "1.5px solid #e7e5e4",
+          }}
+        >
+          🌿 Eco Picks
+        </button>
         {stations.map((s) => (
           <button key={s} className={`section-pill ${activeStation === s ? "active" : ""}`} onClick={() => setActiveStation(s)}>
             {s === "All" ? "🚉 All Stations" : `📍 ${s}`}
@@ -723,6 +749,11 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
                   {isAiPick && (
                     <span style={{ position: "absolute", top: 6, right: 6, background: "#FFCC00", borderRadius: 6, padding: "2px 7px", fontSize: "0.62rem", fontWeight: 800, color: "#1c1917", display: "flex", alignItems: "center", gap: 3 }}>
                       <Zap size={9} /> AI Pick
+                    </span>
+                  )}
+                  {item.sustainable && (
+                    <span style={{ position: "absolute", top: 6, left: 6, background: "#dcfce7", borderRadius: 6, padding: "2px 7px", fontSize: "0.62rem", fontWeight: 800, color: "#166534", display: "flex", alignItems: "center", gap: 3 }}>
+                      🌿 Eco
                     </span>
                   )}
                   <span style={{ fontSize: "2.8rem" }}>{vis.emoji}</span>

@@ -143,11 +143,17 @@ All items are **non-perishable and locally produced** — sourced from regional 
 
 ## SDG Alignment
 
+### SDG 7 — Affordable and Clean Energy
+When a passenger uses location detection, the platform displays a real-time **CO₂ savings banner** showing how much carbon they've avoided compared to driving the same distance (rail emits ~0.04 kg CO₂/km vs. ~0.21 kg/km by car). A **🌿 Eco Picks filter** surfaces the 19 products in the catalogue made by vendors using sustainable, natural, or low-impact materials — beeswax candles, wildflower seed kits, boreal soaps, honey, and foraged goods. Together these features make the environmental benefit of rail travel visible and connect passengers to a greener commerce choice.
+
 ### SDG 8 — Decent Work and Economic Growth
 The platform creates a **digital marketplace channel for local artisans and small producers** who would otherwise lack access to VIA Rail's 4+ million annual passenger touchpoints — from Limestone City Craft Co. in Kingston to Indigenous art vendors in Prince Rupert. The AI Personalize feature generates marketing copy for their products on demand, lowering the barrier to digital commerce for micro-vendors with no e-commerce presence.
 
 ### SDG 10 — Reduced Inequalities
 Without this platform, vendors in Churchill, Miramichi, or Senneterre have zero access to the passenger market that Toronto and Montréal vendors take for granted. The catalogue gives equal digital shelf space to every station regardless of size. The geolocation feature further levels the playing field by surfacing nearby vendors first — a passenger near Jasper sees Jasper products, not just urban ones.
+
+### SDG 9 — Industry, Innovation and Resilient Infrastructure
+The **offline-first store-and-forward queue** ensures commerce works across rural and remote stretches of Canada — Churchill, The Pas, northern BC — where connectivity is intermittent or absent. Orders placed during cellular dead zones are queued locally and synced the moment connectivity returns at the next platform. Beyond connectivity resilience, the AI Personalize and AI Recommend endpoints give a Churchill general store or Miramichi soap maker the same AI-powered retail tools that large urban retailers pay thousands for — democratizing innovation infrastructure across the rail corridor.
 
 ### SDG 11 — Sustainable Cities and Communities
 Making rail travel more commercially useful supports modal shift away from private vehicles. If passengers can shop, discover destinations, and place orders onboard, the train becomes a more compelling alternative to driving. The Discover tab also actively promotes smaller corridor communities (Baie-Saint-Paul, The Pas, Cobourg) to passengers who might not have considered them — strengthening local tourism and cultural economy.
