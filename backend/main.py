@@ -64,6 +64,7 @@ RETAIL_ITEMS = [
         "description": "Curated set of 4 dried herbs and spices sourced from Kensington Market's independent vendors in Toronto's most eclectic neighbourhood.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     # ── Ontario — Ottawa ──────────────────────────────────────────────────────
     {
@@ -131,6 +132,7 @@ RETAIL_ITEMS = [
         "description": "100% beeswax pillar candle scented with lavender from Prince Edward County's renowned agricultural heartland.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     {
         "id": "BVL-003",
@@ -198,6 +200,7 @@ RETAIL_ITEMS = [
         "description": "Native wildflower seed kit from the Royal Botanical Gardens' Cootes Paradise sanctuary on the Niagara Escarpment.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     {
         "id": "HAM-002",
@@ -251,6 +254,7 @@ RETAIL_ITEMS = [
         "description": "Raw clover honey from Waterloo Region apiaries near the Rockway Gardens — bottled in a heritage-label glass jar.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     {
         "id": "KIT-003",
@@ -291,6 +295,7 @@ RETAIL_ITEMS = [
         "description": "Soy wax candle scented with cedar, fern, and wildflower notes from London's namesake forests and Covent Garden market botanicals.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     {
         "id": "LON-003",
@@ -331,6 +336,7 @@ RETAIL_ITEMS = [
         "description": "Artisan beeswax soap infused with Niagara Peninsula Vidal ice wine extract — a taste of Canada's largest wine-growing region.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     {
         "id": "NIA-003",
@@ -424,6 +430,7 @@ RETAIL_ITEMS = [
         "description": "Soy candle infused with wild black spruce and birch from the boreal forests surrounding Sudbury's 330 Canadian Shield lakes.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     # ── Ontario — Windsor ─────────────────────────────────────────────────────
     {
@@ -518,6 +525,7 @@ RETAIL_ITEMS = [
         "description": "Cold-pressed cedar and spruce soap hand-crafted in Prince George's boreal rainforest tradition.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     {
         "id": "PG-002",
@@ -544,6 +552,7 @@ RETAIL_ITEMS = [
         "description": "Dried wild mushroom and herb seasoning foraged from the Nechako River valley woodlands.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     # ── British Columbia — Prince Rupert ─────────────────────────────────────
     {
@@ -611,6 +620,7 @@ RETAIL_ITEMS = [
         "description": "100% pure beeswax candle with a sage and pine scent profile, poured by Kamloops artisans.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     {
         "id": "KAM-003",
@@ -718,6 +728,7 @@ RETAIL_ITEMS = [
         "description": "Curated seed kit of Québec heritage herbs and edible flowers sourced from Jean Talon Market's 100-year-old farmers' institution.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     {
         "id": "MTL-002",
@@ -1091,6 +1102,7 @@ RETAIL_ITEMS = [
         "description": "Curated seed kit with native wildflowers from the Cobequid Hills and Victoria Park's 20-kilometre trail network.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     {
         "id": "TRU-003",
@@ -1184,6 +1196,7 @@ RETAIL_ITEMS = [
         "description": "Handcrafted bar soap infused with balsam fir oil from the Restigouche Valley's boreal forests.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     # ── New Brunswick — Bathurst ──────────────────────────────────────────────
     {
@@ -1224,6 +1237,7 @@ RETAIL_ITEMS = [
         "description": "Soy candle blending cedar from the Acadian forest and sea salt from Chaleur Bay's warm coastal waters.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     # ── New Brunswick — Miramichi ─────────────────────────────────────────────
     {
@@ -1291,6 +1305,7 @@ RETAIL_ITEMS = [
         "description": "Hand-harvested sea salt blended with locally dried herbs from the Acadian Peninsula — the perfect souvenir from lobster country.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     {
         "id": "MON-003",
@@ -1344,6 +1359,7 @@ RETAIL_ITEMS = [
         "description": "Soy wax candle blended with Manitoba prairie wildflower extracts — crocus, fleabane, and goldenrod — poured at The Forks.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     # ── Manitoba — Thompson ───────────────────────────────────────────────────
     {
@@ -1358,6 +1374,7 @@ RETAIL_ITEMS = [
         "description": "Illustrated guide to Thompson's boreal forest fauna — wolverine, woodland caribou, great grey owl, and more.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     {
         "id": "THO-002",
@@ -1384,6 +1401,7 @@ RETAIL_ITEMS = [
         "description": "Cold-pressed cedar and birch bar soap hand-crafted in Thompson, scented with the boreal forest's signature black spruce.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     # ── Manitoba — The Pas ────────────────────────────────────────────────────
     {
@@ -1491,6 +1509,7 @@ RETAIL_ITEMS = [
         "description": "Curated seed kit featuring native wildflowers from Edmonton's River Valley — North America's largest urban parkland.",
         "in_stock": True,
         "perishable": False,
+        "sustainable": True,
     },
     {
         "id": "EDM-003",
