@@ -1629,14 +1629,25 @@ const ORDER_STEPS = [
   { icon: "🚆", label: "Delivered to your seat",  detail: "Enjoy your order!" },
 ];
 
+// Stores operate 7am–10pm local time (covers pharmacy, grocery, gift shops)
+const STORE_OPEN_HOUR  = 7;   // 07:00
+const STORE_CLOSE_HOUR = 22;  // 22:00
+
+function isStoreOpen(date) {
+  const h = date.getHours();
+  return h >= STORE_OPEN_HOUR && h < STORE_CLOSE_HOUR;
+}
+
 function TabInstacart() {
   const now = Date.now();
-  const stops = DEMO_STOPS.map((s) => ({
-    ...s,
-    eta: new Date(now + s.offset * 60000),
-    minutesAway: s.offset,
-    eligible: !s.departed && s.offset >= MIN_LEAD_MIN,
-  }));
+  const stops = DEMO_STOPS.map((s) => {
+    const eta = new Date(now + s.offset * 60000);
+    // Shopper needs to be at store ~30 min before train arrives to allow VIA handoff
+    const shopperDeadline = new Date(now + (s.offset - 30) * 60000);
+    const storeOpen = isStoreOpen(shopperDeadline);
+    const eligible = !s.departed && s.offset >= MIN_LEAD_MIN && storeOpen;
+    return { ...s, eta, minutesAway: s.offset, eligible, storeOpen };
+  });
 
   const [selectedStop, setSelectedStop] = useState(() => stops.find((s) => s.eligible) || null);
   const [activeCategory, setActiveCategory] = useState(Object.keys(INSTACART_CATALOGUE)[0]);
@@ -1733,13 +1744,13 @@ function TabInstacart() {
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "space-between",
                   padding: "0.6rem 0.85rem", borderRadius: 10, cursor: stop.eligible ? "pointer" : "default",
-                  background: isSelected ? "#FFCC00" : stop.eligible ? "#fafaf9" : "#f5f5f4",
-                  border: isSelected ? "1.5px solid #b45309" : "1.5px solid #e7e5e4",
+                  background: isSelected ? "#FFCC00" : stop.eligible ? "#fafaf9" : !stop.storeOpen && !stop.departed ? "#fff5f5" : "#f5f5f4",
+                  border: isSelected ? "1.5px solid #b45309" : !stop.storeOpen && !stop.departed ? "1.5px solid #fca5a5" : "1.5px solid #e7e5e4",
                   opacity: stop.departed ? 0.4 : 1,
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: stop.departed ? "#9ca3af" : stop.eligible ? "#16a34a" : "#f59e0b" }} />
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: stop.departed ? "#9ca3af" : stop.eligible ? "#16a34a" : !stop.storeOpen ? "#dc2626" : "#f59e0b" }} />
                   <div>
                     <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "#111" }}>{stop.station}</span>
                     <span style={{ fontSize: "0.72rem", color: "#6b7280", marginLeft: 6 }}>{stop.province}</span>
@@ -1748,8 +1759,13 @@ function TabInstacart() {
                 <div style={{ textAlign: "right" }}>
                   <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#111" }}>{timeStr}</div>
                   {!stop.departed && (
-                    <div style={{ fontSize: "0.68rem", color: stop.eligible ? "#16a34a" : "#f59e0b", fontWeight: 600 }}>
-                      {stop.eligible ? `✓ ${hoursAway}h away — eligible` : `⚠ Only ${hoursAway}h — too soon`}
+                    <div style={{ fontSize: "0.68rem", fontWeight: 600,
+                      color: stop.eligible ? "#16a34a" : !stop.storeOpen ? "#dc2626" : "#f59e0b" }}>
+                      {stop.eligible
+                        ? `✓ ${hoursAway}h away — eligible`
+                        : !stop.storeOpen
+                        ? `🔒 Stores closed at arrival`
+                        : `⚠ Only ${hoursAway}h — too soon`}
                     </div>
                   )}
                 </div>
@@ -1757,8 +1773,11 @@ function TabInstacart() {
             );
           })}
         </div>
+        <div style={{ marginTop: "0.6rem", fontSize: "0.7rem", color: "#9ca3af", display: "flex", alignItems: "center", gap: 5 }}>
+          <Clock size={11} /> Store hours: 7:00 AM – 10:00 PM · 🔴 Red = stores closed at arrival time
+        </div>
         {selectedStop && (
-          <div style={{ marginTop: "0.85rem", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.65rem 0.85rem", display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ marginTop: "0.75rem", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.65rem 0.85rem", display: "flex", alignItems: "center", gap: 8 }}>
             <Clock size={13} color="#16a34a" />
             <span style={{ fontSize: "0.78rem", color: "#166534", fontWeight: 600 }}>
               Order by <strong>{cutoffStr}</strong> to receive at {selectedStop.station} (arriving {etaStr})
