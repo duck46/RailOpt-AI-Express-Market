@@ -4,6 +4,7 @@ import {
   Plus, Trash2, Zap, Truck, Gauge, CloudLightning,
   CheckCircle, RefreshCw, MapPin, Star, Activity,
   AlertTriangle, Database, Send, Loader, Train, X, Compass, Navigation,
+  Package, Clock, ChevronRight, ChevronDown, ShoppingBag, Users,
 } from "lucide-react";
 
 // ─── Station coordinates (lat, lng) for nearest-station detection ─────────────
@@ -1564,10 +1565,412 @@ function TabAccount() {
   );
 }
 
+// ─── Tab: Instacart Station Pickup ────────────────────────────────────────────
+
+// Demo train schedule: offsets in minutes from "now" (Toronto → Montréal)
+const DEMO_STOPS = [
+  { station: "Toronto",    province: "ON", offset: -45,  departed: true },
+  { station: "Cobourg",    province: "ON", offset: 65 },
+  { station: "Kingston",   province: "ON", offset: 185 },
+  { station: "Brockville", province: "ON", offset: 255 },
+  { station: "Ottawa",     province: "ON", offset: 375 },
+  { station: "Montréal",   province: "QC", offset: 555 },
+];
+const MIN_LEAD_MIN = 120;
+
+const INSTACART_CATALOGUE = {
+  "🥗 Fresh Food": [
+    { id: "IC-F001", name: "Seasonal Fruit Bowl", vendor: "Farm Boy", price: 8.99, emoji: "🍓", desc: "Local Ontario mixed berries and melon, freshly cut." },
+    { id: "IC-F002", name: "Artisan Sandwich", vendor: "Première Moisson", price: 12.49, emoji: "🥪", desc: "Sourdough turkey & brie with grainy mustard." },
+    { id: "IC-F003", name: "Greek Yogurt Parfait", vendor: "Liberté", price: 6.99, emoji: "🫙", desc: "Organic yogurt, granola, and wild blueberries." },
+    { id: "IC-F004", name: "Cold-Pressed Green Juice", vendor: "Greenhouse", price: 9.49, emoji: "🥤", desc: "Cucumber, spinach, apple, lemon, ginger." },
+    { id: "IC-F005", name: "Veggie & Hummus Snack Box", vendor: "Goodfood", price: 7.99, emoji: "🥕", desc: "Carrots, celery, snap peas with roasted red pepper hummus." },
+    { id: "IC-F006", name: "Avocado Toast Kit", vendor: "Farm Boy", price: 11.99, emoji: "🥑", desc: "Sourdough, ripe avocados, everything bagel seasoning, lemon." },
+  ],
+  "💊 Pharmacy": [
+    { id: "IC-P001", name: "Travel Pain Relief Pack", vendor: "Shoppers Drug Mart", price: 7.49, emoji: "💊", desc: "Advil + Tylenol dual pack, 20 tablets each." },
+    { id: "IC-P002", name: "Hand Sanitizer (250ml)", vendor: "Personnelle", price: 4.99, emoji: "🧴", desc: "70% alcohol, fragrance-free, pocket size." },
+    { id: "IC-P003", name: "Motion Sickness Relief", vendor: "Gravol", price: 8.99, emoji: "🌀", desc: "Natural ginger formula, non-drowsy, 8 tablets." },
+    { id: "IC-P004", name: "Hydration Electrolyte Pack", vendor: "Nuun", price: 9.99, emoji: "💧", desc: "4-tablet tube, mixed berry flavour." },
+    { id: "IC-P005", name: "Travel First Aid Kit", vendor: "Johnson & Johnson", price: 14.99, emoji: "🩹", desc: "20-piece compact kit for on-the-go." },
+    { id: "IC-P006", name: "Eye Drops (Dry Eyes)", vendor: "Systane", price: 11.49, emoji: "👁️", desc: "Preservative-free lubricating drops, 0.5ml vials." },
+  ],
+  "📚 Books & Magazines": [
+    { id: "IC-B001", name: "Globe and Mail (Today)", vendor: "Indigo", price: 4.50, emoji: "📰", desc: "Today's print edition with full weekend magazine." },
+    { id: "IC-B002", name: "Canadian Geographic", vendor: "Indigo", price: 6.99, emoji: "🗺️", desc: "Latest issue — Canada's national geography magazine." },
+    { id: "IC-B003", name: "Bestseller Fiction Grab", vendor: "Chapters", price: 21.99, emoji: "📖", desc: "Current #1 Canadian bestselling novel." },
+    { id: "IC-B004", name: "Travel Journal & Pen Set", vendor: "Moleskine", price: 24.99, emoji: "📓", desc: "Softcover ruled notebook with matching ballpoint pen." },
+    { id: "IC-B005", name: "Sudoku & Crossword Book", vendor: "Chapters", price: 9.99, emoji: "🔢", desc: "300 mixed-difficulty puzzles, perfect for long journeys." },
+    { id: "IC-B006", name: "Kids Activity Book", vendor: "Scholastic", price: 7.99, emoji: "🖍️", desc: "Ages 4–8, stickers, mazes, colouring pages." },
+  ],
+  "🎁 Gifts": [
+    { id: "IC-G001", name: "Local Wildflower Honey", vendor: "Beeking", price: 16.99, emoji: "🍯", desc: "Raw Ontario wildflower honey, 250g glass jar." },
+    { id: "IC-G002", name: "Artisan Chocolate Box", vendor: "Chocolats Favoris", price: 22.99, emoji: "🍫", desc: "12-piece assorted Québec artisan chocolates." },
+    { id: "IC-G003", name: "Lavender Bath Bundle", vendor: "Lush", price: 28.99, emoji: "🛁", desc: "Bath bomb, soap bar, and mini lotion — gift wrapped." },
+    { id: "IC-G004", name: "Maple Syrup Gift Set", vendor: "Decacer", price: 19.99, emoji: "🍁", desc: "Three 100ml bottles — light, medium, dark amber." },
+    { id: "IC-G005", name: "Wine (Red, 750ml)", vendor: "LCBO", price: 18.95, emoji: "🍷", desc: "Ontario VQA Cabernet Franc, Niagara Peninsula." },
+    { id: "IC-G006", name: "Succulent Plant Kit", vendor: "Home Depot Garden", price: 14.99, emoji: "🌵", desc: "3 mini succulents in terracotta pots, ready to gift." },
+  ],
+  "🛒 Grocery": [
+    { id: "IC-GR001", name: "Trail Mix (500g)", vendor: "Bulk Barn", price: 8.99, emoji: "🥜", desc: "Mixed nuts, dried cranberries, dark chocolate chips." },
+    { id: "IC-GR002", name: "Sparkling Water 6-Pack", vendor: "San Pellegrino", price: 7.49, emoji: "💦", desc: "330ml cans, natural mineral water." },
+    { id: "IC-GR003", name: "Kettle Chips (Large)", vendor: "Lay's Kettle", price: 5.49, emoji: "🥔", desc: "Sea salt & vinegar, 220g sharing bag." },
+    { id: "IC-GR004", name: "Baby Wipes (72 pack)", vendor: "Pampers", price: 6.99, emoji: "👶", desc: "Sensitive, fragrance-free, resealable pack." },
+    { id: "IC-GR005", name: "Protein Bar 4-Pack", vendor: "RXBAR", price: 12.99, emoji: "💪", desc: "Chocolate sea salt, whole food ingredients." },
+    { id: "IC-GR006", name: "Oat Milk Latte (2-pack)", vendor: "Minor Figures", price: 6.99, emoji: "☕", desc: "Barista oat milk cold brew, ready to drink." },
+  ],
+};
+
+const ORDER_STEPS = [
+  { icon: "🛒", label: "Order placed",           detail: "Sent to Instacart network" },
+  { icon: "🏪", label: "Shopper picking",         detail: "At store near your stop" },
+  { icon: "🚗", label: "En route to station",     detail: "Heading to platform" },
+  { icon: "🤝", label: "Handoff to VIA staff",    detail: "Staff signed & received" },
+  { icon: "🚆", label: "Delivered to your seat",  detail: "Enjoy your order!" },
+];
+
+function TabInstacart() {
+  const now = Date.now();
+  const stops = DEMO_STOPS.map((s) => ({
+    ...s,
+    eta: new Date(now + s.offset * 60000),
+    minutesAway: s.offset,
+    eligible: !s.departed && s.offset >= MIN_LEAD_MIN,
+  }));
+
+  const [selectedStop, setSelectedStop] = useState(() => stops.find((s) => s.eligible) || null);
+  const [activeCategory, setActiveCategory] = useState(Object.keys(INSTACART_CATALOGUE)[0]);
+  const [cart, setCart] = useState([]);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [orderPlaced, setOrderPlaced] = useState(false);
+  const [orderStep, setOrderStep] = useState(0);
+  const [orderId, setOrderId] = useState("");
+
+  const allItems = Object.values(INSTACART_CATALOGUE).flat();
+  const cartCount = cart.reduce((s, c) => s + c.qty, 0);
+  const cartTotal = cart.reduce((s, c) => {
+    const item = allItems.find((i) => i.id === c.id);
+    return s + (item ? item.price * c.qty : 0);
+  }, 0);
+
+  const addToCart = (item) => {
+    setCart((prev) => {
+      const ex = prev.find((c) => c.id === item.id);
+      return ex ? prev.map((c) => c.id === item.id ? { ...c, qty: c.qty + 1 } : c)
+                : [...prev, { id: item.id, qty: 1 }];
+    });
+  };
+  const removeFromCart = (id) => setCart((p) => p.filter((c) => c.id !== id));
+  const changeQty = (id, qty) => qty <= 0 ? removeFromCart(id) : setCart((p) => p.map((c) => c.id === id ? { ...c, qty } : c));
+
+  const handlePlaceOrder = () => {
+    const id = `IC-${String(Math.floor(Math.random() * 90000) + 10000)}`;
+    setOrderId(id);
+    setOrderPlaced(true);
+    setCartOpen(false);
+    setOrderStep(1);
+    // Simulate progression through steps
+    [2000, 5000, 9000, 14000].forEach((delay, i) => {
+      setTimeout(() => setOrderStep(i + 2), delay);
+    });
+    // Save to purchase history
+    const entry = {
+      orderId: id,
+      date: new Date().toISOString(),
+      total: cartTotal.toFixed(2),
+      status: "Confirmed",
+      source: "Instacart",
+      stop: selectedStop?.station,
+      items: cart.map((c) => {
+        const item = allItems.find((i) => i.id === c.id);
+        return { id: c.id, name: item?.name || c.id, qty: c.qty, price: `$${item?.price.toFixed(2)}` };
+      }),
+    };
+    const prev = JSON.parse(localStorage.getItem("railopt_orders") || "[]");
+    localStorage.setItem("railopt_orders", JSON.stringify([entry, ...prev]));
+    setCart([]);
+  };
+
+  const cutoffTime = selectedStop ? new Date(now + (selectedStop.offset - MIN_LEAD_MIN) * 60000) : null;
+  const cutoffStr = cutoffTime ? cutoffTime.toLocaleTimeString("en-CA", { hour: "2-digit", minute: "2-digit" }) : "";
+  const etaStr = selectedStop ? selectedStop.eta.toLocaleTimeString("en-CA", { hour: "2-digit", minute: "2-digit" }) : "";
+
+  return (
+    <div style={{ maxWidth: 720, margin: "0 auto" }}>
+
+      {/* Hero banner */}
+      <div style={{ background: "linear-gradient(135deg, #003D1F 0%, #00532A 100%)", borderRadius: 16, padding: "1.25rem 1.5rem", marginBottom: "1.25rem", color: "#fff" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "0.5rem" }}>
+          <span style={{ fontSize: "1.5rem" }}>🛒</span>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: "1.05rem" }}>Station Pickup via Instacart</div>
+            <div style={{ fontSize: "0.75rem", opacity: 0.8 }}>Order from any local store. VIA Rail staff deliver to your seat.</div>
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 16, marginTop: "0.75rem", flexWrap: "wrap" }}>
+          {[["🏪", "Any local store"], ["🤝", "VIA staff handoff"], ["🚆", "Seat delivery"]].map(([icon, label]) => (
+            <div key={label} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.75rem", opacity: 0.9 }}>
+              <span>{icon}</span><span>{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Train schedule + stop selector */}
+      <div className="card" style={{ padding: "1.1rem 1.25rem", marginBottom: "1.25rem" }}>
+        <div style={{ fontWeight: 800, fontSize: "0.88rem", color: "#111", marginBottom: "0.75rem", display: "flex", alignItems: "center", gap: 6 }}>
+          <Train size={15} color="#FFCC00" /> Choose your pickup stop
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          {stops.map((stop) => {
+            const isSelected = selectedStop?.station === stop.station;
+            const timeStr = stop.departed ? "Departed" : stop.eta.toLocaleTimeString("en-CA", { hour: "2-digit", minute: "2-digit" });
+            const hoursAway = (stop.offset / 60).toFixed(1);
+            return (
+              <div
+                key={stop.station}
+                onClick={() => stop.eligible && setSelectedStop(stop)}
+                style={{
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  padding: "0.6rem 0.85rem", borderRadius: 10, cursor: stop.eligible ? "pointer" : "default",
+                  background: isSelected ? "#FFCC00" : stop.eligible ? "#fafaf9" : "#f5f5f4",
+                  border: isSelected ? "1.5px solid #b45309" : "1.5px solid #e7e5e4",
+                  opacity: stop.departed ? 0.4 : 1,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 8, height: 8, borderRadius: "50%", background: stop.departed ? "#9ca3af" : stop.eligible ? "#16a34a" : "#f59e0b" }} />
+                  <div>
+                    <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "#111" }}>{stop.station}</span>
+                    <span style={{ fontSize: "0.72rem", color: "#6b7280", marginLeft: 6 }}>{stop.province}</span>
+                  </div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#111" }}>{timeStr}</div>
+                  {!stop.departed && (
+                    <div style={{ fontSize: "0.68rem", color: stop.eligible ? "#16a34a" : "#f59e0b", fontWeight: 600 }}>
+                      {stop.eligible ? `✓ ${hoursAway}h away — eligible` : `⚠ Only ${hoursAway}h — too soon`}
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        {selectedStop && (
+          <div style={{ marginTop: "0.85rem", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.65rem 0.85rem", display: "flex", alignItems: "center", gap: 8 }}>
+            <Clock size={13} color="#16a34a" />
+            <span style={{ fontSize: "0.78rem", color: "#166534", fontWeight: 600 }}>
+              Order by <strong>{cutoffStr}</strong> to receive at {selectedStop.station} (arriving {etaStr})
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Category tabs */}
+      <div style={{ display: "flex", gap: "0.4rem", marginBottom: "1rem", overflowX: "auto", paddingBottom: 4 }}>
+        {Object.keys(INSTACART_CATALOGUE).map((cat) => (
+          <button key={cat} onClick={() => setActiveCategory(cat)} style={{
+            padding: "0.4rem 0.85rem", borderRadius: 20, border: "none", cursor: "pointer", whiteSpace: "nowrap",
+            fontWeight: 700, fontSize: "0.78rem",
+            background: activeCategory === cat ? "#003D1F" : "#f5f5f4",
+            color: activeCategory === cat ? "#fff" : "#6b7280",
+          }}>{cat}</button>
+        ))}
+      </div>
+
+      {/* Product grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(165px, 1fr))", gap: "0.85rem", marginBottom: "1.5rem" }}>
+        {INSTACART_CATALOGUE[activeCategory].map((item) => {
+          const inCart = cart.find((c) => c.id === item.id);
+          return (
+            <div key={item.id} className="card slide-up" style={{ display: "flex", flexDirection: "column", padding: 0, overflow: "hidden" }}>
+              <div style={{ background: "#f0fdf4", height: 110, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, position: "relative" }}>
+                <span style={{ fontSize: "2.6rem" }}>{item.emoji}</span>
+                <span style={{ fontSize: "0.58rem", fontWeight: 700, color: "#16a34a", letterSpacing: "0.06em", textTransform: "uppercase" }}>{item.vendor}</span>
+                <span style={{ position: "absolute", top: 6, right: 6, background: "#003D1F", color: "#fff", borderRadius: 6, padding: "2px 6px", fontSize: "0.58rem", fontWeight: 800 }}>Instacart</span>
+              </div>
+              <div style={{ padding: "0.7rem", display: "flex", flexDirection: "column", gap: "0.3rem", flex: 1 }}>
+                <p style={{ fontWeight: 700, fontSize: "0.83rem", color: "#111", lineHeight: 1.3, margin: 0 }}>{item.name}</p>
+                <p style={{ fontSize: "0.68rem", color: "#6b7280", margin: 0, lineHeight: 1.4 }}>{item.desc}</p>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto", paddingTop: "0.5rem" }}>
+                  <span style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111" }}>${item.price.toFixed(2)}</span>
+                  {inCart ? (
+                    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                      <button className="qty-btn" onClick={() => changeQty(item.id, inCart.qty - 1)} style={{ width: 22, height: 22, fontSize: "0.8rem" }}>−</button>
+                      <span style={{ fontWeight: 700, minWidth: 14, textAlign: "center", fontSize: "0.85rem" }}>{inCart.qty}</span>
+                      <button className="qty-btn" onClick={() => addToCart(item)} style={{ width: 22, height: 22, fontSize: "0.8rem" }}>+</button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => selectedStop ? addToCart(item) : null}
+                      disabled={!selectedStop}
+                      style={{ background: selectedStop ? "#FFCC00" : "#e5e7eb", border: "none", borderRadius: 8, padding: "0.3rem 0.65rem", fontSize: "0.75rem", fontWeight: 700, cursor: selectedStop ? "pointer" : "not-allowed", color: "#111" }}
+                    >+ Add</button>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* How it works */}
+      <div className="card" style={{ padding: "1.25rem", marginBottom: "5rem" }}>
+        <div style={{ fontWeight: 800, fontSize: "0.88rem", color: "#111", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 6 }}>
+          <Users size={15} color="#FFCC00" /> How it works
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+          {ORDER_STEPS.map((step, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+              <div style={{ width: 34, height: 34, borderRadius: "50%", background: "#f5f5f4", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1rem", flexShrink: 0 }}>
+                {step.icon}
+              </div>
+              <div style={{ paddingTop: 4 }}>
+                <div style={{ fontWeight: 700, fontSize: "0.83rem", color: "#111" }}>{step.label}</div>
+                <div style={{ fontSize: "0.72rem", color: "#6b7280" }}>{step.detail}</div>
+              </div>
+              {i < ORDER_STEPS.length - 1 && (
+                <div style={{ position: "absolute", width: 2, height: 20, background: "#e5e7eb", marginLeft: 16, marginTop: 34 }} />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Cart bar */}
+      {cartCount > 0 && !orderPlaced && (
+        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 100, padding: "0.85rem 1rem", background: "rgba(255,255,255,0.95)", backdropFilter: "blur(12px)", borderTop: "1px solid #E8E8E8" }}>
+          <div style={{ maxWidth: 720, margin: "0 auto" }}>
+            <button onClick={() => setCartOpen(true)} style={{ width: "100%", background: "#003D1F", color: "#fff", fontWeight: 800, fontSize: "0.95rem", border: "none", borderRadius: 50, padding: "0.85rem 1.5rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div style={{ background: "#FFCC00", color: "#111", borderRadius: "50%", width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", fontWeight: 800 }}>{cartCount}</div>
+                Review Pickup Order
+              </div>
+              <span>${cartTotal.toFixed(2)}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Order tracking screen */}
+      {orderPlaced && (
+        <div className="card slide-up" style={{ padding: "1.5rem", marginBottom: "5rem" }}>
+          <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+            <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>{ORDER_STEPS[orderStep]?.icon}</div>
+            <div style={{ fontWeight: 800, fontSize: "1.1rem", color: "#111" }}>{ORDER_STEPS[orderStep]?.label}</div>
+            <div style={{ fontSize: "0.8rem", color: "#6b7280", marginTop: 4 }}>{ORDER_STEPS[orderStep]?.detail}</div>
+            <div style={{ fontSize: "0.72rem", color: "#9ca3af", marginTop: 6 }}>Order {orderId} · Pickup at {selectedStop?.station}</div>
+          </div>
+
+          {/* Step tracker */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem", padding: "0 0.25rem" }}>
+            {ORDER_STEPS.map((step, i) => (
+              <div key={i} style={{ display: "flex", alignItems: "center", flex: i < ORDER_STEPS.length - 1 ? 1 : 0 }}>
+                <div style={{ width: 28, height: 28, borderRadius: "50%", background: i <= orderStep ? "#003D1F" : "#e5e7eb", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.75rem", flexShrink: 0, transition: "background 0.4s" }}>
+                  {i < orderStep ? <CheckCircle size={14} color="#FFCC00" /> : <span>{step.icon}</span>}
+                </div>
+                {i < ORDER_STEPS.length - 1 && (
+                  <div style={{ flex: 1, height: 3, background: i < orderStep ? "#003D1F" : "#e5e7eb", margin: "0 3px", transition: "background 0.4s" }} />
+                )}
+              </div>
+            ))}
+          </div>
+
+          {orderStep < ORDER_STEPS.length - 1 ? (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, color: "#6b7280", fontSize: "0.8rem" }}>
+              <Loader size={14} className="animate-spin" /> Live tracking updating…
+            </div>
+          ) : (
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#16a34a", marginBottom: "0.75rem" }}>🎉 Delivered! Enjoy your order.</div>
+              <button onClick={() => { setOrderPlaced(false); setOrderStep(0); }} style={{ background: "#FFCC00", border: "none", borderRadius: 50, padding: "0.65rem 1.5rem", fontWeight: 800, fontSize: "0.85rem", cursor: "pointer" }}>Order Again</button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Cart drawer */}
+      {cartOpen && (
+        <div style={{ position: "fixed", inset: 0, zIndex: 200 }}>
+          <div onClick={() => setCartOpen(false)} style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(2px)" }} />
+          <div className="slide-up" style={{ position: "absolute", bottom: 0, left: 0, right: 0, background: "#fff", borderRadius: "20px 20px 0 0", padding: "1.5rem", maxHeight: "85vh", overflowY: "auto", boxShadow: "0 -8px 40px rgba(0,0,0,0.15)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
+              <h2 style={{ fontWeight: 800, fontSize: "1.1rem", color: "#111", margin: 0 }}>Pickup Order</h2>
+              <button onClick={() => setCartOpen(false)} style={{ background: "#F5F5F5", border: "none", borderRadius: "50%", width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}><X size={16} color="#6b7280" /></button>
+            </div>
+
+            {/* Pickup stop summary */}
+            {selectedStop && (
+              <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.65rem 0.85rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 8 }}>
+                <Train size={13} color="#16a34a" />
+                <div style={{ fontSize: "0.78rem", color: "#166534", fontWeight: 600 }}>
+                  Pickup at <strong>{selectedStop.station}</strong> · arriving {etaStr} · order by <strong>{cutoffStr}</strong>
+                </div>
+              </div>
+            )}
+
+            {/* Logistics chain */}
+            <div style={{ background: "#f9fafb", borderRadius: 10, padding: "0.75rem 1rem", marginBottom: "1rem" }}>
+              <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.5rem" }}>Delivery chain</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap", fontSize: "0.78rem", fontWeight: 600, color: "#374151" }}>
+                <span>🛒 Instacart picks</span>
+                <ChevronRight size={12} color="#9ca3af" />
+                <span>🚗 Delivers to platform</span>
+                <ChevronRight size={12} color="#9ca3af" />
+                <span>🤝 VIA staff receives</span>
+                <ChevronRight size={12} color="#9ca3af" />
+                <span>🚆 Your seat</span>
+              </div>
+            </div>
+
+            {/* Cart items */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem", marginBottom: "1.25rem" }}>
+              {cart.map((c) => {
+                const item = allItems.find((i) => i.id === c.id);
+                if (!item) return null;
+                return (
+                  <div key={c.id} style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.65rem", background: "#F9F9F9", borderRadius: 10 }}>
+                    <div style={{ fontSize: "1.6rem", width: 44, height: 44, background: "#f0fdf4", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{item.emoji}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontWeight: 700, fontSize: "0.83rem", color: "#111", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.name}</p>
+                      <p style={{ fontSize: "0.7rem", color: "#6b7280", margin: 0 }}>{item.vendor}</p>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}>
+                      <button className="qty-btn" onClick={() => changeQty(c.id, c.qty - 1)} style={{ width: 22, height: 22 }}>−</button>
+                      <span style={{ fontWeight: 700, minWidth: 16, textAlign: "center", fontSize: "0.85rem" }}>{c.qty}</span>
+                      <button className="qty-btn" onClick={() => changeQty(c.id, c.qty + 1)} style={{ width: 22, height: 22 }}>+</button>
+                    </div>
+                    <div style={{ textAlign: "right", flexShrink: 0, minWidth: 52 }}>
+                      <p style={{ fontWeight: 800, fontSize: "0.88rem", color: "#111", margin: 0 }}>${(item.price * c.qty).toFixed(2)}</p>
+                      <button onClick={() => removeFromCart(c.id)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}><Trash2 size={12} color="#ef4444" /></button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{ borderTop: "1px solid #E8E8E8", paddingTop: "1rem", marginBottom: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontWeight: 700, color: "#111" }}>Order Total</span>
+              <span style={{ fontWeight: 800, fontSize: "1.2rem", color: "#111" }}>${cartTotal.toFixed(2)}</span>
+            </div>
+            <p style={{ fontSize: "0.68rem", color: "#9ca3af", marginBottom: "1rem", textAlign: "center" }}>Instacart service fees and taxes applied at checkout · Delivered to seat {JSON.parse(localStorage.getItem("railopt_account") || "{}").seatNumber || "—"}</p>
+
+            <button onClick={handlePlaceOrder} style={{ width: "100%", background: "#003D1F", color: "#fff", fontWeight: 800, fontSize: "1rem", border: "none", borderRadius: 50, padding: "0.9rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+              <ShoppingBag size={18} /> Place Pickup Order
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 const TABS = [
-  { id: "retail",   emoji: "🛍️", label: "Shop" },
-  { id: "discover", emoji: "🧭", label: "Discover" },
-  { id: "account",  emoji: "👤", label: "Account" },
+  { id: "retail",    emoji: "🛍️", label: "Shop" },
+  { id: "instacart", emoji: "🛒", label: "Pickup" },
+  { id: "discover",  emoji: "🧭", label: "Discover" },
+  { id: "account",   emoji: "👤", label: "Account" },
 ];
 
 export default function App() {
@@ -1621,9 +2024,10 @@ export default function App() {
 
       {/* Content */}
       <main style={{ maxWidth: 960, margin: "0 auto", padding: "1.25rem 1rem" }}>
-        {tab === "retail"   && <Tab1 shopStation={shopStation} onStationHandled={() => setShopStation("All")} />}
-        {tab === "discover" && <Tab4 onShopStation={handleShopStation} />}
-        {tab === "account"  && <TabAccount />}
+        {tab === "retail"    && <Tab1 shopStation={shopStation} onStationHandled={() => setShopStation("All")} />}
+        {tab === "instacart" && <TabInstacart />}
+        {tab === "discover"  && <Tab4 onShopStation={handleShopStation} />}
+        {tab === "account"   && <TabAccount />}
       </main>
     </div>
   );
