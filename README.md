@@ -143,20 +143,14 @@ All items are **non-perishable and locally produced** — sourced from regional 
 
 ## SDG Alignment
 
-### SDG 7 — Affordable and Clean Energy
-Rail optimization via siding conflict resolution reduces idle fuel burn. Each avoided idling minute produces measurable CO₂ reductions, demonstrating how AI dispatch contributes to a cleaner network.
-
 ### SDG 8 — Decent Work and Economic Growth
-The platform creates a **digital marketplace channel for local artisans and small producers** who would otherwise lack access to VIA Rail's 4+ million annual passenger touchpoints — from Limestone City Craft Co. in Kingston to Indigenous art vendors in Prince Rupert.
-
-### SDG 9 — Industry, Innovation and Resilient Infrastructure
-The store-and-forward offline queue ensures orders placed during cellular dead zones (tunnels, rural stretches) are never lost — cryptographically queued and synced at the next station platform connection. Digital commerce that works as reliably as the rail itself.
+The platform creates a **digital marketplace channel for local artisans and small producers** who would otherwise lack access to VIA Rail's 4+ million annual passenger touchpoints — from Limestone City Craft Co. in Kingston to Indigenous art vendors in Prince Rupert. The AI Personalize feature generates marketing copy for their products on demand, lowering the barrier to digital commerce for micro-vendors with no e-commerce presence.
 
 ### SDG 10 — Reduced Inequalities
-Rural and small-station vendors (Cobourg, Churchill, Miramichi) get equal digital shelf space alongside major urban stations. Phase 1 prioritizes regional non-perishables to onboard the highest-impact, lowest-logistics-complexity vendors first.
+Without this platform, vendors in Churchill, Miramichi, or Senneterre have zero access to the passenger market that Toronto and Montréal vendors take for granted. The catalogue gives equal digital shelf space to every station regardless of size. The geolocation feature further levels the playing field by surfacing nearby vendors first — a passenger near Jasper sees Jasper products, not just urban ones.
 
 ### SDG 11 — Sustainable Cities and Communities
-Enhancing the economic utility of rail travel supports modal shift away from private vehicles. Surfacing local cultural products from smaller corridor communities strengthens their identity and commerce reach to thousands of daily passengers.
+Making rail travel more commercially useful supports modal shift away from private vehicles. If passengers can shop, discover destinations, and place orders onboard, the train becomes a more compelling alternative to driving. The Discover tab also actively promotes smaller corridor communities (Baie-Saint-Paul, The Pas, Cobourg) to passengers who might not have considered them — strengthening local tourism and cultural economy.
 
 ---
 
