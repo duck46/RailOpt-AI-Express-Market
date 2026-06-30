@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import {
-  ShoppingCart, Wrench, ShieldCheck, WifiOff, Wifi,
+  ShoppingCart, Wrench, ShieldCheck,
   Plus, Trash2, Zap, Truck, Gauge, CloudLightning,
   CheckCircle, RefreshCw, MapPin, Star, Activity,
   AlertTriangle, Database, Send, Loader, Train, X, Compass, Navigation,
@@ -240,7 +240,7 @@ const ITEM_VISUALS = {
 
 // ─── Cart drawer ──────────────────────────────────────────────────────────────
 
-function OrderConfirmation({ orderNumber, total, itemCount, offline, onClose }) {
+function OrderConfirmation({ orderNumber, total, itemCount, onClose }) {
   return (
     <div style={{ textAlign: "center", padding: "2rem 1rem 1rem" }}>
       {/* Success icon */}
@@ -270,15 +270,6 @@ function OrderConfirmation({ orderNumber, total, itemCount, offline, onClose }) 
         </div>
       </div>
 
-      {offline && (
-        <div style={{ background: "#FFF3E0", border: "1px solid #ffcc0060", borderRadius: 12, padding: "0.75rem 1rem", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: 8 }}>
-          <WifiOff size={14} color="#f59e0b" />
-          <span style={{ fontSize: "0.78rem", color: "#92400e", fontWeight: 600 }}>
-            Dead zone active — order queued and will sync at the next station platform
-          </span>
-        </div>
-      )}
-
       <button
         onClick={onClose}
         style={{ width: "100%", background: "#FFCC00", color: "#111", fontWeight: 800, fontSize: "1rem", border: "none", borderRadius: 50, padding: "0.9rem", cursor: "pointer" }}
@@ -289,7 +280,7 @@ function OrderConfirmation({ orderNumber, total, itemCount, offline, onClose }) 
   );
 }
 
-function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, syncing, confirmed, orderNumber, orderTotal, offline, deadlineSecondsLeft }) {
+function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, syncing, confirmed, orderNumber, orderTotal, deadlineSecondsLeft }) {
   const total = cart.reduce((sum, c) => {
     const item = items.find((i) => i.id === c.id);
     return sum + (item ? item.price * c.qty : 0);
@@ -312,7 +303,6 @@ function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, synci
             orderNumber={orderNumber}
             total={orderTotal}
             itemCount={itemCount}
-            offline={offline}
             onClose={onClose}
           />
         ) : (
@@ -323,15 +313,6 @@ function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, synci
                 <X size={18} color="#6b7280" />
               </button>
             </div>
-
-            {offline && (
-              <div style={{ background: "#FFF3E0", border: "1px solid #ffcc0060", borderRadius: 12, padding: "0.75rem 1rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 8 }}>
-                <WifiOff size={14} color="#f59e0b" />
-                <span style={{ fontSize: "0.8rem", color: "#92400e", fontWeight: 600 }}>
-                  Dead zone active — orders will sync at next station platform
-                </span>
-              </div>
-            )}
 
             {deadlineSecondsLeft !== null && deadlineSecondsLeft > 0 && cart.length > 0 && (() => {
               const mins = Math.floor(deadlineSecondsLeft / 60);
@@ -424,7 +405,7 @@ function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, synci
 
 // ─── Tab 1: Shop ──────────────────────────────────────────────────────────────
 
-function Tab1({ offline, shopStation = "All", onStationHandled }) {
+function Tab1({ shopStation = "All", onStationHandled }) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [cart, setCart] = useState([]);
@@ -619,16 +600,8 @@ function Tab1({ offline, shopStation = "All", onStationHandled }) {
           onRemove={removeFromCart} onChangeQty={changeQty}
           onSync={handlePlaceOrder} syncing={syncing}
           confirmed={confirmed} orderNumber={confirmedOrderNumber} orderTotal={confirmedTotal}
-          offline={offline} deadlineSecondsLeft={deadlineSecondsLeft}
+          deadlineSecondsLeft={deadlineSecondsLeft}
         />
-      )}
-
-      {/* Offline banner */}
-      {offline && (
-        <div className="slide-up" style={{ background: "#FFF8E1", border: "1px solid #FFCC00", borderRadius: 12, padding: "0.75rem 1rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 8 }}>
-          <WifiOff size={14} color="#b45309" />
-          <span style={{ fontSize: "0.8rem", color: "#92400e", fontWeight: 600 }}>Cellular dead zone — orders will sync at the next station platform</span>
-        </div>
       )}
 
       {/* Location detection banner */}
@@ -1598,7 +1571,6 @@ const TABS = [
 ];
 
 export default function App() {
-  const [offline, setOffline] = useState(false);
   const [tab, setTab] = useState("retail");
   const [shopStation, setShopStation] = useState("All");
 
@@ -1624,24 +1596,6 @@ export default function App() {
               </div>
             </div>
 
-            <button
-              onClick={() => setOffline((v) => !v)}
-              style={{
-                display: "flex", alignItems: "center", gap: 6,
-                padding: "0.4rem 0.85rem", borderRadius: 50,
-                border: offline ? "1.5px solid #fca5a5" : "1.5px solid #E8E8E8",
-                background: offline ? "#FEF2F2" : "#F5F5F5",
-                color: offline ? "#ef4444" : "#6b7280",
-                fontSize: "0.7rem", fontWeight: 700, cursor: "pointer",
-                letterSpacing: "0.04em", transition: "all 0.15s",
-              }}
-            >
-              {offline ? <WifiOff size={13} /> : <Wifi size={13} />}
-              <span className="hidden sm:inline">Dead Zone</span>
-              <span style={{ background: offline ? "#ef4444" : "#E8E8E8", color: offline ? "#fff" : "#9ca3af", borderRadius: 99, padding: "1px 6px", fontSize: "0.6rem", fontWeight: 800 }}>
-                {offline ? "ON" : "OFF"}
-              </span>
-            </button>
           </div>
 
           {/* Tabs */}
@@ -1667,7 +1621,7 @@ export default function App() {
 
       {/* Content */}
       <main style={{ maxWidth: 960, margin: "0 auto", padding: "1.25rem 1rem" }}>
-        {tab === "retail"   && <Tab1 offline={offline} shopStation={shopStation} onStationHandled={() => setShopStation("All")} />}
+        {tab === "retail"   && <Tab1 shopStation={shopStation} onStationHandled={() => setShopStation("All")} />}
         {tab === "discover" && <Tab4 onShopStation={handleShopStation} />}
         {tab === "account"  && <TabAccount />}
       </main>
