@@ -72,7 +72,7 @@ VIA Rail spent **$51.4M on onboard product costs in 2025 (+14.5% YoY)** with no 
 | Stream | Rate | Notes |
 |--------|------|-------|
 | Pickup commission | 5% per order | On every Instacart station pickup |
-| Platform fee | $0.99 per order | Charged to passenger at checkout |
+| Platform fee | $1.99 per order | Charged to passenger at checkout |
 | Shop commission | 15% per artisan sale | Standard marketplace take rate |
 | Phase 2 SaaS | $X/month to VIA Rail | AI demand forecasting licence |
 

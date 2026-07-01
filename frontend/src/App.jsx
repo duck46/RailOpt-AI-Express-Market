@@ -2807,13 +2807,15 @@ const STATION_TZ = {
 
 // Demo train schedule: The Canadian (Toronto → Vancouver) — 4-day journey
 // Offsets in minutes from "now". Shows the real long-haul pain point.
+// trainDelayMins: simulates live VIA Rail train status feed (positive = late, negative = early)
+// storeDistanceKm: walking distance from platform to nearest pickup-eligible store
 const DEMO_STOPS = [
-  { station: "Toronto",       province: "ON", offset: -60,  departed: true },
-  { station: "Sudbury",       province: "ON", offset: 185 },
-  { station: "Sioux Lookout", province: "ON", offset: 420,  note: "The Rexall & Subway stop — passengers used to sprint here during 20-min stops. Order ahead instead." },
-  { station: "Winnipeg",      province: "MB", offset: 780,  note: "Station concessions closed at night — order ahead, your shopper meets you at the platform." },
-  { station: "Saskatoon",     province: "SK", offset: 1140 },
-  { station: "Vancouver",     province: "BC", offset: 1560 },
+  { station: "Toronto",       province: "ON", offset: -60,  departed: true,  trainDelayMins: 0,   storeDistanceKm: 0.3 },
+  { station: "Sudbury",       province: "ON", offset: 185,                   trainDelayMins: 12,  storeDistanceKm: 0.4 },
+  { station: "Sioux Lookout", province: "ON", offset: 420,  note: "The Rexall & Subway stop — passengers used to sprint here during 20-min stops. Order ahead instead.", trainDelayMins: 22, storeDistanceKm: 0.2 },
+  { station: "Winnipeg",      province: "MB", offset: 780,  note: "Station concessions closed at night — order ahead, your shopper meets you at the platform.", trainDelayMins: 8,  storeDistanceKm: 0.6 },
+  { station: "Saskatoon",     province: "SK", offset: 1140,                  trainDelayMins: 0,   storeDistanceKm: 1.8 },
+  { station: "Vancouver",     province: "BC", offset: 1560,                  trainDelayMins: 0,   storeDistanceKm: 0.3 },
 ];
 const MIN_LEAD_MIN = 120;
 
@@ -2888,12 +2890,17 @@ function TabInstacart() {
   const now = Date.now();
   const stops = DEMO_STOPS.map((s) => {
     const tz = STATION_TZ[s.station] || "America/Toronto";
-    const eta = new Date(now + s.offset * 60000);
+    // Adjust ETA by live train delay from VIA Rail status feed
+    const delayMins = s.trainDelayMins || 0;
+    const adjustedOffset = s.offset + delayMins;
+    const eta = new Date(now + adjustedOffset * 60000);
     // Shopper needs to be at store ~30 min before train arrives to allow VIA handoff
-    const shopperDeadline = new Date(now + (s.offset - 30) * 60000);
+    const shopperDeadline = new Date(now + (adjustedOffset - 30) * 60000);
     const storeOpen = isStoreOpen(shopperDeadline, tz);
-    const eligible = !s.departed && s.offset >= MIN_LEAD_MIN && storeOpen;
-    return { ...s, eta, minutesAway: s.offset, eligible, storeOpen, tz };
+    const eligible = !s.departed && adjustedOffset >= MIN_LEAD_MIN && storeOpen;
+    // Warn if store is >1km from platform — shopper may be late if train is on time
+    const distanceRisk = (s.storeDistanceKm || 0) > 1.0;
+    return { ...s, eta, minutesAway: adjustedOffset, delayMins, eligible, storeOpen, tz, distanceRisk };
   });
 
   const [selectedStop, setSelectedStop] = useState(() => stops.find((s) => s.eligible) || null);
@@ -2949,7 +2956,7 @@ function TabInstacart() {
     setCart([]);
   };
 
-  const cutoffTime = selectedStop ? new Date(now + (selectedStop.offset - MIN_LEAD_MIN) * 60000) : null;
+  const cutoffTime = selectedStop ? new Date(now + (selectedStop.minutesAway - MIN_LEAD_MIN) * 60000) : null;
   const cutoffStr = cutoffTime ? cutoffTime.toLocaleTimeString("en-CA", { hour: "2-digit", minute: "2-digit" }) : "";
   const etaStr = selectedStop ? selectedStop.eta.toLocaleTimeString("en-CA", { hour: "2-digit", minute: "2-digit" }) : "";
 
@@ -2980,7 +2987,7 @@ function TabInstacart() {
         <div style={{ marginTop: "0.85rem", paddingTop: "0.75rem", borderTop: "1px solid rgba(255,255,255,0.15)", display: "flex", gap: 16, flexWrap: "wrap", marginBottom: "0.6rem" }}>
           {[
             ["5%", "commission per order", null],
-            ["$0.99", "platform fee per order", null],
+            ["$1.99", "platform fee per order", null],
             ["Phase 2", "SaaS to VIA Rail", "Every Instacart order trains the AI on what passengers on each route actually want. Once we have 6–12 months of data, we sell VIA Rail a demand forecasting licence — telling them exactly what to stock on each route. VIA spent $51.4M on onboard products in 2025 with no demand data behind it."],
           ].map(([val, label, tip]) => (
             <div key={label} style={{ fontSize: "0.72rem", opacity: 0.85, display: "flex", alignItems: "center", gap: 4 }}>
@@ -2997,6 +3004,27 @@ function TabInstacart() {
           </span>
         </div>
       </div>
+
+      {/* Live Train Status banner */}
+      {stops.some(s => s.delayMins > 0 && !s.departed) && (
+        <div style={{ background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 12, padding: "0.65rem 1rem", marginBottom: "0.85rem", display: "flex", alignItems: "flex-start", gap: 8 }}>
+          <span style={{ fontSize: "1rem", flexShrink: 0 }}>🚆</span>
+          <div>
+            <div style={{ fontWeight: 800, fontSize: "0.78rem", color: "#9a3412" }}>Live Train Status · VIA Rail feed</div>
+            <div style={{ fontSize: "0.72rem", color: "#7c2d12", lineHeight: 1.5, marginTop: 2 }}>
+              This train is running <strong>behind schedule</strong>. Pickup ETAs below reflect the adjusted arrival times.
+              Your order cutoff and shopper deadline update automatically.
+            </div>
+            <div style={{ marginTop: "0.4rem", display: "flex", flexWrap: "wrap", gap: 6 }}>
+              {stops.filter(s => s.delayMins > 0 && !s.departed).map(s => (
+                <span key={s.station} style={{ fontSize: "0.68rem", fontWeight: 700, background: "#fed7aa", borderRadius: 20, padding: "2px 8px", color: "#9a3412" }}>
+                  {s.station} +{s.delayMins} min
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Train schedule + stop selector */}
       <div className="card" style={{ padding: "1.1rem 1.25rem", marginBottom: "1.25rem" }}>
@@ -3028,6 +3056,11 @@ function TabInstacart() {
                     <span style={{ fontSize: "0.72rem", color: "#6b7280", marginLeft: 6 }}>{stop.province}</span>
                     {stop.note && (
                       <div style={{ fontSize: "0.67rem", color: "#2563eb", fontWeight: 600, marginTop: 2, maxWidth: 180 }}>{stop.note}</div>
+                    )}
+                    {stop.distanceRisk && stop.eligible && (
+                      <div style={{ fontSize: "0.66rem", color: "#b45309", fontWeight: 600, marginTop: 2, maxWidth: 200, display: "flex", alignItems: "center", gap: 3 }}>
+                        ⚠️ Nearest store is {stop.storeDistanceKm}km from platform — order may be at risk if train runs on time
+                      </div>
                     )}
                   </div>
                 </div>
@@ -3402,7 +3435,7 @@ function TabPitch() {
       <Section num="6" title="Business Model" color="#FFCC00">
         {[
           ["5%", "Commission per Pickup order", "On every Instacart station pickup processed through RailOpt"],
-          ["$0.99", "Platform fee per order", "Charged to passenger at checkout — below psychological resistance threshold"],
+          ["$1.99", "Platform fee per order", "Charged to passenger at checkout — below psychological resistance threshold"],
           ["15%", "Shop commission", "Standard marketplace take rate on every artisan sale"],
           ["SaaS", "Phase 2 licence to VIA Rail", "AI demand forecasting — route-level stocking recommendations"],
         ].map(([rate, name, desc]) => (
