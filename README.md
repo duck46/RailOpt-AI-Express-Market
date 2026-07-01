@@ -64,6 +64,35 @@ VIA Rail spent **$51.4M on onboard product costs in 2025 (+14.5% YoY)** with no 
 
 ---
 
+## Revenue Model
+
+| Stream | Rate | Notes |
+|--------|------|-------|
+| Pickup commission | 5% per order | On every Instacart station pickup |
+| Platform fee | $0.99 per order | Charged to passenger at checkout |
+| Shop commission | 15% per artisan sale | Standard marketplace take rate |
+| Phase 2 SaaS | $X/month to VIA Rail | AI demand forecasting licence |
+
+At 4.4M passengers/year with even 2% conversion on Pickup ($25 AOV) and 5% on Shop ($18 AOV): **~$270K ARR at Phase 1 scale before Phase 2 SaaS revenue kicks in.**
+
+---
+
+## Go-to-Market
+
+**We don't need VIA Rail's permission to launch Phase 1.**
+
+- RailOpt launches as a **standalone passenger app** — no VIA Rail contract required
+- Passengers order Instacart pickups independently; shoppers already service train station areas
+- Artisan vendors sign up as sellers directly; we handle the digital shelf
+- We collect demand data across every route and stop
+
+**Phase 2 is the enterprise sale:**
+Once we have 6–12 months of route-level demand data, we approach VIA Rail with a data-backed proposal: *"Here's exactly what passengers on your Winnipeg run want to buy onboard — here's what you should stock."* VIA Rail's $51.4M onboard product cost problem now has a data-backed solution, and we have the proof.
+
+This sidesteps the 18–36 month Crown Corporation procurement cycle. We build leverage before we knock on the door.
+
+---
+
 ## Why It's Different from the 2018 Metrolinx / PC Express Pilot
 
 Loblaw and Metrolinx ran a grocery pickup pilot at 5 GO Transit stations in 2018. It was shut down. The key differences:
