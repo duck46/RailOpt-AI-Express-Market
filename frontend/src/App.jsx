@@ -614,41 +614,46 @@ function Tab1({ shopStation = "All", onStationHandled }) {
         />
       )}
 
-      {/* Prosperity Impact Banner */}
-      <div style={{ background: "linear-gradient(135deg, #1c1917 0%, #1a2e1a 100%)", border: "1px solid #22c55e40", borderRadius: 14, padding: "1rem 1.1rem", marginBottom: "1rem" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.6rem" }}>
-          <span style={{ fontSize: "1rem" }}>🌱</span>
-          <span style={{ fontWeight: 800, fontSize: "0.82rem", color: "#86efac", letterSpacing: "0.07em", textTransform: "uppercase" }}>Prosperity Impact — SDG 7 · SDG 8 · SDG 10</span>
-        </div>
-        <p style={{ margin: "0 0 0.75rem", fontSize: "0.78rem", color: "#d1fae5", lineHeight: 1.55 }}>
-          Every purchase puts money directly into a <strong style={{ color: "#86efac" }}>local Canadian artisan's hands</strong> — a Churchill candle maker, a Miramichi soap producer, a Jasper woodworker. No middlemen. No urban gatekeepers.
-        </p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: "0.75rem" }}>
-          {[
-            { val: "120+", label: "Local Products" },
-            { val: "41",   label: "VIA Stations" },
-            { val: "8",    label: "Provinces" },
-            { val: "4.4M", label: "Annual Passengers" },
-          ].map(({ val, label }) => (
-            <div key={label} style={{ background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.55rem 0.4rem", textAlign: "center" }}>
-              <div style={{ fontWeight: 800, fontSize: "1rem", color: "#4ade80", lineHeight: 1 }}>{val}</div>
-              <div style={{ fontSize: "0.62rem", color: "#86efac", marginTop: 3, lineHeight: 1.3 }}>{label}</div>
-            </div>
-          ))}
-        </div>
-        <div style={{ background: "rgba(255,204,0,0.08)", border: "1px solid rgba(255,204,0,0.25)", borderRadius: 10, padding: "0.55rem 0.8rem", display: "flex", alignItems: "flex-start", gap: 8, marginBottom: "0.6rem" }}>
-          <span style={{ fontSize: "0.9rem", flexShrink: 0, marginTop: 1 }}>⚖️</span>
-          <p style={{ margin: 0, fontSize: "0.73rem", color: "#fef3c7", lineHeight: 1.5 }}>
-            <strong style={{ color: "#FFCC00" }}>Equal digital shelf space.</strong> A vendor in Churchill, Manitoba gets the same AI-powered storefront and access to VIA Rail's 4.4M passengers as a vendor in Toronto — zero e-commerce setup required. Products travel onboard on <strong style={{ color: "#FFCC00" }}>consignment</strong>: no upfront cost to VIA Rail, vendors paid per sale.
+      {/* Prosperity Impact Banner — collapsed by default */}
+      <details style={{ marginBottom: "1rem" }}>
+        <summary style={{ background: "linear-gradient(135deg, #1c1917 0%, #1a2e1a 100%)", border: "1px solid #22c55e40", borderRadius: 14, padding: "0.65rem 1.1rem", cursor: "pointer", listStyle: "none", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontSize: "1rem" }}>🌱</span>
+            <span style={{ fontWeight: 800, fontSize: "0.82rem", color: "#86efac", letterSpacing: "0.07em", textTransform: "uppercase" }}>Prosperity Impact — SDG 7 · SDG 8 · SDG 10</span>
+          </div>
+          <span style={{ fontSize: "0.7rem", color: "#86efac", opacity: 0.7 }}>▼ learn more</span>
+        </summary>
+        <div style={{ background: "linear-gradient(135deg, #1c1917 0%, #1a2e1a 100%)", border: "1px solid #22c55e40", borderTop: "none", borderRadius: "0 0 14px 14px", padding: "0.85rem 1.1rem" }}>
+          <p style={{ margin: "0 0 0.75rem", fontSize: "0.78rem", color: "#d1fae5", lineHeight: 1.55 }}>
+            Every purchase puts money directly into a <strong style={{ color: "#86efac" }}>local Canadian artisan's hands</strong> — a Churchill candle maker, a Miramichi soap producer, a Jasper woodworker.
           </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: "0.75rem" }}>
+            {[
+              { val: "120+", label: "Local Products" },
+              { val: "41",   label: "VIA Stations" },
+              { val: "8",    label: "Provinces" },
+              { val: "4.4M", label: "Annual Passengers" },
+            ].map(({ val, label }) => (
+              <div key={label} style={{ background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.55rem 0.4rem", textAlign: "center" }}>
+                <div style={{ fontWeight: 800, fontSize: "1rem", color: "#4ade80", lineHeight: 1 }}>{val}</div>
+                <div style={{ fontSize: "0.62rem", color: "#86efac", marginTop: 3, lineHeight: 1.3 }}>{label}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ background: "rgba(255,204,0,0.08)", border: "1px solid rgba(255,204,0,0.25)", borderRadius: 10, padding: "0.55rem 0.8rem", display: "flex", alignItems: "flex-start", gap: 8, marginBottom: "0.6rem" }}>
+            <span style={{ fontSize: "0.9rem", flexShrink: 0, marginTop: 1 }}>⚖️</span>
+            <p style={{ margin: 0, fontSize: "0.73rem", color: "#fef3c7", lineHeight: 1.5 }}>
+              <strong style={{ color: "#FFCC00" }}>Equal digital shelf space.</strong> A vendor in Churchill, Manitoba gets the same AI-powered storefront and access to VIA Rail's 4.4M passengers as a vendor in Toronto — zero e-commerce setup required. Products travel onboard on <strong style={{ color: "#FFCC00" }}>consignment</strong>: no upfront cost to VIA Rail, vendors paid per sale.
+            </p>
+          </div>
+          <div style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.55rem 0.8rem", display: "flex", alignItems: "flex-start", gap: 8 }}>
+            <span style={{ fontSize: "0.9rem", flexShrink: 0, marginTop: 1 }}>⚡</span>
+            <p style={{ margin: 0, fontSize: "0.73rem", color: "#d1fae5", lineHeight: 1.5 }}>
+              <strong style={{ color: "#86efac" }}>Zero-marginal-carbon commerce.</strong> The train runs whether passengers buy anything or not. Every dollar of artisan revenue generated onboard is prosperity built on clean rail infrastructure — economic growth decoupled from additional energy consumption. Rail emits <strong style={{ color: "#86efac" }}>~80% less CO₂</strong> per passenger-km than driving.
+            </p>
+          </div>
         </div>
-        <div style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.55rem 0.8rem", display: "flex", alignItems: "flex-start", gap: 8 }}>
-          <span style={{ fontSize: "0.9rem", flexShrink: 0, marginTop: 1 }}>⚡</span>
-          <p style={{ margin: 0, fontSize: "0.73rem", color: "#d1fae5", lineHeight: 1.5 }}>
-            <strong style={{ color: "#86efac" }}>Zero-marginal-carbon commerce.</strong> The train runs whether passengers buy anything or not. Every dollar of artisan revenue generated onboard is prosperity built on clean rail infrastructure — economic growth decoupled from additional energy consumption. Rail emits <strong style={{ color: "#86efac" }}>~80% less CO₂</strong> per passenger-km than driving.
-          </p>
-        </div>
-      </div>
+      </details>
 
       {/* After-hours notice — VIA Rail cart service ends at 7pm */}
       {new Date().getHours() >= 19 && (
