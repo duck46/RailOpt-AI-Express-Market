@@ -1087,21 +1087,1055 @@ function Tab3() {
 
 // ─── Tab 4: Discover ─────────────────────────────────────────────────────────
 
+const DESTINATIONS = [
+  {
+    "id": "prince-george",
+    "name": "Prince George",
+    "province": "British Columbia",
+    "tagline": "Northern BC's boreal hub",
+    "emoji": "🌲",
+    "hero_color": "#1a3a2a",
+    "highlights": [
+      "Prince George Astronomical Observatory — breathtaking celestial views",
+      "Two Rivers Gallery — immerse yourself in Canadian art",
+      "Central BC Railway & Forestry Museum — the industries that shaped the north",
+      "Teapot Mountain — 360° view of surrounding forests and wetlands",
+      "Cottonwood Island Nature Park — walk along the Nechako River shoreline"
+    ],
+    "vibe": [
+      "🎨 Arts & Culture",
+      "🥾 Hiking",
+      "🌿 Nature",
+      "🚂 Rail Heritage"
+    ],
+    "popular_routes": [
+      "Jasper → Prince George",
+      "Prince George → Prince Rupert"
+    ]
+  },
+  {
+    "id": "prince-rupert",
+    "name": "Prince Rupert",
+    "province": "British Columbia",
+    "tagline": "Wild Pacific North Coast",
+    "emoji": "🐻",
+    "hero_color": "#0d2233",
+    "highlights": [
+      "Khutzeymateen Grizzly Sanctuary — watch brown bears in their natural habitat",
+      "Museum of Northern BC — home of the Ts'msyen People's history",
+      "North Pacific Cannery National Historic Site (May–Sep)",
+      "Humpback whale watching tours from the harbour",
+      "Mount Hayes — panoramic view of the Pacific Ocean and nearby islands"
+    ],
+    "vibe": [
+      "🐋 Wildlife",
+      "🏔️ Adventure",
+      "🎣 Fishing",
+      "🏛️ Indigenous Culture"
+    ],
+    "popular_routes": [
+      "Jasper → Prince Rupert"
+    ]
+  },
+  {
+    "id": "kamloops",
+    "name": "Kamloops",
+    "province": "British Columbia",
+    "tagline": "Sunny interior at the river junction",
+    "emoji": "🚵",
+    "hero_color": "#2d1f0a",
+    "highlights": [
+      "Kamloops Farmers' Markets — fresh local produce on Sat & Wed",
+      "Kweseltken Artisan Market — traditional foods and handmade goods",
+      "Kamloops Bike Ranch — world-class mountain biking trails",
+      "Adams River Sockeye Salmon Run — waters turn red (late Sep–mid Oct)",
+      "Tsútswecw Provincial Park — 26 km of trails"
+    ],
+    "vibe": [
+      "🚵 Mountain Biking",
+      "🎭 Arts",
+      "🍺 Craft Beer",
+      "🐟 Nature"
+    ],
+    "popular_routes": [
+      "Vancouver → Kamloops",
+      "Edmonton → Kamloops",
+      "Toronto → Kamloops"
+    ]
+  },
+  {
+    "id": "vancouver",
+    "name": "Vancouver",
+    "province": "British Columbia",
+    "tagline": "Pacific metropolis between ocean and mountains",
+    "emoji": "🌊",
+    "hero_color": "#0a1f2d",
+    "highlights": [
+      "Stanley Park — 1,000-acre rainforest with 10 km ocean seawall",
+      "Granville Island Public Market — fresh local produce and artisan goods",
+      "Museum of Anthropology — 50,000+ works from cultures worldwide",
+      "Canada's largest Chinatown — Dr. Sun Yat-Sen Classical Chinese Garden",
+      "Capilano Suspension Bridge and Grouse Mountain (North Vancouver)"
+    ],
+    "vibe": [
+      "🏙️ Urban",
+      "🌊 Ocean",
+      "🎨 Culture",
+      "🌿 Green Spaces"
+    ],
+    "popular_routes": [
+      "Toronto → Vancouver",
+      "Edmonton → Vancouver",
+      "Montréal → Vancouver"
+    ]
+  },
+  {
+    "id": "saskatoon",
+    "name": "Saskatoon",
+    "province": "Saskatchewan",
+    "tagline": "Prairie city on the South Saskatchewan River",
+    "emoji": "🌾",
+    "hero_color": "#1a1000",
+    "highlights": [
+      "Remai Modern — world-class contemporary art museum with the largest Picasso linocut collection",
+      "Wanuskewin Heritage Park NHS — Plains bison herd and Canada's longest-running archaeological dig",
+      "Meewasin Valley Trails — stunning river and skyline views along the South Saskatchewan",
+      "Black Fox Farm & Distillery — award-winning SE Eleven whisky from prairie-grown botanicals",
+      "Saskatoon Fringe Festival & Jazz Festival — a vibrant summer cultural calendar"
+    ],
+    "vibe": [
+      "🎨 Modern Art",
+      "🦬 Indigenous Heritage",
+      "🎶 Festivals",
+      "🚴 River Trails"
+    ],
+    "popular_routes": [
+      "Toronto → Saskatoon",
+      "Vancouver → Saskatoon",
+      "Winnipeg → Saskatoon"
+    ]
+  },
+  {
+    "id": "regina",
+    "name": "Regina",
+    "province": "Saskatchewan",
+    "tagline": "The Queen City on the prairies",
+    "emoji": "👑",
+    "hero_color": "#1a0510",
+    "highlights": [
+      "RCMP Heritage Centre — the full history of Canada's national police force from 1873 to today",
+      "Royal Saskatchewan Museum — see Scotty, the world's largest T. rex, in full life-size cast",
+      "Wascana Centre — 930-hectare urban park with a 120-hectare lake in the city's heart",
+      "Saskatchewan Science Centre & Kramer IMAX Theatre — 150+ hands-on exhibits",
+      "Over the Hill Orchards & Winery — organic prairie fruit wines with Qu'Appelle Valley views"
+    ],
+    "vibe": [
+      "👮 RCMP Heritage",
+      "🦕 Dinosaurs",
+      "🌊 Urban Lake",
+      "🍷 Prairie Wine"
+    ],
+    "popular_routes": [
+      "Toronto → Saskatoon",
+      "Vancouver → Saskatoon",
+      "Winnipeg → Saskatoon"
+    ]
+  },
+  {
+    "id": "montréal",
+    "name": "Montréal",
+    "province": "Québec",
+    "tagline": "The francophone metropolis of North America",
+    "emoji": "🗼",
+    "hero_color": "#1a0a1a",
+    "highlights": [
+      "Old Montréal & Notre-Dame Basilica — cobblestone streets and neo-Gothic grandeur",
+      "Mont-Royal — climb to the Kondiaronk Belvedere for a sweeping city panorama",
+      "Jean Talon Market & Mile-End — the culinary and creative soul of the city",
+      "Quartier des Spectacles — the epicentre of Montréal's world-class festival scene",
+      "Lachine Canal — bike or canoe through the city's beloved historic waterway"
+    ],
+    "vibe": [
+      "🎶 Festivals",
+      "🍽️ Food Scene",
+      "🎨 Arts",
+      "🚲 Cycling"
+    ],
+    "popular_routes": [
+      "Toronto → Montréal",
+      "Ottawa → Montréal",
+      "Québec → Montréal"
+    ]
+  },
+  {
+    "id": "québec",
+    "name": "Québec",
+    "province": "Québec",
+    "tagline": "North America's only walled city above the St. Lawrence",
+    "emoji": "🏰",
+    "hero_color": "#1a0f00",
+    "highlights": [
+      "Old Québec (UNESCO) — cobblestone streets, the Château Frontenac, and Terrasse Dufferin",
+      "Fortifications of Québec — the largest British fortress in North America still occupied",
+      "Saint-Louis Forts and Châteaux NHS — 200+ years of archaeological history",
+      "Saint-Jean-Baptiste & Limoilou — craft breweries, gourmet shops, and neighbourhood gems",
+      "Plains of Abraham — vast urban park above the St. Lawrence with sweeping river views"
+    ],
+    "vibe": [
+      "🏰 History",
+      "🍺 Craft Beer",
+      "🛍️ Artisan Shops",
+      "🌿 Parks"
+    ],
+    "popular_routes": [
+      "Montréal → Québec",
+      "Ottawa → Québec",
+      "Toronto → Québec"
+    ]
+  },
+  {
+    "id": "baie-saint-paul",
+    "name": "Baie-Saint-Paul",
+    "province": "Québec",
+    "tagline": "Charlevoix's art capital by the St. Lawrence",
+    "emoji": "🎨",
+    "hero_color": "#0a1a2a",
+    "highlights": [
+      "Charlevoix art galleries — world-renowned concentration of fine art in a small riverside town",
+      "Le Festif! music festival — a beloved outdoor celebration of indie and folk music each summer",
+      "Parc national des Grands-Jardins — subarctic caribou habitat and lichen-covered boreal landscape",
+      "Parc national des Hautes-Gorges-de-la-Rivière-Malbaie — dramatic fjord canyon hiking",
+      "La Malbaie & Saint-Irénée — charming riverside villages with beaches and local cuisine"
+    ],
+    "vibe": [
+      "🎨 Fine Arts",
+      "🎶 Music",
+      "🥾 Hiking",
+      "🌲 Boreal Nature"
+    ],
+    "popular_routes": [
+      "Montréal → Québec",
+      "Toronto → Québec"
+    ]
+  },
+  {
+    "id": "rimouski",
+    "name": "Rimouski",
+    "province": "Québec",
+    "tagline": "Where the St. Lawrence meets the mountains",
+    "emoji": "🦭",
+    "hero_color": "#0a1f1a",
+    "highlights": [
+      "Promenade de la Mer — scenic coastal walking trail along the St. Lawrence shore",
+      "Île Saint-Barnabé — a short excursion offshore for Québec's most spectacular sunsets",
+      "Parc national du Bic — bays, cliffs, islands, and harbour seals on the lower St. Lawrence",
+      "Route des Monts Notre-Dame — forests, lakes, and farmland through the Chic-Chocs foothills",
+      "Rimouski waterfront dining — fresh Atlantic seafood in a laid-back Bas-Saint-Laurent setting"
+    ],
+    "vibe": [
+      "🦭 Wildlife",
+      "🌅 Sunsets",
+      "🥾 Hiking",
+      "🌊 Coastal"
+    ],
+    "popular_routes": [
+      "Montréal → Rimouski",
+      "Québec → Rimouski"
+    ]
+  },
+  {
+    "id": "jonquière",
+    "name": "Jonquière",
+    "province": "Québec",
+    "tagline": "Gateway to the Saguenay Fjord",
+    "emoji": "🏔️",
+    "hero_color": "#0d0a1a",
+    "highlights": [
+      "Saguenay Fjord — one of Canada's most dramatic landscapes; granite walls plunging into glacial waters",
+      "Véloroute des Bleuets — 256 km cycling loop around Lac Saint-Jean through blueberry country",
+      "Parc national des Monts-Valin — hiking and skiing among peaks capped in snow-white fir trees",
+      "Saguenay microbreweries — regional craft beers brewed with blueberries and boreal botanicals",
+      "Camping, kayaking, and wildlife watching in a pristine Saguenay–Lac-Saint-Jean wilderness"
+    ],
+    "vibe": [
+      "🏔️ Fjord & Mountains",
+      "🚴 Cycling",
+      "🍺 Craft Beer",
+      "🫐 Blueberry Country"
+    ],
+    "popular_routes": [
+      "Montréal → Jonquière",
+      "Québec → Jonquière"
+    ]
+  },
+  {
+    "id": "la-tuque",
+    "name": "La Tuque",
+    "province": "Québec",
+    "tagline": "Haute-Mauricie wilderness with an urban flair",
+    "emoji": "🎣",
+    "hero_color": "#0f1a0a",
+    "highlights": [
+      "Parc des Chutes-de-la-Petite-Rivière-Bostonnais — waterfall trails in the heart of the city",
+      "La Pécheresse Microbrewery — craft beers with conifers, raspberry, and ground cherry",
+      "Haute-Mauricie fishing lodges — legendary rivers and lakes for salmon and trout fishing",
+      "Félix-Leclerc Cultural Complex — celebrating Québec's beloved folk poet and singer",
+      "Canoeing, hiking, cycling, and beach day trips through the surrounding boreal wilderness"
+    ],
+    "vibe": [
+      "🎣 Fishing",
+      "🍺 Microbrewery",
+      "🎶 Folk Culture",
+      "🌲 Boreal"
+    ],
+    "popular_routes": [
+      "Montréal → Senneterre"
+    ]
+  },
+  {
+    "id": "senneterre",
+    "name": "Senneterre",
+    "province": "Québec",
+    "tagline": "Abitibi's untamed boreal wilderness",
+    "emoji": "🌲",
+    "hero_color": "#0a1a05",
+    "highlights": [
+      "Boreal forest lodges — remote wilderness camps for fishing, hiking, and canoe-tripping",
+      "Mont Bell — backcountry hiking and skiing in the Abitibi highlands",
+      "Chute à Grandmaison trail — a scenic pedestrian path through old-growth boreal forest",
+      "Paddling the Nottaway and Bell River systems — pristine routes through untouched wilderness",
+      "One of the last places in Québec accessible only by train — a true end-of-the-line adventure"
+    ],
+    "vibe": [
+      "🌲 Boreal Wilderness",
+      "🎿 Backcountry Skiing",
+      "🛶 Canoeing",
+      "🎣 Fishing"
+    ],
+    "popular_routes": [
+      "Montréal → Senneterre"
+    ]
+  },
+  {
+    "id": "halifax",
+    "name": "Halifax",
+    "province": "Nova Scotia",
+    "tagline": "Canada's Ocean Playground capital",
+    "emoji": "⚓",
+    "hero_color": "#0a1a2a",
+    "highlights": [
+      "Halifax Waterfront Boardwalk — 4 km stroll past the oldest farmers' market in North America (270+ years)",
+      "Halifax Citadel National Historic Site — Canada's most-visited National Historic Site",
+      "Peggy's Cove & Lunenburg — iconic coastal villages a day trip from the city",
+      "Canadian Museum of Immigration at Pier 21 — Canada's Ellis Island",
+      "Craft breweries with unique local ingredients — spruce, maple, lobster, and jalapeño"
+    ],
+    "vibe": [
+      "⚓ Maritime",
+      "🍺 Craft Beer",
+      "🏛️ History",
+      "🌊 Ocean"
+    ],
+    "popular_routes": [
+      "Montréal → Halifax",
+      "Toronto → Halifax",
+      "Moncton → Halifax"
+    ]
+  },
+  {
+    "id": "new-glasgow",
+    "name": "New Glasgow",
+    "province": "Nova Scotia",
+    "tagline": "Gateway to Pictou County and Cape Breton",
+    "emoji": "🎶",
+    "hero_color": "#1a0f1a",
+    "highlights": [
+      "Glasgow Square Jubilee — three-day East Coast music festival at the outdoor amphitheater",
+      "Museum of Industry — Nova Scotia's industrial history from the 19th and 20th centuries",
+      "Cape Breton Island & Cabot Trail — one of the world's great scenic coastal drives",
+      "Pictou — Hector Heritage Quay, Northumberland Fishing Museum, and ferry to Pictou Island",
+      "Antigonish — Highland Heart of Nova Scotia with Steinhart Distillery and Cape George Lighthouse"
+    ],
+    "vibe": [
+      "🎶 East Coast Music",
+      "🏛️ History",
+      "🥾 Hiking",
+      "🎻 Celtic Culture"
+    ],
+    "popular_routes": [
+      "Montréal → Halifax",
+      "Toronto → Halifax",
+      "Moncton → Halifax"
+    ]
+  },
+  {
+    "id": "truro",
+    "name": "Truro",
+    "province": "Nova Scotia",
+    "tagline": "Colchester County and the Bay of Fundy tides",
+    "emoji": "🌊",
+    "hero_color": "#0d1f1a",
+    "highlights": [
+      "Tidal Bore — watch the Bay of Fundy surge up the Salmon River twice daily",
+      "Victoria Park — one of Nova Scotia's oldest public parks with 20 km of trails and Jacob's Ladder",
+      "Cobequid Trail — spectacular countryside views of streams, waterfalls, and stone walls",
+      "Rogart Mountain — hiking paths with panoramic Nova Scotia vistas",
+      "Inglis Street — charming downtown strip with local artisan studios and boutiques"
+    ],
+    "vibe": [
+      "🌊 Bay of Fundy",
+      "🥾 Hiking",
+      "🎨 Artisan",
+      "🏛️ Heritage"
+    ],
+    "popular_routes": [
+      "Montréal → Halifax",
+      "Toronto → Halifax",
+      "Moncton → Halifax"
+    ]
+  },
+  {
+    "id": "amherst",
+    "name": "Amherst",
+    "province": "Nova Scotia",
+    "tagline": "Victorian charm at the Nova Scotia gateway",
+    "emoji": "🏛️",
+    "hero_color": "#1a1a0a",
+    "highlights": [
+      "Victorian Heritage District — beautifully restored 19th-century homes converted to inns and shops",
+      "Birkinshaw's Tea Room — Canada's 'Tea Room of the Year' for classic high tea",
+      "Fort Beauséjour National Historic Site — 1751 French fortress with underground stone tunnels",
+      "Tantramar Salt Marshes — a birder's paradise at the NB–NS border",
+      "Amherst Point Bird Sanctuary — spot American black ducks, pintails, and blue-winged teals"
+    ],
+    "vibe": [
+      "🏛️ Victorian Heritage",
+      "🍵 Tea Culture",
+      "🐦 Birding",
+      "🌿 Marshlands"
+    ],
+    "popular_routes": [
+      "Montréal → Halifax",
+      "Toronto → Halifax",
+      "Moncton → Halifax"
+    ]
+  },
+  {
+    "id": "campbellton",
+    "name": "Campbellton",
+    "province": "New Brunswick",
+    "tagline": "Atlantic salmon country on Restigouche Bay",
+    "emoji": "🐟",
+    "hero_color": "#0a1f1a",
+    "highlights": [
+      "Restigouche Sam — visit the world's largest Atlantic salmon replica on the waterfront",
+      "Mount Sugarloaf Provincial Park — hiking, mountain biking, and skiing in season",
+      "Restigouche River — world-class salmon fishing and scenic paddling routes",
+      "Waterfront boardwalk — picnic at sunset over the mouth of the Restigouche",
+      "Snowmobiling and cross-country skiing through forested river valleys in winter"
+    ],
+    "vibe": [
+      "🐟 Fishing",
+      "🥾 Hiking",
+      "🎿 Winter Sports",
+      "🌊 Waterfront"
+    ],
+    "popular_routes": [
+      "Bathurst → Montréal",
+      "Montréal → Halifax"
+    ]
+  },
+  {
+    "id": "bathurst",
+    "name": "Bathurst",
+    "province": "New Brunswick",
+    "tagline": "Golden beaches on Chaleur Bay",
+    "emoji": "🏖️",
+    "hero_color": "#0a1a2a",
+    "highlights": [
+      "Chaleur Bay — some of the warmest saltwater beaches in Atlantic Canada",
+      "Youghall Beach — golden sand, warm water, and a scenic boardwalk",
+      "Daly Point Nature Reserve — 100 acres of Acadian forest and marshland with migratory birds",
+      "Nepisiguit Mi'gmaq Trail — 140 km path from Daly Point to Mount Carleton",
+      "Pabineau Falls — a spectacular waterfall stop along the Nepisiguit corridor"
+    ],
+    "vibe": [
+      "🏖️ Beach",
+      "🐦 Birding",
+      "🥾 Hiking",
+      "⛳ Golf"
+    ],
+    "popular_routes": [
+      "Montréal → Bathurst",
+      "Halifax → Bathurst",
+      "Bathurst → Montréal"
+    ]
+  },
+  {
+    "id": "miramichi",
+    "name": "Miramichi",
+    "province": "New Brunswick",
+    "tagline": "Canada's Irish capital on the salmon river",
+    "emoji": "🎣",
+    "hero_color": "#1a0f0a",
+    "highlights": [
+      "Miramichi River — one of the world's most legendary Atlantic salmon fishing rivers",
+      "Miramichi Irish Festival — Canada's Irish capital celebrates its heritage every summer",
+      "Metepenagiag Heritage Park — Mi'gmaq archeological sites with interpretive trails",
+      "Beaubears Island — immerse yourself in the shipbuilding and Acadian history",
+      "Ritchie Wharf — shipbuilding-themed waterfront park with dining and river excursions"
+    ],
+    "vibe": [
+      "🎣 Salmon Fishing",
+      "🎶 Folk Music",
+      "🏛️ Indigenous Culture",
+      "🛶 River Life"
+    ],
+    "popular_routes": [
+      "Montréal → Halifax",
+      "Québec → Halifax",
+      "Toronto → Halifax"
+    ]
+  },
+  {
+    "id": "moncton",
+    "name": "Moncton",
+    "province": "New Brunswick",
+    "tagline": "Acadian heart of the Bay of Fundy",
+    "emoji": "🌊",
+    "hero_color": "#0d1a1f",
+    "highlights": [
+      "Hopewell Rocks Provincial Park — 20 spectacular flowerpot monoliths shaped by the world's highest tides",
+      "Tidal Bore — watch the Bay of Fundy surge through downtown Moncton twice daily",
+      "Shediac — lobster capital of the world, with beaches and warm Northumberland Strait waters",
+      "Capitol Theater & Aberdeen Cultural Centre — a thriving bilingual arts scene",
+      "Magnetic Hill Zoo, Magic Mountain, and Resurgo Museum for family adventures"
+    ],
+    "vibe": [
+      "🌊 Bay of Fundy",
+      "🦞 Seafood",
+      "🎭 Arts & Culture",
+      "🏖️ Beaches"
+    ],
+    "popular_routes": [
+      "Montréal → Moncton",
+      "Toronto → Moncton",
+      "Halifax → Moncton"
+    ]
+  },
+  {
+    "id": "winnipeg",
+    "name": "Winnipeg",
+    "province": "Manitoba",
+    "tagline": "Where the prairies meet the arts",
+    "emoji": "🎨",
+    "hero_color": "#1a0a2e",
+    "highlights": [
+      "Canadian Museum for Human Rights — one of the world's most striking museum buildings",
+      "Exchange District — 600+ outdoor murals, boutiques, galleries, and local restaurants",
+      "The Forks National Historic Site — where the Red and Assiniboine Rivers meet",
+      "Assiniboine Park Zoo — 150+ animal species in a year-round urban oasis",
+      "Riel House NHS — home of Louis Riel, founding father of Manitoba"
+    ],
+    "vibe": [
+      "🎨 Street Art",
+      "🏛️ Museums",
+      "🎭 Performing Arts",
+      "🌿 River Parks"
+    ],
+    "popular_routes": [
+      "Toronto → Winnipeg",
+      "Vancouver → Winnipeg",
+      "Edmonton → Winnipeg"
+    ]
+  },
+  {
+    "id": "thompson",
+    "name": "Thompson",
+    "province": "Manitoba",
+    "tagline": "Northern Manitoba's boreal gateway",
+    "emoji": "🌲",
+    "hero_color": "#0d1f0d",
+    "highlights": [
+      "Spirit Way — 2 km cultural trail with 15 heritage points of interest",
+      "Millennium Trail — 15 km loop through the surrounding boreal forest",
+      "Heritage North Museum — fur trade artifacts, fossils, and boreal forest diorama",
+      "Pisew Falls Provincial Park — hike to Manitoba's two highest waterfalls",
+      "Mystery Mountain Winter Park — skiing and snowboarding in the boreal"
+    ],
+    "vibe": [
+      "🥾 Hiking",
+      "🎿 Winter Sports",
+      "🦌 Wildlife",
+      "🌲 Boreal Forest"
+    ],
+    "popular_routes": [
+      "Winnipeg → Churchill",
+      "Churchill → Winnipeg"
+    ]
+  },
+  {
+    "id": "the-pas",
+    "name": "The Pas",
+    "province": "Manitoba",
+    "tagline": "Gateway to the North",
+    "emoji": "🏕️",
+    "hero_color": "#0f1a0a",
+    "highlights": [
+      "Clearwater Lake Provincial Park — white sand beaches and turquoise crystalline waters",
+      "Opaskwayak Cree Nation — vibrant Indigenous community with crafts and cultural events",
+      "Northern Manitoba Trappers' Festival — one of Canada's oldest winter carnivals",
+      "Bill Bannock Ice Fishing Derby — a beloved northern tradition on frozen lakes",
+      "Canoeing and fishing on surrounding boreal lakes and rivers"
+    ],
+    "vibe": [
+      "🏕️ Camping",
+      "🎣 Fishing",
+      "🛶 Canoeing",
+      "🏛️ Indigenous Culture"
+    ],
+    "popular_routes": [
+      "Winnipeg → Churchill",
+      "Churchill → Winnipeg"
+    ]
+  },
+  {
+    "id": "churchill",
+    "name": "Churchill",
+    "province": "Manitoba",
+    "tagline": "Polar bear capital of the world",
+    "emoji": "🐻‍❄️",
+    "hero_color": "#0a1a2a",
+    "highlights": [
+      "Polar bear watching — the world's best, every fall on Hudson Bay",
+      "Beluga whale watching — 4,000+ belugas enter the Churchill River Estuary each summer",
+      "Northern Lights (Aurora Borealis) — visible up to 300 nights per year",
+      "Itsanitaq Museum — millennium-old Inuit artifacts and contemporary carvings",
+      "Prince of Wales Fort NHS — a 300-year-old Hudson Bay Company stone fort"
+    ],
+    "vibe": [
+      "🐻‍❄️ Wildlife",
+      "🌌 Northern Lights",
+      "🛶 Eco-Tourism",
+      "🏛️ Inuit Culture"
+    ],
+    "popular_routes": [
+      "Winnipeg → Churchill",
+      "Churchill → Winnipeg"
+    ]
+  },
+  {
+    "id": "edmonton",
+    "name": "Edmonton",
+    "province": "Alberta",
+    "tagline": "Festival capital of the north",
+    "emoji": "🏙️",
+    "hero_color": "#1a2535",
+    "highlights": [
+      "50+ annual festivals — from Freewill Shakespeare to Farmfair International in November",
+      "Royal Alberta Museum — Western Canada's largest museum with 82,000 sq ft of exhibits",
+      "Edmonton River Valley — North America's largest urban parkland, 150+ km of trails",
+      "ICE District & Rogers Place — Oilers games, Grand Villa Casino, and vibrant nightlife",
+      "Day trip to Elk Island National Park — Plains bison, moose, and 250+ bird species"
+    ],
+    "vibe": [
+      "🎭 Festivals",
+      "🏛️ Museums",
+      "🌿 Parks",
+      "🏒 Sports"
+    ],
+    "popular_routes": [
+      "Toronto → Edmonton",
+      "Vancouver → Edmonton",
+      "Montréal → Edmonton"
+    ]
+  },
+  {
+    "id": "jasper",
+    "name": "Jasper",
+    "province": "Alberta",
+    "tagline": "Dark skies and glacial wilderness",
+    "emoji": "⭐",
+    "hero_color": "#0d1a0d",
+    "highlights": [
+      "Jasper National Park — Canada's largest Rocky Mountain park, 1,200 km of hiking trails",
+      "Columbia Icefield — ride an Ice Explorer onto the Athabasca Glacier",
+      "World's 2nd largest Dark Sky Preserve — stargazing like nowhere else on Earth",
+      "Jasper SkyTram — seven-minute ride to Whistler Mountain's 360° panorama",
+      "Fairmont Jasper Park Lodge Golf Course — SCOREgolf's best public course in Canada"
+    ],
+    "vibe": [
+      "⭐ Stargazing",
+      "🧊 Glaciers",
+      "🥾 Hiking",
+      "🐻 Wildlife"
+    ],
+    "popular_routes": [
+      "Vancouver → Jasper",
+      "Edmonton → Jasper",
+      "Toronto → Jasper"
+    ]
+  },
+  {
+    "id": "banff",
+    "name": "Banff",
+    "province": "Alberta",
+    "tagline": "Rooftop of Canada in the Rockies",
+    "emoji": "🏔️",
+    "hero_color": "#0d1f2d",
+    "highlights": [
+      "Lake Louise — turquoise glacial lake beneath Victoria Glacier at 1,885 m elevation",
+      "Banff Upper Hot Springs — soak in sulphurous mineral pools with mountain views",
+      "Cave and Basin National Historic Site — birthplace of Canada's national parks system",
+      "Moraine Lake & Valley of the Ten Peaks — one of the world's most photographed vistas",
+      "Banff Mountain Film & Book Festival — world-class outdoor adventure storytelling"
+    ],
+    "vibe": [
+      "🏔️ Mountains",
+      "🛁 Hot Springs",
+      "📸 Photography",
+      "🎿 Skiing"
+    ],
+    "popular_routes": [
+      "Vancouver → Banff",
+      "Edmonton → Banff",
+      "Toronto → Banff"
+    ]
+  },
+  {
+    "id": "toronto",
+    "name": "Toronto",
+    "province": "Ontario",
+    "tagline": "Canada's most cosmopolitan city",
+    "emoji": "🏙️",
+    "hero_color": "#0a0a1a",
+    "highlights": [
+      "CN Tower SkyPod — highest observation platform in the Western Hemisphere at 447 metres",
+      "Distillery District — 19th-century Victorian industrial complex turned pedestrian arts village",
+      "Kensington Market & Queen Street West — Toronto's most eclectic and creative neighbourhoods",
+      "Rouge National Urban Park — one of the largest urban parks in North America",
+      "Scarborough Bluffs and Lake Ontario beaches — urban escapes on the city's eastern edge"
+    ],
+    "vibe": [
+      "🏙️ Urban Culture",
+      "🎨 Street Art",
+      "🍜 Food Scene",
+      "🌿 Urban Parks"
+    ],
+    "popular_routes": [
+      "Montréal → Toronto",
+      "Ottawa → Toronto",
+      "Vancouver → Toronto"
+    ]
+  },
+  {
+    "id": "ottawa",
+    "name": "Ottawa",
+    "province": "Ontario",
+    "tagline": "Canada's capital on the Rideau Canal",
+    "emoji": "🍁",
+    "hero_color": "#1a0f0a",
+    "highlights": [
+      "Parliament Hill — take a guided tour and watch the Changing of the Guard",
+      "Rideau Canal — UNESCO World Heritage Site and the world's largest naturally frozen skating rink",
+      "National Gallery of Canada — home to the Group of Seven and world-class international collections",
+      "ByWard Market — one of Canada's oldest and largest public markets since 1826",
+      "Laurier House NHS — former residence of two Canadian prime ministers"
+    ],
+    "vibe": [
+      "🍁 Canadian Heritage",
+      "🏛️ Museums",
+      "🛍️ Markets",
+      "🌿 Waterways"
+    ],
+    "popular_routes": [
+      "Toronto → Ottawa",
+      "Montréal → Ottawa",
+      "Québec → Ottawa"
+    ]
+  },
+  {
+    "id": "belleville",
+    "name": "Belleville",
+    "province": "Ontario",
+    "tagline": "Quinte Bay charm near Prince Edward County",
+    "emoji": "🌊",
+    "hero_color": "#0a1a1a",
+    "highlights": [
+      "Glanmore National Historic Site — a breathtaking Second Empire Victorian mansion from 1883",
+      "Bay of Quinte waterfront — boat excursions, fishing, and scenic hiking trails",
+      "Prince Edward County — just across the water: wineries, lavender farms, and Sandbanks Provincial Park",
+      "H.R. Frink Outdoor Education Centre — guided hikes through forests and wetlands",
+      "Belleville waterfront dining — fresh local seafood with views of the bay"
+    ],
+    "vibe": [
+      "🏛️ Victorian Heritage",
+      "🌊 Waterfront",
+      "🍷 Wine Country",
+      "🥾 Hiking"
+    ],
+    "popular_routes": [
+      "Toronto → Montréal",
+      "Toronto → Ottawa"
+    ]
+  },
+  {
+    "id": "cornwall",
+    "name": "Cornwall",
+    "province": "Ontario",
+    "tagline": "Eastern Ontario on the St. Lawrence River",
+    "emoji": "🚴",
+    "hero_color": "#0a1a0a",
+    "highlights": [
+      "Riverside Trail — 40+ km of St. Lawrence waterfront cycling and walking paths",
+      "Rurban Brewing — Cornwall's beloved craft brewery with local ingredients",
+      "Historic SDG Jail — a unique heritage attraction in the heart of Cornwall",
+      "Saunders Hydro Dam Visitor Centre — explore the massive St. Lawrence power infrastructure",
+      "Cline House Gallery — contemporary and heritage art from Eastern Ontario artists"
+    ],
+    "vibe": [
+      "🚴 Cycling",
+      "🏛️ Heritage",
+      "🍺 Craft Beer",
+      "🌊 St. Lawrence"
+    ],
+    "popular_routes": [
+      "Toronto → Montréal",
+      "Kingston → Montréal"
+    ]
+  },
+  {
+    "id": "hamilton",
+    "name": "Hamilton",
+    "province": "Ontario",
+    "tagline": "Steel City on the Niagara Escarpment",
+    "emoji": "🌿",
+    "hero_color": "#0f1a0a",
+    "highlights": [
+      "Royal Botanical Gardens' Cootes Paradise — the most diverse nature sanctuary in Ontario",
+      "Niagara Escarpment — Bruce Trail ridge walks with sweeping views of Hamilton Harbour",
+      "Hamilton Street Art District — 35 restored historical buildings and vibrant murals",
+      "Sassafras Point Trail in Churchill Park — a hidden gem of urban forest hiking",
+      "Art Gallery of Hamilton — Ontario's third-largest public art gallery"
+    ],
+    "vibe": [
+      "🌿 Nature",
+      "🎨 Street Art",
+      "🏛️ History",
+      "🥾 Hiking"
+    ],
+    "popular_routes": [
+      "Toronto → London",
+      "London → Toronto"
+    ]
+  },
+  {
+    "id": "kitchener",
+    "name": "Kitchener",
+    "province": "Ontario",
+    "tagline": "Bavarian heritage in the heart of Waterloo Region",
+    "emoji": "🍺",
+    "hero_color": "#1a0f00",
+    "highlights": [
+      "Kitchener-Waterloo Oktoberfest — Canada's largest Bavarian festival every September–October",
+      "Victoria Park — outdoor events, a scenic lake, and picturesque Rockway Gardens",
+      "Woodside National Historic Site — Victorian childhood home of PM William Lyon Mackenzie King",
+      "Kitchener Market — fresh local produce, artisan goods, and regional specialties",
+      "THEMUSEUM — interactive and contemporary exhibitions for the whole family"
+    ],
+    "vibe": [
+      "🍺 Oktoberfest",
+      "🎭 Events",
+      "🏛️ Heritage",
+      "🛍️ Markets"
+    ],
+    "popular_routes": [
+      "Toronto → Kitchener",
+      "London → Kitchener"
+    ]
+  },
+  {
+    "id": "london",
+    "name": "London",
+    "province": "Ontario",
+    "tagline": "The Forest City on the Thames",
+    "emoji": "🌳",
+    "hero_color": "#0a1a05",
+    "highlights": [
+      "Thames Valley Trail — winding through forests and meadows along the Thames River",
+      "Covent Garden Market — London's historic indoor market with local produce and artisan vendors",
+      "Labatt Brewery — Canada's largest brewer, offering guided tours and tastings",
+      "Storybook Gardens & London Children's Museum — the first children's museum in Canada",
+      "London Music Hall — Western Ontario's premier live music venue"
+    ],
+    "vibe": [
+      "🌳 Forest & Nature",
+      "🎶 Live Music",
+      "🛍️ Markets",
+      "🍺 Brewing"
+    ],
+    "popular_routes": [
+      "Toronto → London",
+      "Windsor → London",
+      "London → Toronto"
+    ]
+  },
+  {
+    "id": "niagara-falls",
+    "name": "Niagara Falls",
+    "province": "Ontario",
+    "tagline": "The most powerful waterfall in North America",
+    "emoji": "💧",
+    "hero_color": "#0a1f2a",
+    "highlights": [
+      "Horseshoe Falls — the most powerful waterfall in North America, best seen from the Maid of the Mist",
+      "Niagara Peninsula Wine Region — Canada's largest wine-growing area, famous for Vidal ice wine",
+      "Fort George National Historic Site — key fortification of the War of 1812",
+      "Clifton Hill — a bustling tourist promenade with restaurants, attractions, and entertainment",
+      "Niagara Gorge hiking trails — walk the rim of the gorge for stunning views"
+    ],
+    "vibe": [
+      "💧 Waterfalls",
+      "🍷 Wine Country",
+      "🏛️ History",
+      "🎡 Entertainment"
+    ],
+    "popular_routes": [
+      "Toronto → Niagara Falls",
+      "Niagara Falls → Montréal"
+    ]
+  },
+  {
+    "id": "sarnia",
+    "name": "Sarnia",
+    "province": "Ontario",
+    "tagline": "Lake Huron's California of Ontario",
+    "emoji": "🌅",
+    "hero_color": "#1a1000",
+    "highlights": [
+      "Grand Bend Beach — one of Ontario's finest sandy beaches on Lake Huron",
+      "Cantara Park coastal dunes — dramatic dune landscapes along Lambton County's shore",
+      "Stones N'Bones Museum — a remarkable collection of fossils from the Devonian era",
+      "Boat excursions on Lake Huron — fishing cruises and sunset tours along the coast",
+      "Lambton County forests — hiking, cycling, and snowmobiling through mixed woodland"
+    ],
+    "vibe": [
+      "🌅 Beaches",
+      "🐚 Fossils",
+      "🎣 Fishing",
+      "🌊 Lake Huron"
+    ],
+    "popular_routes": [
+      "Toronto → Sarnia",
+      "Sarnia → Toronto"
+    ]
+  },
+  {
+    "id": "sudbury",
+    "name": "Sudbury",
+    "province": "Ontario",
+    "tagline": "Northern Ontario's lake country on the Shield",
+    "emoji": "🪨",
+    "hero_color": "#1a0a1a",
+    "highlights": [
+      "Big Nickel — Sudbury's iconic 9-metre replica of the Canadian five-cent coin",
+      "Science North — one of Canada's most celebrated science centres on Ramsey Lake",
+      "330 Canadian Shield lakes — cycling and snowmobiling through ancient Precambrian rock",
+      "Bell Park — the city's largest waterfront green space on Lake Ramsey",
+      "Dynamic Earth — journey to the centre of the Earth at the former Inco mine"
+    ],
+    "vibe": [
+      "🪨 Canadian Shield",
+      "🔬 Science",
+      "🏕️ Lake Country",
+      "❄️ Winter Adventures"
+    ],
+    "popular_routes": [
+      "Toronto → Sudbury",
+      "Sudbury → White River"
+    ]
+  },
+  {
+    "id": "windsor",
+    "name": "Windsor",
+    "province": "Ontario",
+    "tagline": "Canada's southernmost city on the Detroit River",
+    "emoji": "🌉",
+    "hero_color": "#0a0f1a",
+    "highlights": [
+      "Detroit River Waterfront — stunning views of Detroit's skyscrapers from Windsor's parks",
+      "Walkerville Heritage District — century-old elms, Victorian architecture, and Willistead Manor",
+      "Windsor-Essex Wine Country — Ontario's sunniest wine region with over 30 wineries",
+      "Little Italy & Caesars Windsor — vibrant dining scene and riverside entertainment",
+      "Fort Malden National Historic Site — War of 1812 fortifications at nearby Amherstburg"
+    ],
+    "vibe": [
+      "🌉 Riverfront",
+      "🍷 Wine Country",
+      "🏛️ Heritage",
+      "🌆 Urban"
+    ],
+    "popular_routes": [
+      "Toronto → Windsor",
+      "London → Windsor"
+    ]
+  },
+  {
+    "id": "kingston",
+    "name": "Kingston",
+    "province": "Ontario",
+    "tagline": "Limestone City on Lake Ontario",
+    "emoji": "🏰",
+    "hero_color": "#1a1a0d",
+    "highlights": [
+      "Fort Henry National Historic Site — Canada's greatest 19th-century fort",
+      "Historic downtown waterfront — boutiques and independent restaurants",
+      "Kingston Penitentiary tours — Canada's most notorious prison",
+      "Thousand Islands boat cruises — world-famous archipelago",
+      "Queen's University campus — stunning limestone architecture"
+    ],
+    "vibe": [
+      "🏛️ History",
+      "🛍️ Shopping",
+      "⛵ Boating",
+      "🍺 Local Eats"
+    ],
+    "popular_routes": [
+      "Toronto → Kingston",
+      "Montréal → Kingston"
+    ]
+  },
+  {
+    "id": "cobourg",
+    "name": "Cobourg",
+    "province": "Ontario",
+    "tagline": "Northumberland's hidden gem",
+    "emoji": "🌾",
+    "hero_color": "#1a0f0a",
+    "highlights": [
+      "Cobourg Beach — one of Ontario's finest sandy beaches",
+      "Victoria Hall — ornate 1860 courthouse and concert hall",
+      "Northumberland Farmers' Market — local produce and artisan goods",
+      "Ganaraska Forest — hiking and cross-country skiing",
+      "Historic downtown — boutique shops and local restaurants"
+    ],
+    "vibe": [
+      "🏖️ Beach",
+      "🌿 Nature",
+      "🛍️ Artisan",
+      "🏛️ Heritage"
+    ],
+    "popular_routes": [
+      "Toronto → Cobourg",
+      "Cobourg → Montréal"
+    ]
+  }
+];
+
 function Tab4({ onShopStation }) {
-  const [destinations, setDestinations] = useState([]);
   const [selected, setSelected] = useState(null);
   const [detail, setDetail] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    fetch(`${API}/destinations`)
-      .then((r) => r.json())
-      .then((d) => setDestinations(d.destinations || []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
 
   const openDestination = async (dest) => {
     setSelected(dest);
@@ -1120,12 +2154,6 @@ function Tab4({ onShopStation }) {
     (acc[d.province] = acc[d.province] || []).push(d);
     return acc;
   }, {});
-
-  if (loading) return (
-    <div style={{ display: "flex", justifyContent: "center", padding: "4rem 0" }}>
-      <Loader size={24} color="#FFCC00" className="animate-spin" />
-    </div>
-  );
 
   return (
     <>
