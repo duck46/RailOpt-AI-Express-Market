@@ -667,6 +667,16 @@ function Tab1({ shopStation = "All", onStationHandled }) {
         )}
       </div>
 
+      {/* Pharmacy nudge — shown as soon as user types a pharmacy keyword */}
+      {/advil|tylenol|ibuprofen|medication|medicine|drug|pill|painkiller|cold medicine|cough syrup|pharmacy|aspirin|nyquil|dayquil/i.test(aiQuery) && (
+        <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 12, padding: "0.75rem 1rem", marginBottom: "0.75rem", display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: "1rem", flexShrink: 0 }}>💊</span>
+          <span style={{ fontSize: "0.8rem", color: "#1e40af", fontWeight: 600, lineHeight: 1.4 }}>
+            Pharmacy items aren't in the local artisan catalogue — but you can order <strong>Advil, Tylenol, cold medicine</strong> and more via the <strong>Pickup tab</strong>. A Rail Certified Instacart shopper will meet you at the platform.
+          </span>
+        </div>
+      )}
+
       {/* Station filter — compact row: eco toggle + dropdown */}
       <div style={{ display: "flex", gap: "0.6rem", marginBottom: "1.25rem", alignItems: "center" }}>
         <button
@@ -758,6 +768,11 @@ function Tab1({ shopStation = "All", onStationHandled }) {
                   {item.sustainable && (
                     <span style={{ position: "absolute", top: 6, left: 6, background: "#dcfce7", borderRadius: 6, padding: "2px 7px", fontSize: "0.62rem", fontWeight: 800, color: "#166534", display: "flex", alignItems: "center", gap: 3 }}>
                       🌿 Eco
+                    </span>
+                  )}
+                  {!item.sustainable && (
+                    <span style={{ position: "absolute", top: 6, left: 6, background: "#fff0f0", borderRadius: 6, padding: "2px 7px", fontSize: "0.62rem", fontWeight: 800, color: "#b91c1c", display: "flex", alignItems: "center", gap: 3 }}>
+                      🍁 Canada
                     </span>
                   )}
                   <span style={{ fontSize: "2.8rem" }}>{vis.emoji}</span>
