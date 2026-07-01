@@ -81,6 +81,8 @@ const ITEM_VISUALS = {
   "TOR-001": { emoji: "🏭", bg: "#E8F5E9", label: "Distillery Print" },
   "TOR-002": { emoji: "🗼", bg: "#E3F2FD", label: "CN Tower Pin" },
   "TOR-003": { emoji: "🌿", bg: "#FFF8E1", label: "Herb & Spice Kit" },
+  "TOR-004": { emoji: "🍯", bg: "#FFF8E1", label: "Wildflower Honey" },
+  "TOR-005": { emoji: "🍵", bg: "#E8F5E9", label: "Chamomile Ginger Tea" },
   // Ottawa
   "OTT-001": { emoji: "🍁", bg: "#FCE4EC", label: "Parliament Pin" },
   "OTT-002": { emoji: "🎨", bg: "#E3F2FD", label: "Rideau Canal Print" },
