@@ -2724,6 +2724,18 @@ function TabAccount() {
 
 // ─── Tab: Instacart Station Pickup ────────────────────────────────────────────
 
+// IANA timezone for each demo stop — used for store-hours check so we evaluate
+// whether stores are open in the station's local time, not the passenger's device time.
+const STATION_TZ = {
+  "Toronto":    "America/Toronto",
+  "Cobourg":    "America/Toronto",
+  "Kingston":   "America/Toronto",
+  "Brockville": "America/Toronto",
+  "Ottawa":     "America/Toronto",
+  "Winnipeg":   "America/Winnipeg",
+  "Montréal":   "America/Toronto",
+};
+
 // Demo train schedule: offsets in minutes from "now" (Toronto → Montréal)
 const DEMO_STOPS = [
   { station: "Toronto",    province: "ON", offset: -45,  departed: true },
@@ -2787,24 +2799,32 @@ const ORDER_STEPS = [
   { icon: "✅", label: "Collected — enjoy!",        detail: "Step off, grab your bag, step back on" },
 ];
 
-// Stores operate 7am–10pm local time (covers pharmacy, grocery, gift shops)
-const STORE_OPEN_HOUR  = 7;   // 07:00
-const STORE_CLOSE_HOUR = 22;  // 22:00
+// Stores operate 7am–10pm in the station's LOCAL time
+const STORE_OPEN_HOUR  = 7;
+const STORE_CLOSE_HOUR = 22;
 
-function isStoreOpen(date) {
-  const h = date.getHours();
+// Returns the hour (0–23) of a Date in a given IANA timezone,
+// so store-hours are evaluated against station local time — not the passenger's device time.
+function localHourAt(date, tz) {
+  const h = new Intl.DateTimeFormat("en-CA", { hour: "numeric", hour12: false, timeZone: tz }).format(date);
+  return parseInt(h, 10);
+}
+
+function isStoreOpen(date, tz) {
+  const h = localHourAt(date, tz || "America/Toronto");
   return h >= STORE_OPEN_HOUR && h < STORE_CLOSE_HOUR;
 }
 
 function TabInstacart() {
   const now = Date.now();
   const stops = DEMO_STOPS.map((s) => {
+    const tz = STATION_TZ[s.station] || "America/Toronto";
     const eta = new Date(now + s.offset * 60000);
     // Shopper needs to be at store ~30 min before train arrives to allow VIA handoff
     const shopperDeadline = new Date(now + (s.offset - 30) * 60000);
-    const storeOpen = isStoreOpen(shopperDeadline);
+    const storeOpen = isStoreOpen(shopperDeadline, tz);
     const eligible = !s.departed && s.offset >= MIN_LEAD_MIN && storeOpen;
-    return { ...s, eta, minutesAway: s.offset, eligible, storeOpen };
+    return { ...s, eta, minutesAway: s.offset, eligible, storeOpen, tz };
   });
 
   const [selectedStop, setSelectedStop] = useState(() => stops.find((s) => s.eligible) || null);
@@ -2893,7 +2913,8 @@ function TabInstacart() {
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {stops.map((stop) => {
             const isSelected = selectedStop?.station === stop.station;
-            const timeStr = stop.departed ? "Departed" : stop.eta.toLocaleTimeString("en-CA", { hour: "2-digit", minute: "2-digit" });
+            // Show arrival time in the station's local timezone, not the passenger's device time
+            const timeStr = stop.departed ? "Departed" : stop.eta.toLocaleTimeString("en-CA", { hour: "2-digit", minute: "2-digit", timeZone: stop.tz });
             const hoursAway = (stop.offset / 60).toFixed(1);
             return (
               <div
