@@ -10,6 +10,18 @@ An AI-powered full-stack platform that turns the VIA Rail journey into a complet
 
 ---
 
+## The Market
+
+VIA Rail carried **4.4 million passengers** in 2025, travelling **986 million passenger miles** across **400+ communities** in Canada. **95% of those trips** are long-haul intercity journeys on the Québec City–Windsor Corridor — assigned seats, 2–5 hour rides, nowhere to go.
+
+VIA Rail spent **$51.4 million on onboard product costs in 2025**, up **14.5% year-over-year**, driven by higher ridership in Business and Sleeper classes and rising supplier prices. The annual report flags this cost line as a growing financial pressure — yet there is no demand intelligence behind it. VIA stocks trains by intuition, not data.
+
+RailOpt's Phase 2 AI turns that $51M cost line into a precision operation: learn what passengers on each route actually buy, tell VIA exactly what to stock, reduce waste, improve fill rates. The data moat is built in Phase 1.
+
+*(Source: VIA Rail 2025 Annual Report)*
+
+---
+
 ## The Problem
 
 Every traveller has had that moment — you're on the train and you realize you forgot something. Your headache pills. A gift for whoever you're visiting. A snack for the kids. Normally you're stuck until the next city.
@@ -41,6 +53,8 @@ VIA Rail's current onboard commerce is a café cart. No app, no local products, 
 
 ### 🧠 Phase 2 — AI Onboard Intelligence *(Roadmap)*
 Every Instacart order trains the AI on what passengers on each route actually want. Once enough signal is gathered, the AI tells VIA Rail what to stock onboard — seat delivery unlocked without any platform stop or staff liability issue. The data becomes the moat.
+
+VIA Rail spent **$51.4M on onboard product costs in 2025 (+14.5% YoY)** with no demand intelligence behind that spend. Phase 2 directly attacks that inefficiency: route-level demand forecasting means less waste, better fill rates, and a data asset VIA doesn't currently have. RailOpt is also timed to VIA's **32 new Venture trainsets** just deployed in the Corridor — a clean slate to build digital commerce infrastructure from day one.
 
 ---
 
