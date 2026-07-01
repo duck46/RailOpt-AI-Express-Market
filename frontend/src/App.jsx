@@ -3276,11 +3276,193 @@ function TabInstacart() {
   );
 }
 
+// ─── Pitch Tab ────────────────────────────────────────────────────────────────
+function TabPitch() {
+  const acct = JSON.parse(localStorage.getItem("railopt_account") || "{}");
+  const founderName = acct.name || "Founder";
+
+  const Section = ({ num, title, color = "#FFCC00", children }) => (
+    <div style={{ marginBottom: "1.5rem" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "0.75rem" }}>
+        <div style={{ background: color, borderRadius: 8, width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "0.8rem", color: "#111", flexShrink: 0 }}>{num}</div>
+        <h2 style={{ fontWeight: 800, fontSize: "1rem", color: "#111", margin: 0 }}>{title}</h2>
+      </div>
+      <div style={{ paddingLeft: 38 }}>{children}</div>
+    </div>
+  );
+
+  const Bullet = ({ children }) => (
+    <div style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: "0.45rem" }}>
+      <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#FFCC00", marginTop: 7, flexShrink: 0 }} />
+      <span style={{ fontSize: "0.82rem", color: "#374151", lineHeight: 1.55 }}>{children}</span>
+    </div>
+  );
+
+  const Stat = ({ val, label }) => (
+    <div style={{ background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 10, padding: "0.6rem 0.75rem", textAlign: "center" }}>
+      <div style={{ fontWeight: 800, fontSize: "1.1rem", color: "#92400e" }}>{val}</div>
+      <div style={{ fontSize: "0.62rem", color: "#b45309", marginTop: 2, fontWeight: 600 }}>{label}</div>
+    </div>
+  );
+
+  const Tag = ({ children, color = "#f5f5f4", text = "#374151" }) => (
+    <span style={{ background: color, color: text, borderRadius: 99, padding: "3px 10px", fontSize: "0.72rem", fontWeight: 700, display: "inline-block", margin: "3px 4px 3px 0" }}>{children}</span>
+  );
+
+  return (
+    <div style={{ maxWidth: 720, margin: "0 auto", paddingBottom: "3rem" }}>
+
+      {/* Hero */}
+      <div style={{ background: "linear-gradient(135deg, #1c1917 0%, #292524 100%)", borderRadius: 16, padding: "1.5rem", marginBottom: "1.75rem", textAlign: "center" }}>
+        <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>🚆</div>
+        <h1 style={{ fontWeight: 900, fontSize: "1.4rem", color: "#FFCC00", margin: "0 0 0.35rem" }}>RailOpt AI Express Market</h1>
+        <p style={{ color: "#e7e5e4", fontSize: "0.85rem", margin: "0 0 1rem", lineHeight: 1.5 }}>Onboard Retail & Destination Discovery Platform for VIA Rail</p>
+        <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap" }}>
+          {["SDG 7", "SDG 8", "SDG 9", "SDG 10", "SDG 11", "SDG 12"].map((s) => (
+            <span key={s} style={{ background: "rgba(255,204,0,0.15)", border: "1px solid rgba(255,204,0,0.4)", borderRadius: 99, padding: "3px 10px", fontSize: "0.7rem", fontWeight: 700, color: "#FFCC00" }}>{s}</span>
+          ))}
+        </div>
+      </div>
+
+      {/* 1. The Problem */}
+      <Section num="1" title="The Problem" color="#ef4444">
+        <Bullet>VIA Rail carries <strong>4.4M passengers/year</strong> on 2–5 hour long-haul journeys — yet there is no digital commerce layer on any train.</Bullet>
+        <Bullet>Passengers who forget medication, need a gift, or want local snacks have one option: <strong>sprint to a convenience store during a 10-minute stop</strong> and hope they make it back.</Bullet>
+        <Bullet>VIA Rail spent <strong>$51.4M on onboard products in 2025 (+14.5% YoY)</strong> with no demand data behind that spend — stocking by intuition, not intelligence.</Bullet>
+        <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 10, padding: "0.75rem 1rem", margin: "0.75rem 0", fontSize: "0.78rem", color: "#7f1d1d", fontStyle: "italic", lineHeight: 1.6 }}>
+          "Sioux Lookout has a Subway just down the street — that's pushing it time wise — or a Rexall past the CIBC. There have been times the stop is long enough for a dash over to Subway but it is very rare. Make sure you have at least 20 minutes otherwise do NOT make the run." — Reddit, r/ViaRail
+        </div>
+        <Bullet>The demand is real and proven. VIA Rail just has no infrastructure to serve it.</Bullet>
+      </Section>
+
+      {/* 2. The Solution */}
+      <Section num="2" title="The Solution" color="#22c55e">
+        <Bullet><strong>Shop tab:</strong> 120+ non-perishable products from local artisans at 41 VIA Rail stations across 8 provinces — carried onboard on consignment, browsable via AI Concierge, collected at the café car pickup zone.</Bullet>
+        <Bullet><strong>Pickup tab:</strong> Order from any local store near any stop. A Rail Certified Instacart shopper meets you at your car door during the scheduled stop — you never leave the train.</Bullet>
+        <Bullet><strong>Phase 2 AI:</strong> Every order trains a demand model. Once we have 6–12 months of route data, we sell VIA Rail a forecasting licence — telling them exactly what to stock on each route, cutting waste from their $51.4M spend.</Bullet>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8, margin: "0.75rem 0" }}>
+          <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.75rem" }}>
+            <div style={{ fontWeight: 800, fontSize: "0.82rem", color: "#166534", marginBottom: 4 }}>🛍️ Shop — Artisan Consignment</div>
+            <div style={{ fontSize: "0.72rem", color: "#374151", lineHeight: 1.5 }}>Products loaded at origin station · café car pickup zone · 8-min ready time · AI-personalized feed</div>
+          </div>
+          <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.75rem" }}>
+            <div style={{ fontWeight: 800, fontSize: "0.82rem", color: "#166534", marginBottom: 4 }}>🛒 Pickup — Instacart Platform</div>
+            <div style={{ fontSize: "0.72rem", color: "#374151", lineHeight: 1.5 }}>Any store · 2-hr lead time · platform handoff · business hours enforced · 5-step tracker</div>
+          </div>
+        </div>
+      </Section>
+
+      {/* 3. The Team */}
+      <Section num="3" title="The Team" color="#8b5cf6">
+        <div style={{ background: "#faf5ff", border: "1px solid #c4b5fd", borderRadius: 10, padding: "0.85rem 1rem", marginBottom: "0.5rem" }}>
+          <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#6d28d9", marginBottom: 4 }}>{founderName}</div>
+          <div style={{ fontSize: "0.78rem", color: "#374151", lineHeight: 1.55 }}>
+            Builder of RailOpt AI Express Market — full-stack platform combining AI personalization, offline-first commerce infrastructure, and a two-phase business model targeting VIA Rail's $51.4M onboard product cost line.
+          </div>
+        </div>
+        <Bullet>Deep understanding of VIA Rail's operational constraints (Moneris Go POS, S3 Passenger platform, Economy cart service hours, seat assignment rules by route).</Bullet>
+        <Bullet>Built PIPEDA + Bill C-27/CPPA compliant data architecture with opt-in consent, right to delete, and anonymous aggregation for AI training.</Bullet>
+        <Bullet>Positioned to execute Phase 1 without any VIA Rail contract — standalone passenger app, data flywheel starts immediately.</Bullet>
+      </Section>
+
+      {/* 4. Why Now */}
+      <Section num="4" title="Why Now?" color="#f59e0b">
+        <Bullet><strong>VIA Rail's 32 new Venture trainsets</strong> just deployed on the Québec City–Windsor Corridor — a clean-slate digital infrastructure moment. No legacy system to integrate around.</Bullet>
+        <Bullet><strong>Instacart + Uber partnership (May 2024)</strong> proves the platform pickup model at scale. Rail Certified shoppers ride the same wave.</Bullet>
+        <Bullet><strong>AI inference costs collapsed</strong> — OpenRouter's Gemini Flash makes real-time product personalization and demand forecasting viable at zero marginal cost per query.</Bullet>
+        <Bullet><strong>Post-pandemic modal shift</strong> — intercity rail ridership rebounding; VIA's 4.4M passenger year (2025) is the baseline, not the ceiling.</Bullet>
+        <Bullet><strong>Bill C-27 / CPPA</strong> creates a trust gap for data-driven commerce. RailOpt is built compliant from day one — a moat competitors can't retrofit easily.</Bullet>
+      </Section>
+
+      {/* 5. The Market */}
+      <Section num="5" title="The Market" color="#06b6d4">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8, marginBottom: "0.85rem" }}>
+          <Stat val="4.4M" label="VIA Rail passengers/year" />
+          <Stat val="$489M" label="2025 passenger revenue" />
+          <Stat val="95%" label="long-haul corridor trips" />
+          <Stat val="$51.4M" label="onboard product spend" />
+        </div>
+        <Bullet><strong>Primary users:</strong> VIA Rail passengers on long-haul intercity journeys (2–5 hours) — highest dwell time of any transit mode.</Bullet>
+        <Bullet><strong>Secondary customers:</strong> Local artisan vendors along 41 stations in 8 provinces with zero existing e-commerce presence.</Bullet>
+        <Bullet><strong>Enterprise customer (Phase 2):</strong> VIA Rail itself — a Crown Corporation with a $51.4M annual pain point and no current demand intelligence solution.</Bullet>
+        <Bullet>TAM extends to GO Transit, Amtrak, and any intercity rail operator running long-haul assigned-seat routes with scheduled stops.</Bullet>
+      </Section>
+
+      {/* 6. Business Model */}
+      <Section num="6" title="Business Model" color="#FFCC00">
+        {[
+          ["5%", "Commission per Pickup order", "On every Instacart station pickup processed through RailOpt"],
+          ["$0.99", "Platform fee per order", "Charged to passenger at checkout — below psychological resistance threshold"],
+          ["15%", "Shop commission", "Standard marketplace take rate on every artisan sale"],
+          ["SaaS", "Phase 2 licence to VIA Rail", "AI demand forecasting — route-level stocking recommendations"],
+        ].map(([rate, name, desc]) => (
+          <div key={name} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: "0.6rem", padding: "0.6rem 0.75rem", background: "#fff", border: "1px solid #e7e5e4", borderRadius: 10 }}>
+            <div style={{ fontWeight: 900, fontSize: "1rem", color: "#FFCC00", minWidth: 42, flexShrink: 0 }}>{rate}</div>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#111" }}>{name}</div>
+              <div style={{ fontSize: "0.72rem", color: "#6b7280", lineHeight: 1.4, marginTop: 2 }}>{desc}</div>
+            </div>
+          </div>
+        ))}
+        <div style={{ background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 10, padding: "0.65rem 0.85rem", marginTop: "0.5rem", fontSize: "0.78rem", color: "#92400e", lineHeight: 1.5 }}>
+          <strong>Phase 1 ARR estimate:</strong> At 4.4M passengers/year with 2% Pickup conversion ($25 AOV) and 5% Shop conversion ($18 AOV) → <strong>~$270K ARR</strong> before Phase 2 SaaS revenue.
+        </div>
+      </Section>
+
+      {/* 7. Measurable Impact */}
+      <Section num="7" title="Measurable Impact" color="#10b981">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: "0.85rem" }}>
+          {[
+            ["SDG 7", "⚡", "Zero-marginal-carbon commerce on existing clean rail infrastructure"],
+            ["SDG 8", "💼", "New income channel for artisans with zero e-commerce setup"],
+            ["SDG 10", "⚖️", "Churchill vendor = Toronto vendor on the digital shelf"],
+            ["SDG 9", "🏗️", "Offline-first infrastructure + AI demand forecasting"],
+            ["SDG 11", "🏙️", "Modal shift; 41 corridor communities promoted"],
+            ["SDG 12", "♻️", "Consignment model eliminates VIA's overstock waste"],
+          ].map(([sdg, icon, desc]) => (
+            <div key={sdg} style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.65rem 0.7rem" }}>
+              <div style={{ fontWeight: 800, fontSize: "0.75rem", color: "#166534", marginBottom: 3 }}>{icon} {sdg}</div>
+              <div style={{ fontSize: "0.65rem", color: "#374151", lineHeight: 1.4 }}>{desc}</div>
+            </div>
+          ))}
+        </div>
+        <Bullet><strong>Success metrics:</strong> Order conversion rate, artisan vendor revenue per route, CO₂ avoided per passenger-km, Phase 2 AI forecast accuracy vs. actual VIA stocking needs.</Bullet>
+        <Bullet>Phase 2 impact: measurable reduction in VIA Rail's $51.4M onboard product waste line — a trackable, auditable outcome tied directly to the AI's route forecasts.</Bullet>
+      </Section>
+
+      {/* 8. Additional */}
+      <Section num="8" title="Additional Information" color="#6b7280">
+        <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", marginBottom: "0.4rem" }}>Competitive Advantage</div>
+        <Bullet>The only platform that combines onboard artisan consignment + Instacart platform pickup + AI demand intelligence in a single rail-native product.</Bullet>
+        <Bullet>2018 Metrolinx/PC Express pilot failed: order-night-before, walk to locker, Loblaws only, no personalization, 3-min commuter stops. RailOpt solves every one of those failure modes.</Bullet>
+
+        <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Go-to-Market — No Permission Needed</div>
+        <Bullet>Phase 1 launches as a standalone passenger app — no VIA Rail contract required. Instacart shoppers already service station areas.</Bullet>
+        <Bullet>This sidesteps the 18–36 month Crown Corporation procurement cycle. We build leverage before we knock on the door.</Bullet>
+
+        <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Traction & Validation</div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: "0.5rem" }}>
+          {["120+ products catalogued", "41 stations mapped", "8 provinces", "Live demo deployed", "PIPEDA compliant", "OpenRouter AI integrated"].map((t) => (
+            <Tag key={t} color="#f0fdf4" text="#166534">{t}</Tag>
+          ))}
+        </div>
+
+        <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Scalability & Roadmap</div>
+        <Bullet><strong>Phase 1:</strong> Passenger app live, Instacart Pickup + artisan Shop, demand data collection across all routes.</Bullet>
+        <Bullet><strong>Phase 2:</strong> AI demand forecasting SaaS sold to VIA Rail — route-level stocking recommendations, reduces $51.4M cost line.</Bullet>
+        <Bullet><strong>Phase 3:</strong> Expand to GO Transit, Amtrak, and international intercity rail operators. Same data flywheel, new networks.</Bullet>
+      </Section>
+
+    </div>
+  );
+}
+
 const TABS = [
   { id: "retail",    emoji: "🛍️", label: "Shop" },
   { id: "instacart", emoji: "🛒", label: "Pickup" },
   { id: "discover",  emoji: "🧭", label: "Discover" },
   { id: "account",   emoji: "👤", label: "Account" },
+  { id: "pitch",     emoji: "🎯", label: "Pitch" },
 ];
 
 export default function App() {
@@ -3349,6 +3531,7 @@ export default function App() {
         {tab === "instacart" && <TabInstacart />}
         {tab === "discover"  && <Tab4 onShopStation={handleShopStation} />}
         {tab === "account"   && <TabAccount />}
+        {tab === "pitch"     && <TabPitch />}
       </main>
     </div>
   );
