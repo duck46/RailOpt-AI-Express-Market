@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   ShoppingCart, Wrench, ShieldCheck,
   Plus, Trash2, Zap, Truck, Gauge, CloudLightning,
@@ -51,6 +51,38 @@ const STATION_COORDS = {
   "La Tuque":       [47.4571, -72.7898],
   "Senneterre":     [48.3901, -77.2278],
 };
+
+// ─── Info Bubble ──────────────────────────────────────────────────────────────
+function InfoBubble({ content, color = "#FFCC00" }) {
+  const [visible, setVisible] = useState(false);
+  const timerRef = useRef(null);
+  const ref = useRef(null);
+
+  const show = () => {
+    clearTimeout(timerRef.current);
+    setVisible(true);
+    timerRef.current = setTimeout(() => setVisible(false), 4000);
+  };
+  const hide = () => { clearTimeout(timerRef.current); setVisible(false); };
+
+  useEffect(() => () => clearTimeout(timerRef.current), []);
+
+  return (
+    <span ref={ref} style={{ position: "relative", display: "inline-flex", alignItems: "center", verticalAlign: "middle" }}>
+      <button
+        onMouseEnter={show} onMouseLeave={hide} onClick={(e) => { e.stopPropagation(); visible ? hide() : show(); }}
+        style={{ background: "none", border: `1.5px solid ${color}`, borderRadius: "50%", width: 16, height: 16, fontSize: "0.6rem", fontWeight: 800, color, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", lineHeight: 1, padding: 0, flexShrink: 0 }}
+        aria-label="More info"
+      >i</button>
+      {visible && (
+        <div style={{ position: "absolute", bottom: "calc(100% + 6px)", left: "50%", transform: "translateX(-50%)", background: "#1c1917", border: `1px solid ${color}40`, borderRadius: 10, padding: "0.6rem 0.8rem", width: 240, zIndex: 999, boxShadow: "0 4px 20px rgba(0,0,0,0.35)", pointerEvents: "none" }}>
+          <div style={{ fontSize: "0.72rem", color: "#e7e5e4", lineHeight: 1.5 }}>{content}</div>
+          <div style={{ position: "absolute", bottom: -5, left: "50%", transform: "translateX(-50%)", width: 8, height: 8, background: "#1c1917", border: `1px solid ${color}40`, borderTop: "none", borderLeft: "none", rotate: "45deg" }} />
+        </div>
+      )}
+    </span>
+  );
+}
 
 function haversineKm(lat1, lon1, lat2, lon2) {
   const R = 6371, d2r = Math.PI / 180;
@@ -614,46 +646,16 @@ function Tab1({ shopStation = "All", onStationHandled }) {
         />
       )}
 
-      {/* Prosperity Impact Banner — collapsed by default */}
-      <details style={{ marginBottom: "1rem" }}>
-        <summary style={{ background: "linear-gradient(135deg, #1c1917 0%, #1a2e1a 100%)", border: "1px solid #22c55e40", borderRadius: 14, padding: "0.65rem 1.1rem", cursor: "pointer", listStyle: "none", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: "1rem" }}>🌱</span>
-            <span style={{ fontWeight: 800, fontSize: "0.82rem", color: "#86efac", letterSpacing: "0.07em", textTransform: "uppercase" }}>Prosperity Impact — SDG 7 · SDG 8 · SDG 10</span>
-          </div>
-          <span style={{ fontSize: "0.7rem", color: "#86efac", opacity: 0.7 }}>▼ learn more</span>
-        </summary>
-        <div style={{ background: "linear-gradient(135deg, #1c1917 0%, #1a2e1a 100%)", border: "1px solid #22c55e40", borderTop: "none", borderRadius: "0 0 14px 14px", padding: "0.85rem 1.1rem" }}>
-          <p style={{ margin: "0 0 0.75rem", fontSize: "0.78rem", color: "#d1fae5", lineHeight: 1.55 }}>
-            Every purchase puts money directly into a <strong style={{ color: "#86efac" }}>local Canadian artisan's hands</strong> — a Churchill candle maker, a Miramichi soap producer, a Jasper woodworker.
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: "0.75rem" }}>
-            {[
-              { val: "120+", label: "Local Products" },
-              { val: "41",   label: "VIA Stations" },
-              { val: "8",    label: "Provinces" },
-              { val: "4.4M", label: "Annual Passengers" },
-            ].map(({ val, label }) => (
-              <div key={label} style={{ background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.55rem 0.4rem", textAlign: "center" }}>
-                <div style={{ fontWeight: 800, fontSize: "1rem", color: "#4ade80", lineHeight: 1 }}>{val}</div>
-                <div style={{ fontSize: "0.62rem", color: "#86efac", marginTop: 3, lineHeight: 1.3 }}>{label}</div>
-              </div>
-            ))}
-          </div>
-          <div style={{ background: "rgba(255,204,0,0.08)", border: "1px solid rgba(255,204,0,0.25)", borderRadius: 10, padding: "0.55rem 0.8rem", display: "flex", alignItems: "flex-start", gap: 8, marginBottom: "0.6rem" }}>
-            <span style={{ fontSize: "0.9rem", flexShrink: 0, marginTop: 1 }}>⚖️</span>
-            <p style={{ margin: 0, fontSize: "0.73rem", color: "#fef3c7", lineHeight: 1.5 }}>
-              <strong style={{ color: "#FFCC00" }}>Equal digital shelf space.</strong> A vendor in Churchill, Manitoba gets the same AI-powered storefront and access to VIA Rail's 4.4M passengers as a vendor in Toronto — zero e-commerce setup required. Products travel onboard on <strong style={{ color: "#FFCC00" }}>consignment</strong>: no upfront cost to VIA Rail, vendors paid per sale.
-            </p>
-          </div>
-          <div style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.55rem 0.8rem", display: "flex", alignItems: "flex-start", gap: 8 }}>
-            <span style={{ fontSize: "0.9rem", flexShrink: 0, marginTop: 1 }}>⚡</span>
-            <p style={{ margin: 0, fontSize: "0.73rem", color: "#d1fae5", lineHeight: 1.5 }}>
-              <strong style={{ color: "#86efac" }}>Zero-marginal-carbon commerce.</strong> The train runs whether passengers buy anything or not. Every dollar of artisan revenue generated onboard is prosperity built on clean rail infrastructure — economic growth decoupled from additional energy consumption. Rail emits <strong style={{ color: "#86efac" }}>~80% less CO₂</strong> per passenger-km than driving.
-            </p>
-          </div>
-        </div>
-      </details>
+      {/* Prosperity Impact chip */}
+      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: "0.85rem" }}>
+        <span style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 20, padding: "0.2rem 0.65rem", fontSize: "0.7rem", fontWeight: 700, color: "#166534", display: "flex", alignItems: "center", gap: 6 }}>
+          🌱 Prosperity Impact — SDG 7 · SDG 8 · SDG 10
+          <InfoBubble color="#22c55e" content={
+            <><strong style={{ color: "#86efac" }}>120+ local products · 41 stations · 8 provinces · 4.4M passengers.</strong>
+            {" "}Every purchase goes directly to a local Canadian artisan on consignment — no upfront cost to VIA Rail, vendors paid per sale. Rail emits ~80% less CO₂/km than driving, making every dollar earned onboard zero-marginal-carbon commerce.</>
+          } />
+        </span>
+      </div>
 
       {/* After-hours notice — VIA Rail cart service ends at 7pm */}
       {new Date().getHours() >= 19 && (
@@ -671,6 +673,7 @@ function Tab1({ shopStation = "All", onStationHandled }) {
         <span style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 20, padding: "0.2rem 0.65rem", fontSize: "0.7rem", fontWeight: 700, color: "#166534", display: "flex", alignItems: "center", gap: 5 }}>
           <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
           Offline-first — orders queue automatically in no-signal zones
+          <InfoBubble color="#22c55e" content="Orders placed in tunnels or remote stretches are stored locally and sync automatically when the train reaches the next station's Wi-Fi. Zero orders lost, even on The Canadian through Northern Ontario." />
         </span>
       </div>
 
@@ -2953,17 +2956,27 @@ function TabInstacart() {
           </div>
         </div>
         <div style={{ display: "flex", gap: 16, marginTop: "0.75rem", flexWrap: "wrap" }}>
-          {[["🏪", "Any local store"], ["🏅", "Rail Certified shopper"], ["🚉", "Platform handoff"]].map(([icon, label]) => (
+          {[
+            ["🏪", "Any local store", null],
+            ["🏅", "Rail Certified shopper", "Instacart shoppers credentialed for platform handoff — they meet you at your car door during the stop so you never leave the train."],
+            ["🚉", "Platform handoff", "Your shopper arrives at the platform before the train does. You collect your order at your car door during the scheduled stop."],
+          ].map(([icon, label, tip]) => (
             <div key={label} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.75rem", opacity: 0.9 }}>
               <span>{icon}</span><span>{label}</span>
+              {tip && <InfoBubble content={tip} />}
             </div>
           ))}
         </div>
         <div style={{ marginTop: "0.85rem", paddingTop: "0.75rem", borderTop: "1px solid rgba(255,255,255,0.15)", display: "flex", gap: 16, flexWrap: "wrap", marginBottom: "0.6rem" }}>
-          {[["5%", "commission per order"], ["$0.99", "platform fee per order"], ["Phase 2", "SaaS to VIA Rail"]].map(([val, label]) => (
-            <div key={label} style={{ fontSize: "0.72rem", opacity: 0.85 }}>
+          {[
+            ["5%", "commission per order", null],
+            ["$0.99", "platform fee per order", null],
+            ["Phase 2", "SaaS to VIA Rail", "Every Instacart order trains the AI on what passengers on each route actually want. Once we have 6–12 months of data, we sell VIA Rail a demand forecasting licence — telling them exactly what to stock on each route. VIA spent $51.4M on onboard products in 2025 with no demand data behind it."],
+          ].map(([val, label, tip]) => (
+            <div key={label} style={{ fontSize: "0.72rem", opacity: 0.85, display: "flex", alignItems: "center", gap: 4 }}>
               <span style={{ fontWeight: 800, color: "#FFCC00" }}>{val}</span>
-              <span style={{ marginLeft: 4 }}>{label}</span>
+              <span>{label}</span>
+              {tip && <InfoBubble content={tip} />}
             </div>
           ))}
         </div>
