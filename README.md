@@ -26,7 +26,13 @@ RailOpt's Phase 2 AI turns that $51M cost line into a precision operation: learn
 
 Every traveller has had that moment — you're on the train and you realize you forgot something. Your headache pills. A gift for whoever you're visiting. A snack for the kids. Normally you're stuck until the next city.
 
-VIA Rail's current onboard commerce is a café cart. No app, no local products, no AI, no third-party delivery integration. RailOpt fills that gap entirely.
+This is how passengers on The Canadian actually solve it today, from Reddit:
+
+> *"Sioux Lookout has a Subway just down the street — that's pushing it time wise — or a Rexall past the CIBC across the street which is your best bet. There have been times the stop is long enough for a dash over to Subway but it is very rare. Make sure you have at least 20 minutes in station otherwise do NOT make the run. If you have 10 minutes you can do the Rexall. It does involve running. Make sure you communicate clearly with VIA staff. Also the Edmonton vending machines are cheaper than on train. Winnipeg and Jasper are your main places to pick up food."*
+
+Passengers are sprinting to convenience stores during 10-minute stops, timing Rexall dashes, and relying on local knowledge passed around Reddit threads. The demand is real and proven — VIA Rail just has no infrastructure to serve it.
+
+RailOpt replaces the sprint with an app. Order before the stop, a Rail Certified Instacart shopper meets you at the platform door, you never leave the train.
 
 ---
 
