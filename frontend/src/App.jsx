@@ -664,12 +664,12 @@ function Tab1({ shopStation = "All", onStationHandled }) {
         )}
       </div>
 
-      {/* Station filter pills + eco toggle */}
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem", flexWrap: "wrap" }}>
+      {/* Station filter — compact row: eco toggle + dropdown */}
+      <div style={{ display: "flex", gap: "0.6rem", marginBottom: "1.25rem", alignItems: "center" }}>
         <button
           onClick={() => setEcoOnly((v) => !v)}
           style={{
-            padding: "0.35rem 0.85rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
+            flexShrink: 0, padding: "0.45rem 0.9rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
             background: ecoOnly ? "#dcfce7" : "#f5f5f4",
             color: ecoOnly ? "#166534" : "#6b7280",
             border: ecoOnly ? "1.5px solid #86efac" : "1.5px solid #e7e5e4",
@@ -677,11 +677,22 @@ function Tab1({ shopStation = "All", onStationHandled }) {
         >
           🌿 Eco Picks
         </button>
-        {stations.map((s) => (
-          <button key={s} className={`section-pill ${activeStation === s ? "active" : ""}`} onClick={() => setActiveStation(s)}>
-            {s === "All" ? "🚉 All Stations" : `📍 ${s}`}
-          </button>
-        ))}
+        <select
+          value={activeStation}
+          onChange={(e) => setActiveStation(e.target.value)}
+          style={{
+            flex: 1, padding: "0.45rem 0.85rem", borderRadius: 20, fontSize: "0.82rem", fontWeight: 700,
+            border: activeStation !== "All" ? "1.5px solid #FFCC00" : "1.5px solid #e7e5e4",
+            background: activeStation !== "All" ? "#fffbeb" : "#fafaf9",
+            color: "#111", cursor: "pointer", outline: "none", appearance: "none",
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+            backgroundRepeat: "no-repeat", backgroundPosition: "right 0.75rem center", paddingRight: "2rem",
+          }}
+        >
+          {stations.map((s) => (
+            <option key={s} value={s}>{s === "All" ? "🚉 All Stations" : s}</option>
+          ))}
+        </select>
       </div>
 
       {loading ? (
