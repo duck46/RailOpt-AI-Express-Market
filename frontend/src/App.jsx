@@ -266,9 +266,9 @@ function OrderConfirmation({ orderNumber, total, itemCount, onClose }) {
       <div style={{ background: "#FFF8E1", border: "1px solid rgba(255,204,0,0.4)", borderRadius: 14, padding: "1rem", marginBottom: "1.5rem", display: "flex", alignItems: "flex-start", gap: 10, textAlign: "left" }}>
         <Train size={18} color="#b45309" style={{ flexShrink: 0, marginTop: 2 }} />
         <div>
-          <p style={{ fontWeight: 700, fontSize: "0.85rem", color: "#92400e", margin: "0 0 2px" }}>Delivered to your seat</p>
+          <p style={{ fontWeight: 700, fontSize: "0.85rem", color: "#92400e", margin: "0 0 2px" }}>Onboard Pickup Zone</p>
           <p style={{ fontSize: "0.78rem", color: "#b45309", margin: 0, lineHeight: 1.5 }}>
-            A VIA Rail crew member will bring your items to your seat at the next platform stop.
+            Collect your items at the designated onboard pickup zone (café car area) — ready within 8 minutes of ordering.
           </p>
         </div>
       </div>
@@ -380,7 +380,7 @@ function CartDrawer({ cart, items, onClose, onRemove, onChangeQty, onSync, synci
                     <span style={{ fontWeight: 700, color: "#111" }}>Order Total</span>
                     <span style={{ fontWeight: 800, fontSize: "1.25rem", color: "#111" }}>${total.toFixed(2)}</span>
                   </div>
-                  <p style={{ fontSize: "0.7rem", color: "#9ca3af", marginTop: 4 }}>Delivered to your seat at the next stop</p>
+                  <p style={{ fontSize: "0.7rem", color: "#9ca3af", marginTop: 4 }}>Pick up at the onboard café zone — ready in ~8 min</p>
                 </div>
 
                 <button
@@ -2334,7 +2334,7 @@ const DEMO_MESSAGES = [
     from: "RailOpt Express",
     avatar: "🚆",
     subject: "Your order is being prepared",
-    body: "Your order ORD-1001 is currently being prepared by our onboard team. Estimated delivery to your seat in 8–12 minutes.",
+    body: "Your order ORD-1001 is currently being prepared by our onboard team. Head to the onboard pickup zone (café car) in 8–12 minutes to collect your items.",
     time: "2 min ago",
     read: false,
   },
@@ -2448,9 +2448,12 @@ function TabAccount() {
             <Train size={16} color="#FFCC00" /> Journey Details
           </h3>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-            {field("Car Number", "seatCar", "text", "e.g. 4")}
-            {field("Seat Number", "seatNumber", "text", "e.g. 22A")}
+            {field("Car Number (optional)", "seatCar", "text", "e.g. 4")}
+            {field("Seat Number (optional)", "seatNumber", "text", "e.g. 22A")}
           </div>
+          <p style={{ fontSize: "0.72rem", color: "#9ca3af", margin: 0, lineHeight: 1.5 }}>
+            Seat assignment is only available on the Québec City–Windsor Corridor and Sleeper class. Long-distance Economy is first come, first served.
+          </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
             <label style={{ fontSize: "0.75rem", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Travel Class</label>
             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -2980,13 +2983,13 @@ function TabInstacart() {
         </div>
         <p style={{ fontSize: "0.78rem", opacity: 0.9, margin: "0 0 0.85rem 0", lineHeight: 1.5 }}>
           Every Instacart order you place teaches our AI what passengers on your route actually want.
-          Once we have enough signal, popular items get stocked <strong>onboard</strong> — and delivered right to your seat by VIA Rail staff, no platform stop required.
+          Once we have enough signal, popular items get stocked <strong>onboard</strong> — available at the onboard pickup zone on every train, no platform stop required.
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {[
             ["📊", "AI learns demand per route, time, and season"],
             ["🚆", "VIA Rail stocks smarter based on predicted orders"],
-            ["💺", "Seat delivery unlocked — no platform step needed"],
+            ["🛍️", "Onboard pickup zone stocked — no platform step needed"],
           ].map(([icon, text]) => (
             <div key={text} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: "0.76rem", opacity: 0.9 }}>
               <span>{icon}</span><span>{text}</span>
@@ -3134,7 +3137,7 @@ function TabInstacart() {
               <span style={{ fontWeight: 700, color: "#111" }}>Order Total</span>
               <span style={{ fontWeight: 800, fontSize: "1.2rem", color: "#111" }}>${cartTotal.toFixed(2)}</span>
             </div>
-            <p style={{ fontSize: "0.68rem", color: "#9ca3af", marginBottom: "1rem", textAlign: "center" }}>Instacart service fees and taxes applied at checkout · Delivered to seat {JSON.parse(localStorage.getItem("railopt_account") || "{}").seatNumber || "—"}</p>
+            <p style={{ fontSize: "0.68rem", color: "#9ca3af", marginBottom: "1rem", textAlign: "center" }}>Instacart service fees and taxes applied at checkout · Rail Certified shopper meets you at platform door</p>
 
             <button onClick={handlePlaceOrder} style={{ width: "100%", background: "#003D1F", color: "#fff", fontWeight: 800, fontSize: "1rem", border: "none", borderRadius: 50, padding: "0.9rem", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
               <ShoppingBag size={18} /> Place Pickup Order
@@ -3209,7 +3212,7 @@ export default function App() {
           <span style={{ fontSize: "1.1rem" }}>🚆</span>
           <p style={{ margin: 0, fontSize: "0.78rem", color: "#e7e5e4", lineHeight: 1.4 }}>
             <strong style={{ color: "#FFCC00" }}>Forgot something? Need something?</strong>
-            {" "}You're on a train — it comes to you. Local artisan picks delivered to your seat. Anything else at the platform.
+            {" "}You're on a train — it comes to you. Local artisan picks at the onboard pickup zone. Anything else at the platform.
           </p>
         </div>
       </div>
