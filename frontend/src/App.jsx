@@ -614,7 +614,7 @@ function Tab1({ shopStation = "All", onStationHandled }) {
           <span style={{ fontSize: "1rem", flexShrink: 0 }}>🌙</span>
           <span style={{ fontSize: "0.78rem", color: "#fef3c7", lineHeight: 1.4 }}>
             <strong style={{ color: "#FFCC00" }}>Onboard cart service has ended for the night.</strong>
-            {" "}The Shop tab is open 24/7 — order now, collect at the café car zone.
+            {" "}Order now — items stocked onboard are ready at the café car zone within minutes. Pre-orders for items not yet onboard will be loaded at your next stop.
           </span>
         </div>
       )}
@@ -2202,7 +2202,7 @@ function Tab4({ onShopStation }) {
   const closeDetail = () => { setSelected(null); setDetail(null); };
 
   // Province grouping
-  const byProvince = destinations.reduce((acc, d) => {
+  const byProvince = DESTINATIONS.reduce((acc, d) => {
     (acc[d.province] = acc[d.province] || []).push(d);
     return acc;
   }, {});
