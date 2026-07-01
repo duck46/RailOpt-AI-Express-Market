@@ -268,7 +268,7 @@ function OrderConfirmation({ orderNumber, total, itemCount, onClose }) {
         <div>
           <p style={{ fontWeight: 700, fontSize: "0.85rem", color: "#92400e", margin: "0 0 2px" }}>Onboard Pickup Zone</p>
           <p style={{ fontSize: "0.78rem", color: "#b45309", margin: 0, lineHeight: 1.5 }}>
-            Collect your items at the designated onboard pickup zone (café car area) — ready within 8 minutes of ordering.
+            Collect your items at the café car pickup zone — ready within 8 minutes. Products are carried onboard on consignment from local artisans; VIA Rail pays vendors only when a unit sells.
           </p>
         </div>
       </div>
@@ -633,7 +633,7 @@ function Tab1({ shopStation = "All", onStationHandled }) {
         <div style={{ background: "rgba(255,204,0,0.08)", border: "1px solid rgba(255,204,0,0.25)", borderRadius: 10, padding: "0.55rem 0.8rem", display: "flex", alignItems: "flex-start", gap: 8 }}>
           <span style={{ fontSize: "0.9rem", flexShrink: 0, marginTop: 1 }}>⚖️</span>
           <p style={{ margin: 0, fontSize: "0.73rem", color: "#fef3c7", lineHeight: 1.5 }}>
-            <strong style={{ color: "#FFCC00" }}>Equal digital shelf space.</strong> A vendor in Churchill, Manitoba gets the same AI-powered storefront and access to VIA Rail's 4.4M passengers as a vendor in Toronto — zero e-commerce setup required.
+            <strong style={{ color: "#FFCC00" }}>Equal digital shelf space.</strong> A vendor in Churchill, Manitoba gets the same AI-powered storefront and access to VIA Rail's 4.4M passengers as a vendor in Toronto — zero e-commerce setup required. Products travel onboard on <strong style={{ color: "#FFCC00" }}>consignment</strong>: no upfront cost to VIA Rail, vendors paid per sale.
           </p>
         </div>
       </div>

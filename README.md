@@ -47,7 +47,10 @@ RailOpt replaces the sprint with an app. Order before the stop, a Rail Certified
 - **Eco Picks filter** — surfaces 19 sustainable products made with natural/low-impact materials
 - **8-minute order countdown** — timer starts on first cart addition, turns red in final 2 minutes
 - **AI Personalize** — per-product AI-generated marketing scripts tailored to passenger preferences
-- **Onboard pickup zone** — collect your order at the designated café car area, ready in ~8 minutes (works on all trains regardless of seat assignment)
+- **Onboard pickup zone** — collect your order at the café car area, ready in ~8 minutes (works on all trains regardless of seat assignment)
+
+#### Consignment Fulfillment Model
+Artisan products travel onboard on **consignment** — VIA Rail carries inventory loaded at the origin station at no upfront cost. Vendors are paid only when a unit sells; RailOpt handles digital discovery, checkout, and settlement. Unsold stock returns at journey's end or is donated locally. This mirrors how VIA's existing café car operates and requires no change to their current procurement process — just a digital layer on top.
 
 ### 🛒 Pickup Tab — Instacart Station Pickup *(Phase 1)*
 - **Any store near any station** — Fresh Food, Pharmacy, Books & Magazines, Gifts, Grocery (30 items across 5 categories in demo)
