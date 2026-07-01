@@ -2988,7 +2988,7 @@ function TabInstacart() {
           {[
             ["5%", "commission per order", null],
             ["$1.99", "platform fee per order", null],
-            ["Phase 2", "SaaS to VIA Rail", "Every Instacart order trains the AI on what passengers on each route actually want. Once we have 6–12 months of data, we sell VIA Rail a demand forecasting licence — telling them exactly what to stock on each route. VIA spent $51.4M on onboard products in 2025 with no demand data behind it."],
+            ["Phase 2", "SaaS to VIA Rail", "Every order placed through RailOpt builds the demand dataset VIA Rail doesn't currently have. After 6–12 months of operation, we bring VIA route-level purchase intelligence and a forecasting licence — telling them exactly what to stock on each route. VIA spent $51.4M on onboard products in 2025 with no data behind it."],
           ].map(([val, label, tip]) => (
             <div key={label} style={{ fontSize: "0.72rem", opacity: 0.85, display: "flex", alignItems: "center", gap: 4 }}>
               <span style={{ fontWeight: 800, color: "#FFCC00" }}>{val}</span>
@@ -3382,7 +3382,7 @@ function TabPitch() {
       <Section num="2" title="The Solution" color="#22c55e">
         <Bullet><strong>Shop tab:</strong> 120+ non-perishable products from local artisans at 41 VIA Rail stations across 8 provinces — carried onboard on consignment, browsable via AI Concierge, collected at the café car pickup zone.</Bullet>
         <Bullet><strong>Pickup tab:</strong> Order from any local store near any stop. A Rail Certified Instacart shopper meets you at your car door during the scheduled stop — you never leave the train.</Bullet>
-        <Bullet><strong>Phase 2 AI:</strong> Every order trains a demand model. Once we have 6–12 months of route data, we sell VIA Rail a forecasting licence — telling them exactly what to stock on each route, cutting waste from their $51.4M spend.</Bullet>
+        <Bullet><strong>Phase 2 AI:</strong> Every order builds the demand dataset VIA Rail doesn't have. After 6–12 months of operation, we bring VIA route-level purchase intelligence and a forecasting licence — cutting waste from their $51.4M spend with data, not intuition.</Bullet>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 8, margin: "0.75rem 0" }}>
           <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.75rem" }}>
             <div style={{ fontWeight: 800, fontSize: "0.82rem", color: "#166534", marginBottom: 4 }}>🛍️ Shop — Artisan Consignment</div>
@@ -3434,7 +3434,7 @@ function TabPitch() {
         </div>
         <Bullet>Deep understanding of VIA Rail's operational constraints (Moneris Go POS, S3 Passenger platform, Economy cart service hours, seat assignment rules by route).</Bullet>
         <Bullet>Built PIPEDA + Bill C-27/CPPA compliant data architecture with opt-in consent, right to delete, and anonymous aggregation for AI training.</Bullet>
-        <Bullet>Positioned to execute Phase 1 without any VIA Rail contract — standalone passenger app, data flywheel starts immediately.</Bullet>
+        <Bullet>Positioned to execute Phase 1 without any VIA Rail contract — standalone passenger app, demand data collection starts at launch.</Bullet>
       </Section>
 
       {/* 4. Why Now */}
@@ -3457,7 +3457,7 @@ function TabPitch() {
         <Bullet><strong>Primary users:</strong> VIA Rail passengers on long-haul intercity journeys (2–5 hours) — highest dwell time of any transit mode.</Bullet>
         <Bullet><strong>Secondary customers:</strong> Local artisan vendors along 41 stations in 8 provinces with zero existing e-commerce presence.</Bullet>
         <Bullet><strong>Enterprise customer (Phase 2):</strong> VIA Rail itself — a Crown Corporation with a $51.4M annual pain point and no current demand intelligence solution.</Bullet>
-        <Bullet>TAM extends to GO Transit, Amtrak, and any intercity rail operator running long-haul assigned-seat routes with scheduled stops.</Bullet>
+        <Bullet>Sole enterprise client: VIA Rail — Canada's national intercity rail operator, a Crown Corporation with a $51.4M annual cost line and no current demand intelligence infrastructure.</Bullet>
       </Section>
 
       {/* 6. Business Model */}
@@ -3522,9 +3522,9 @@ function TabPitch() {
         </div>
 
         <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Scalability & Roadmap</div>
-        <Bullet><strong>Phase 1:</strong> Passenger app live, Instacart Pickup + artisan Shop, demand data collection across all routes.</Bullet>
-        <Bullet><strong>Phase 2:</strong> AI demand forecasting SaaS sold to VIA Rail — route-level stocking recommendations, reduces $51.4M cost line.</Bullet>
-        <Bullet><strong>Phase 3:</strong> Expand to GO Transit, Amtrak, and international intercity rail operators. Same data flywheel, new networks.</Bullet>
+        <Bullet><strong>Phase 1:</strong> Passenger app live — Instacart Pickup + artisan Shop operational, demand data collection begins across VIA Rail routes.</Bullet>
+        <Bullet><strong>Phase 2:</strong> AI demand forecasting SaaS delivered to VIA Rail — route-level stocking recommendations built from Phase 1 purchase data, targeting their $51.4M cost line.</Bullet>
+        <Bullet><strong>Phase 3:</strong> Artisan Commerce Car partnership with VIA Rail — physical branded discovery car on long-distance trains, sampling revenue, and combined physical + digital demand intelligence for LDRR fleet.</Bullet>
       </Section>
 
     </div>

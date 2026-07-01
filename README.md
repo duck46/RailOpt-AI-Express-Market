@@ -107,7 +107,7 @@ At 4.4M passengers/year with even 2% conversion on Pickup ($25 AOV) and 5% on Sh
 - We collect demand data across every route and stop
 
 **Phase 2 is the enterprise sale:**
-Once we have 6–12 months of route-level demand data, we approach VIA Rail with a data-backed proposal: *"Here's exactly what passengers on your Winnipeg run want to buy onboard — here's what you should stock."* VIA Rail's $51.4M onboard product cost problem now has a data-backed solution, and we have the proof.
+After 6–12 months of Phase 1 operation, RailOpt brings VIA Rail the route-level demand dataset they don't currently have: *"Here's exactly what passengers on your Winnipeg run actually buy — here's what you should stock."* VIA Rail's $51.4M onboard product cost problem now has a data-backed solution. This is a prototype and proposal — Phase 1 operation is what generates the data.
 
 This sidesteps the 18–36 month Crown Corporation procurement cycle. We build leverage before we knock on the door.
 
