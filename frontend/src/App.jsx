@@ -581,7 +581,8 @@ function Tab1({ shopStation = "All", onStationHandled }) {
   };
 
   // CO₂ savings vs driving: car ~0.21 kg/km, VIA Rail ~0.04 kg/km/passenger → 0.17 kg/km saved
-  const co2Saved = nearestDistanceKm ? Math.round(nearestDistanceKm * 0.17) : null;
+  // Only show banner when distance is meaningful (≥10 km) to avoid "~0 kg" display
+  const co2Saved = nearestDistanceKm >= 10 ? Math.round(nearestDistanceKm * 0.17) : null;
 
   const stations = ["All", ...Array.from(new Set(items.map((i) => i.station)))];
   const filtered = (activeStation === "All" ? items : items.filter((i) => i.station === activeStation))
@@ -635,7 +636,7 @@ function Tab1({ shopStation = "All", onStationHandled }) {
             <div className="slide-up" style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 12, padding: "0.65rem 1rem", marginBottom: "0.75rem", display: "flex", alignItems: "center", gap: 9 }}>
               <span style={{ fontSize: "1.1rem" }}>🌿</span>
               <span style={{ fontSize: "0.8rem", color: "#166534", fontWeight: 600 }}>
-                By taking the train you've avoided ~<strong>{co2Saved} kg CO₂</strong> vs. driving this distance — equivalent to planting {Math.max(1, Math.round(co2Saved / 21))} tree{Math.round(co2Saved / 21) !== 1 ? "s" : ""}.
+                {(() => { const trees = Math.max(1, Math.round(co2Saved / 21)); return <>By taking the train you've avoided ~<strong>{co2Saved} kg CO₂</strong> vs. driving this distance — equivalent to planting {trees} {trees === 1 ? "tree" : "trees"}.</>; })()}
               </span>
             </div>
           )}
