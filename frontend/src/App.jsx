@@ -417,9 +417,8 @@ function Tab1({ shopStation = "All", onStationHandled }) {
   const [confirmed, setConfirmed] = useState(false);
   const [confirmedOrderNumber, setConfirmedOrderNumber] = useState("");
   const [confirmedTotal, setConfirmedTotal] = useState("0.00");
-  const [aiPrompts, setAiPrompts] = useState({});
   const [aiResults, setAiResults] = useState({});
-  const [aiLoading, setAiLoading] = useState({});
+  const [aiPersonalizing, setAiPersonalizing] = useState(false);
   const [cartBounceKey, setCartBounceKey] = useState(0);
   const [activeStation, setActiveStation] = useState("All");
   const [locating, setLocating] = useState(false);
@@ -500,6 +499,7 @@ function Tab1({ shopStation = "All", onStationHandled }) {
   }, []);
 
   useEffect(() => { fetchItems(); }, [fetchItems]);
+  useEffect(() => { if (items.length > 0) autoPersonalize(items); }, [items.length]);
 
   const addToCart = (item) => {
     setCart((prev) => {
@@ -563,24 +563,30 @@ function Tab1({ shopStation = "All", onStationHandled }) {
     setConfirmed(true);
   };
 
-  const handlePersonalize = async (item) => {
-    const pref = aiPrompts[item.id] || "";
-    if (!pref.trim()) return;
-    setAiLoading((p) => ({ ...p, [item.id]: true }));
-    setAiResults((p) => ({ ...p, [item.id]: null }));
-    try {
-      const r = await fetch(`${API}/ai/personalize`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ item_id: item.id, preferences: pref }),
-      });
-      const d = await r.json();
-      setAiResults((p) => ({ ...p, [item.id]: d }));
-    } catch {
-      setAiResults((p) => ({ ...p, [item.id]: { script: "AI service unreachable.", model_used: "ERROR" } }));
+  const autoPersonalize = useCallback(async (itemList) => {
+    const acct = JSON.parse(localStorage.getItem("railopt_account") || "{}");
+    const prefs = [
+      acct.trainClass && `travelling ${acct.trainClass} class`,
+      acct.preferences?.length && `interests: ${acct.preferences.join(", ")}`,
+      acct.dietaryNotes && `dietary notes: ${acct.dietaryNotes}`,
+    ].filter(Boolean).join("; ");
+    if (!prefs) return;
+    setAiPersonalizing(true);
+    const targets = itemList.slice(0, 4);
+    for (const item of targets) {
+      try {
+        const r = await fetch(`${API}/ai/personalize`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ item_id: item.id, preferences: prefs }),
+        });
+        const d = await r.json();
+        setAiResults((p) => ({ ...p, [item.id]: d }));
+      } catch { /* silent */ }
+      await new Promise((res) => setTimeout(res, 300));
     }
-    setAiLoading((p) => ({ ...p, [item.id]: false }));
-  };
+    setAiPersonalizing(false);
+  }, []);
 
   // CO₂ savings vs driving: car ~0.21 kg/km, VIA Rail ~0.04 kg/km/passenger → 0.17 kg/km saved
   // Only show banner when distance is meaningful (≥10 km) to avoid "~0 kg" display
@@ -732,6 +738,18 @@ function Tab1({ shopStation = "All", onStationHandled }) {
         </div>
       )}
 
+      {/* AI personalization status chip */}
+      {(aiPersonalizing || Object.keys(aiResults).length > 0) && (
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: "0.6rem" }}>
+          <span style={{ background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 20, padding: "0.2rem 0.65rem", fontSize: "0.7rem", fontWeight: 700, color: "#92400e", display: "flex", alignItems: "center", gap: 5 }}>
+            {aiPersonalizing
+              ? <><Loader size={9} className="animate-spin" /> Personalizing your feed…</>
+              : <><Zap size={9} color="#FFCC00" /> AI-personalized from your profile</>
+            }
+          </span>
+        </div>
+      )}
+
       {/* Station filter — compact row: eco toggle + dropdown */}
       <div style={{ display: "flex", gap: "0.6rem", marginBottom: "1.25rem", alignItems: "center" }}>
         <button
@@ -847,6 +865,14 @@ function Tab1({ shopStation = "All", onStationHandled }) {
                   <p style={{ fontWeight: 700, fontSize: "0.85rem", color: "#111", lineHeight: 1.3 }}>{item.name}</p>
                   <p style={{ fontSize: "0.7rem", color: "#6b7280" }}>{item.vendor}</p>
 
+                  {/* Ambient AI tagline — appears automatically from Account preferences */}
+                  {aiResults[item.id] && (
+                    <p style={{ fontSize: "0.68rem", color: "#78350f", lineHeight: 1.45, fontStyle: "italic", background: "#FFF8E1", borderRadius: 7, padding: "0.4rem 0.6rem", margin: "0.1rem 0", display: "flex", alignItems: "flex-start", gap: 4 }}>
+                      <Zap size={9} color="#FFCC00" style={{ flexShrink: 0, marginTop: 2 }} />
+                      {aiResults[item.id].script}
+                    </p>
+                  )}
+
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto", paddingTop: "0.5rem" }}>
                     <span style={{ fontWeight: 800, fontSize: "1rem", color: "#111" }}>{item.price_display}</span>
                     {inCart ? (
@@ -861,33 +887,6 @@ function Tab1({ shopStation = "All", onStationHandled }) {
                       </button>
                     )}
                   </div>
-
-                  {/* AI Concierge — collapsed */}
-                  <details style={{ marginTop: "0.5rem" }}>
-                    <summary style={{ fontSize: "0.65rem", color: "#FFCC00", fontWeight: 700, cursor: "pointer", letterSpacing: "0.05em", display: "flex", alignItems: "center", gap: 4 }}>
-                      <Star size={9} />AI Personalize
-                    </summary>
-                    <div style={{ marginTop: "0.5rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-                      <input
-                        className="pill-input"
-                        style={{ fontSize: "0.75rem", padding: "0.4rem 0.75rem" }}
-                        placeholder="Your vibe…"
-                        value={aiPrompts[item.id] || ""}
-                        onChange={(e) => setAiPrompts((p) => ({ ...p, [item.id]: e.target.value }))}
-                        onKeyDown={(e) => e.key === "Enter" && handlePersonalize(item)}
-                      />
-                      <button className="add-btn" style={{ width: "100%", justifyContent: "center", borderRadius: 8, padding: "0.35rem" }}
-                        onClick={() => handlePersonalize(item)} disabled={aiLoading[item.id]}>
-                        {aiLoading[item.id] ? <Loader size={11} className="animate-spin" /> : <Send size={11} />}
-                        Generate
-                      </button>
-                      {aiResults[item.id] && (
-                        <p style={{ fontSize: "0.7rem", color: "#374151", lineHeight: 1.5, fontStyle: "italic", background: "#FFF8E1", borderRadius: 8, padding: "0.5rem" }}>
-                          &ldquo;{aiResults[item.id].script}&rdquo;
-                        </p>
-                      )}
-                    </div>
-                  </details>
                 </div>
               </div>
             );
