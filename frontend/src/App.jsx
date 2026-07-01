@@ -3395,6 +3395,35 @@ function TabPitch() {
         </div>
       </Section>
 
+      {/* 2B. Artisan Commerce Car */}
+      <Section num="2B" title="Phase 3 — The Artisan Commerce Car" color="#f97316">
+        <div style={{ background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 12, padding: "0.85rem 1rem", marginBottom: "0.85rem" }}>
+          <div style={{ fontWeight: 800, fontSize: "0.85rem", color: "#9a3412", marginBottom: 6, display: "flex", alignItems: "center", gap: 6 }}>
+            🚃 One coach car. Converted into VIA Rail's highest-revenue-per-square-foot asset.
+          </div>
+          <div style={{ fontSize: "0.76rem", color: "#7c2d12", lineHeight: 1.6 }}>
+            A dedicated Artisan Discovery Car on long-distance trains — part artisan market, part F&B sampling lounge, part branded activation space. Passengers on The Canadian are onboard for <strong>2–4 days</strong>. They walk to the car. They're bored. They're in a discovery mindset. This is the highest-quality captive audience a CPG brand can buy.
+          </div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 8, marginBottom: "0.85rem" }}>
+          {[
+            ["🧃", "Brand Sampling Fees", "F&B brands pay per trip to sample products to a verified passenger audience. Pricing comparable to experiential marketing activations — passengers who walk to the car chose to be there."],
+            ["🍁", "Artisan Consignment Shelf", "Physical manifestation of the Shop tab. Products on the shelf, 15% commission per sale. Same consignment model — no upfront cost to VIA Rail."],
+            ["🏷️", "Car Sponsorship", "A regional brand (e.g. BC winery on Toronto–Vancouver run) sponsors the entire car for a season — branding, sampling, exclusive shelf. A media buy, not a retail deal."],
+            ["📊", "Physical + Digital Data", "Which samples get taken? Which products sell? Physical signals combined with app purchase data create a richer demand model than either alone — the Phase 2 AI gets smarter faster."],
+          ].map(([icon, title, desc]) => (
+            <div key={title} style={{ background: "#fff", border: "1px solid #fed7aa", borderRadius: 10, padding: "0.75rem" }}>
+              <div style={{ fontWeight: 800, fontSize: "0.78rem", color: "#9a3412", marginBottom: 4 }}>{icon} {title}</div>
+              <div style={{ fontSize: "0.68rem", color: "#374151", lineHeight: 1.45 }}>{desc}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ background: "#1c1917", borderRadius: 10, padding: "0.75rem 1rem", fontSize: "0.75rem", color: "#e7e5e4", lineHeight: 1.6 }}>
+          <span style={{ color: "#FFCC00", fontWeight: 800 }}>Timed to VIA's LDRR tender (Solicitation 202606009, June 2026):</span>{" "}
+          VIA Rail is actively procuring F&B design expertise for their Long Distance Rail Renewal fleet right now. The Artisan Commerce Car is the service concept innovation that tender is looking for — RailOpt provides the digital layer, the demand data, and the vendor relationships to make it viable from day one.
+        </div>
+      </Section>
+
       {/* 3. The Team */}
       <Section num="3" title="The Team" color="#8b5cf6">
         <div style={{ background: "#faf5ff", border: "1px solid #c4b5fd", borderRadius: 10, padding: "0.85rem 1rem", marginBottom: "0.5rem" }}>
@@ -3437,7 +3466,9 @@ function TabPitch() {
           ["5%", "Commission per Pickup order", "On every Instacart station pickup processed through RailOpt"],
           ["$1.99", "Platform fee per order", "Charged to passenger at checkout — below psychological resistance threshold"],
           ["15%", "Shop commission", "Standard marketplace take rate on every artisan sale"],
-          ["SaaS", "Phase 2 licence to VIA Rail", "AI demand forecasting — route-level stocking recommendations"],
+          ["$5K–25K", "Brand sampling fee per route", "F&B brands pay per trip to reach captive long-distance passengers in the Artisan Commerce Car — opt-in, discovery-mindset audience"],
+          ["Season", "Car sponsorship", "Regional brand sponsors the entire Artisan Commerce Car for a season — branding, exclusive shelf, sampling rights on every departure"],
+          ["SaaS", "Phase 2 licence to VIA Rail", "AI demand forecasting — route-level stocking recommendations backed by physical + digital purchase data"],
         ].map(([rate, name, desc]) => (
           <div key={name} style={{ display: "flex", gap: 12, alignItems: "flex-start", marginBottom: "0.6rem", padding: "0.6rem 0.75rem", background: "#fff", border: "1px solid #e7e5e4", borderRadius: 10 }}>
             <div style={{ fontWeight: 900, fontSize: "1rem", color: "#FFCC00", minWidth: 42, flexShrink: 0 }}>{rate}</div>
