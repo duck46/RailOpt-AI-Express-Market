@@ -2727,24 +2727,23 @@ function TabAccount() {
 // IANA timezone for each demo stop — used for store-hours check so we evaluate
 // whether stores are open in the station's local time, not the passenger's device time.
 const STATION_TZ = {
-  "Toronto":    "America/Toronto",
-  "Cobourg":    "America/Toronto",
-  "Kingston":   "America/Toronto",
-  "Brockville": "America/Toronto",
-  "Ottawa":     "America/Toronto",
-  "Winnipeg":   "America/Winnipeg",
-  "Montréal":   "America/Toronto",
+  "Toronto":       "America/Toronto",
+  "Sudbury":       "America/Toronto",
+  "Sioux Lookout": "America/Toronto",   // Northwestern Ontario uses Eastern time
+  "Winnipeg":      "America/Winnipeg",
+  "Saskatoon":     "America/Regina",    // Saskatchewan: no DST, UTC-6 year-round
+  "Vancouver":     "America/Vancouver",
 };
 
-// Demo train schedule: offsets in minutes from "now" (Toronto → Montréal)
+// Demo train schedule: The Canadian (Toronto → Vancouver) — 4-day journey
+// Offsets in minutes from "now". Shows the real long-haul pain point.
 const DEMO_STOPS = [
-  { station: "Toronto",    province: "ON", offset: -45,  departed: true },
-  { station: "Cobourg",    province: "ON", offset: 65 },
-  { station: "Kingston",   province: "ON", offset: 185 },
-  { station: "Brockville", province: "ON", offset: 255 },
-  { station: "Ottawa",     province: "ON", offset: 375 },
-  { station: "Winnipeg",   province: "MB", offset: 480, note: "Station concessions closed at night — order ahead, your shopper meets you at the platform." },
-  { station: "Montréal",   province: "QC", offset: 555 },
+  { station: "Toronto",       province: "ON", offset: -60,  departed: true },
+  { station: "Sudbury",       province: "ON", offset: 185 },
+  { station: "Sioux Lookout", province: "ON", offset: 420,  note: "The Rexall & Subway stop — passengers used to sprint here during 20-min stops. Order ahead instead." },
+  { station: "Winnipeg",      province: "MB", offset: 780,  note: "Station concessions closed at night — order ahead, your shopper meets you at the platform." },
+  { station: "Saskatoon",     province: "SK", offset: 1140 },
+  { station: "Vancouver",     province: "BC", offset: 1560 },
 ];
 const MIN_LEAD_MIN = 120;
 
@@ -2900,6 +2899,14 @@ function TabInstacart() {
           {[["🏪", "Any local store"], ["🏅", "Rail Certified shopper"], ["🚉", "Platform handoff"]].map(([icon, label]) => (
             <div key={label} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.75rem", opacity: 0.9 }}>
               <span>{icon}</span><span>{label}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: "0.85rem", paddingTop: "0.75rem", borderTop: "1px solid rgba(255,255,255,0.15)", display: "flex", gap: 16, flexWrap: "wrap" }}>
+          {[["5%", "commission per order"], ["$0.99", "platform fee per order"], ["Phase 2", "SaaS to VIA Rail"]].map(([val, label]) => (
+            <div key={label} style={{ fontSize: "0.72rem", opacity: 0.85 }}>
+              <span style={{ fontWeight: 800, color: "#FFCC00" }}>{val}</span>
+              <span style={{ marginLeft: 4 }}>{label}</span>
             </div>
           ))}
         </div>
