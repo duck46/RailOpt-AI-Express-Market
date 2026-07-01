@@ -66,6 +66,34 @@ RETAIL_ITEMS = [
         "perishable": False,
         "sustainable": True,
     },
+    {
+        "id": "TOR-004",
+        "station": "Toronto",
+        "province": "Ontario",
+        "vendor": "St. Lawrence Market Apiaries",
+        "name": "Ontario Wildflower Honey",
+        "price": 14.00,
+        "price_display": "$14.00",
+        "category": "Food",
+        "description": "Raw wildflower honey from Ontario apiaries — naturally soothing for sore throats, great in tea or straight from the spoon. 250g glass jar.",
+        "in_stock": True,
+        "perishable": False,
+        "sustainable": True,
+    },
+    {
+        "id": "TOR-005",
+        "station": "Toronto",
+        "province": "Ontario",
+        "vendor": "David's Tea — Union Station",
+        "name": "Organic Chamomile & Ginger Herbal Tea",
+        "price": 11.00,
+        "price_display": "$11.00",
+        "category": "Food",
+        "description": "Caffeine-free herbal blend with chamomile, ginger, and lemon — ideal for sore throats, upset stomachs, or winding down on a long journey. 15 biodegradable sachets.",
+        "in_stock": True,
+        "perishable": False,
+        "sustainable": False,
+    },
     # ── Ontario — Ottawa ──────────────────────────────────────────────────────
     {
         "id": "OTT-001",
@@ -2559,10 +2587,11 @@ async def ai_recommend(req: RecommendRequest):
         f"{location_ctx}"
         f"A passenger said: \"{req.query}\". "
         f"Think laterally and empathetically. This is a curated local artisan catalogue — not a pharmacy or grocery store. "
-        f"Match the passenger's underlying need to what IS available: "
-        f"e.g. 'sore throat' → honey or herbal tea; 'stressed' → candle or bath product; 'gift for mom' → artisan food or craft; 'bored' → book or game. "
-        f"Pick up to 3 items that best address the passenger's need, even if the match is indirect. "
-        f"Only return [] if there is absolutely no plausible connection to anything in the catalogue. "
+        f"Match the passenger's UNDERLYING NEED to what is available. "
+        f"GOOD connections: 'sore throat' → honey (soothing) or herbal/ginger tea (comforting warmth); 'stressed' → candle, bath soap, tea; 'gift for mom' → artisan food, craft, honey; 'bored' → book or puzzle; 'hungry' → food items. "
+        f"BAD connections: soap is NOT a remedy for sore throat; art prints are NOT gifts for sick people; souvenirs are NOT comfort items. "
+        f"Rank by GENUINE relevance — honey and herbal tea rank far above soap for a sore throat query. "
+        f"Pick up to 3 items. Only return [] if there is absolutely no plausible connection to anything in the catalogue. "
         f"Reply with ONLY a JSON array of item IDs, e.g. [\"KGN-001\",\"TOR-002\"]. "
         f"No explanation, no markdown, just the JSON array.\n\nCATALOGUE:\n" + "\n".join(catalogue_lines)
     )

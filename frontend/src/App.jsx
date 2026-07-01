@@ -708,12 +708,28 @@ function Tab1({ shopStation = "All", onStationHandled }) {
               <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "#78350f" }}>AI picks for "{aiQuery}"</span>
             </div>
           )}
-          {aiNoMatch && recommendedIds.length === 0 && (
-            <div style={{ gridColumn: "1 / -1", background: "#fef9c3", border: "1px solid #fde047", borderRadius: 12, padding: "0.85rem 1rem", display: "flex", alignItems: "center", gap: 10, margin: "0.25rem 0 0.5rem" }}>
-              <AlertTriangle size={15} color="#a16207" />
-              <span style={{ fontSize: "0.82rem", color: "#78350f", fontWeight: 600 }}>No catalogue items match "{aiQuery}" — try a different search or browse by station.</span>
-            </div>
-          )}
+          {aiNoMatch && recommendedIds.length === 0 && (() => {
+            const pharmacyTerms = /advil|tylenol|ibuprofen|medication|medicine|drug|pill|painkiller|panadol|cold medicine|cough|pharmacy|otc|prescription|aspirin/i;
+            const isPharmacy = pharmacyTerms.test(aiQuery);
+            return (
+              <div style={{ gridColumn: "1 / -1", display: "flex", flexDirection: "column", gap: 8, margin: "0.25rem 0 0.5rem" }}>
+                <div style={{ background: "#fef9c3", border: "1px solid #fde047", borderRadius: 12, padding: "0.85rem 1rem", display: "flex", alignItems: "center", gap: 10 }}>
+                  <AlertTriangle size={15} color="#a16207" />
+                  <span style={{ fontSize: "0.82rem", color: "#78350f", fontWeight: 600 }}>
+                    Nothing in the local artisan catalogue matches "{aiQuery}".
+                  </span>
+                </div>
+                {isPharmacy && (
+                  <div style={{ background: "#eff6ff", border: "1px solid #93c5fd", borderRadius: 12, padding: "0.85rem 1rem", display: "flex", alignItems: "center", gap: 10 }}>
+                    <span style={{ fontSize: "1rem" }}>💊</span>
+                    <span style={{ fontSize: "0.82rem", color: "#1e40af", fontWeight: 600 }}>
+                      For pharmacy items (Advil, Tylenol, etc.) try the <strong>Pickup tab</strong> — order from any nearby pharmacy via Instacart and collect at the platform.
+                    </span>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
           {(recommendedIds.length > 0
             ? [...filtered].sort((a, b) => {
                 const ai = recommendedIds.indexOf(a.id);
