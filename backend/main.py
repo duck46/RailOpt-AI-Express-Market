@@ -2550,7 +2550,7 @@ class RecommendRequest(BaseModel):
 @app.post("/api/ai/recommend")
 async def ai_recommend(req: RecommendRequest):
     catalogue_lines = [
-        f"- [{i['id']}] {i['name']} by {i['vendor']} ({i['station']}, {i['province']}) — {i['price_display']}"
+        f"- [{i['id']}] {i['name']} by {i['vendor']} ({i['station']}, {i['province']}) — {i['price_display']} | {i.get('description', '')}"
         for i in RETAIL_ITEMS
     ]
     location_ctx = f"The passenger is near {req.station} station (~{req.distance_km} km away). " if req.station else ""
@@ -2558,8 +2558,11 @@ async def ai_recommend(req: RecommendRequest):
         f"You are RailOpt AI Concierge on a VIA Rail train. "
         f"{location_ctx}"
         f"A passenger said: \"{req.query}\". "
-        f"From the catalogue below, pick up to 3 items that are genuinely relevant to the request. "
-        f"If nothing in the catalogue is a reasonable match, return an empty array []. "
+        f"Think laterally and empathetically. This is a curated local artisan catalogue — not a pharmacy or grocery store. "
+        f"Match the passenger's underlying need to what IS available: "
+        f"e.g. 'sore throat' → honey or herbal tea; 'stressed' → candle or bath product; 'gift for mom' → artisan food or craft; 'bored' → book or game. "
+        f"Pick up to 3 items that best address the passenger's need, even if the match is indirect. "
+        f"Only return [] if there is absolutely no plausible connection to anything in the catalogue. "
         f"Reply with ONLY a JSON array of item IDs, e.g. [\"KGN-001\",\"TOR-002\"]. "
         f"No explanation, no markdown, just the JSON array.\n\nCATALOGUE:\n" + "\n".join(catalogue_lines)
     )
