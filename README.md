@@ -2,54 +2,90 @@
 
 **Onboard Retail & Destination Discovery Platform for VIA Rail**
 
-> An AI-powered full-stack platform that brings local artisan commerce to rail passengers across Canada — with geolocation-aware product recommendations, offline-first ordering, and destination discovery — aligned with the United Nations Sustainable Development Goals.
+> *"Forgot something? Need something? You're on a train — it comes to you."*
+
+An AI-powered full-stack platform that turns the VIA Rail journey into a complete commerce experience — local artisan products delivered to your seat, anything else from nearby stores collected at the platform, powered by AI personalization and a two-phase logistics model built for real rail operations.
 
 🚆 **Live Demo**: [https://railopt-ai-express-market.onrender.com](https://railopt-ai-express-market.onrender.com)
 
 ---
 
-## What It Does
+## The Problem
 
-RailOpt AI Express Market turns the VIA Rail journey into a curated shopping and discovery experience. Passengers can browse **120+ non-perishable local products** from **41 stations** across 8 provinces, get AI-powered product recommendations based on what they're looking for, and place orders for seat delivery — even when the train is in a cellular dead zone.
+Every traveller has had that moment — you're on the train and you realize you forgot something. Your headache pills. A gift for whoever you're visiting. A snack for the kids. Normally you're stuck until the next city.
+
+VIA Rail's current onboard commerce is a café cart. No app, no local products, no AI, no third-party delivery integration. RailOpt fills that gap entirely.
+
+---
+
+## Two-Layer Commerce Model
+
+### 🛍️ Shop Tab — Local Artisan Catalogue
+- **120+ non-perishable products** from local vendors at 41 VIA Rail stations across 8 provinces
+- Every item carries a **🍁 Canada** badge (or **🌿 Eco** for sustainable products)
+- **AI Concierge** — type anything in natural language ("sore throat", "gift for my mom", "something cozy") and AI surfaces the 3 most relevant items, thinking laterally across the catalogue
+- **Geolocation** — "Use My Location" finds your nearest station and filters the catalogue to nearby products
+- **CO₂ savings banner** — shows carbon avoided vs. driving when location is detected
+- **Eco Picks filter** — surfaces 19 sustainable products made with natural/low-impact materials
+- **8-minute order countdown** — timer starts on first cart addition, turns red in final 2 minutes
+- **AI Personalize** — per-product AI-generated marketing scripts tailored to passenger preferences
+- **Seat delivery** — fulfilled by VIA Rail's existing onboard service model
+
+### 🛒 Pickup Tab — Instacart Station Pickup *(Phase 1)*
+- **Any store near any station** — Fresh Food, Pharmacy, Books & Magazines, Gifts, Grocery (30 items across 5 categories in demo)
+- **Rail Certified shoppers** — Instacart shoppers with a platform-handoff badge meet you at your car door during the stop
+- **Business hours enforcement** — stops where stores will be closed at arrival show a red 🔒 indicator and are disabled
+- **2-hour lead time** — orders only allowed for stops ≥2 hours away
+- **5-step order tracker** — placed → shopper assigned → picking → shopper at platform → collected
+- **Pharmacy nudge** — typing "advil", "tylenol", etc. in the Shop tab instantly surfaces a blue banner pointing to Pickup
+
+### 🧠 Phase 2 — AI Onboard Intelligence *(Roadmap)*
+Every Instacart order trains the AI on what passengers on each route actually want. Once enough signal is gathered, the AI tells VIA Rail what to stock onboard — seat delivery unlocked without any platform stop or staff liability issue. The data becomes the moat.
+
+---
+
+## Why It's Different from the 2018 Metrolinx / PC Express Pilot
+
+Loblaw and Metrolinx ran a grocery pickup pilot at 5 GO Transit stations in 2018. It was shut down. The key differences:
+
+| PC Express / Metrolinx (2018) | RailOpt Express Market |
+|---|---|
+| Order the night before | 2-hour lead time |
+| Walk to a locker | Shopper meets you at your car door |
+| Loblaws only | Any store on Instacart network |
+| No personalization | AI Concierge + lateral reasoning |
+| Commuter context (3-min stops) | Long-haul context (2–5 hr trips) |
+| No local artisan layer | 120+ curated Canadian products |
 
 ---
 
 ## Features
 
-### Shop Tab
-- **120+ local products** across 41 VIA Rail stations in Ontario, Québec, British Columbia, Alberta, Manitoba, New Brunswick, Nova Scotia, and Saskatchewan
-- **Geolocation detection** — "Use My Location" finds your nearest station and auto-filters the catalogue
-- **AI product search** — type anything ("a gift for my mom", "something cozy") and the AI Concierge surfaces the 3 most relevant items from the entire catalogue, highlighted with a gold badge
-- **Order deadline countdown** — an 8-minute timer starts when the first item is added to cart, shown in the cart button and inside the drawer (turns red in the final 2 minutes)
-- **Offline-first ordering** — orders placed in cellular dead zones are stored in a queue and synced at the next station platform
-- **Order confirmation screen** with order number, total, and seat delivery notice
-- **AI Personalize** — per-product AI-generated marketing scripts tailored to passenger preferences
-
-### Discover Tab
-- Browse destinations province by province across the entire VIA Rail network
-- Destination cards with hero colors, taglines, highlights, and vibe tags
-- Popular routes listed per destination
-- "Shop [Station] Products" CTA cross-links directly into the Shop tab filtered to that station
-
 ### Account Tab
 Three sub-sections via a segmented control:
 
 **Profile**
-- Name, email, VIA Préférence number
-- Car and seat number, travel class selector
-- Shopping interest tags (used to personalize AI picks)
+- Name, email, VIA Préférence number, car/seat, travel class
+- Shopping interest tags used to personalize AI picks
 - Dietary/allergy notes, language preference (English / Français)
-- Persisted to `localStorage`
+
+**🔒 Privacy & Data** *(PIPEDA + Bill C-27 / CPPA compliant)*
+- **Opt-in toggle**: Contribute anonymous purchase patterns to route intelligence (off by default)
+- **Opt-in toggle**: Personalized recommendations (on by default, device-only)
+- "Your data is never sold or shared with advertisers" — stated explicitly in UI
+- Delete all my data button — clears localStorage and reloads
 
 **Purchase History**
-- Every order is saved and shown as an expandable card
-- Shows order ID, timestamp, full item breakdown, total
-- 4-step visual status tracker: Confirmed → Preparing → On the Way → Delivered
+- Every order saved as an expandable card with 4-step status tracker
 
 **Messages**
-- Inbox with unread count badge
-- Gold left-border on unread messages; tap to open full view (marks as read)
-- Pre-loaded with onboard notifications from RailOpt AI and VIA Rail Concierge
+- Inbox with unread count badge, gold border on unread, tap to read
+
+### Discover Tab
+- Browse all 41 destinations province by province
+- Hero colors, taglines, highlights, vibe tags, popular routes
+- "Shop [Station] Products" CTA cross-links into Shop tab filtered to that station
+- Fully client-side — renders instantly, no backend cold-start dependency
 
 ---
 
@@ -79,19 +115,20 @@ Open `http://localhost:5173`.
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                 RailOpt AI Express Market                   │
-│                                                             │
-│  ┌─────────────────────┐    ┌───────────────────────────┐  │
-│  │  React + Vite        │    │  FastAPI Backend           │  │
-│  │  Port 5173           │◄──►│  Port 8000                │  │
-│  │  Tailwind CSS        │    │  OpenRouter AI Gateway    │  │
-│  │  Lucide React icons  │    │  In-memory order queue    │  │
-│  └─────────────────────┘    └───────────────────────────┘  │
-│                                                             │
-│  Haversine geolocation (browser-side, no server round-trip) │
-│  localStorage — account profile, orders, read messages      │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│                   RailOpt AI Express Market                      │
+│                                                                  │
+│  ┌──────────────────────┐    ┌────────────────────────────────┐  │
+│  │  React + Vite         │    │  FastAPI Backend               │  │
+│  │  Port 5173            │◄──►│  Port 8000                    │  │
+│  │  Tailwind CSS         │    │  OpenRouter AI Gateway        │  │
+│  │  Lucide React icons   │    │  In-memory order queue        │  │
+│  └──────────────────────┘    └────────────────────────────────┘  │
+│                                                                  │
+│  Haversine geolocation (browser-side, no server round-trip)      │
+│  localStorage — account profile, orders, messages, consent       │
+│  DESTINATIONS static bundle — Discover tab works offline         │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -100,13 +137,14 @@ Open `http://localhost:5173`.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/api/offline-dashboard` | All 120+ non-perishable retail items |
+| `GET` | `/api/offline-dashboard` | 122 non-perishable retail items |
 | `POST` | `/api/offline-order` | Queue an order (store-and-forward) |
 | `GET` | `/api/sync-queue-status` | Current queue depth and byte count |
 | `POST` | `/api/simulate-sync` | Drain the queue (simulate station sync) |
 | `POST` | `/api/ai/personalize` | Generate a 2-sentence personalized marketing script |
 | `POST` | `/api/ai/recommend` | Return up to 3 relevant product IDs for a free-text query |
-| `GET` | `/api/railopt/simulation` | Siding pass conflict calc (`?freight_delay=N`) |
+| `GET` | `/api/destinations` | All 41 destination objects |
+| `GET` | `/api/destinations/{id}` | Single destination detail |
 
 ---
 
@@ -120,7 +158,16 @@ Open `http://localhost:5173`.
 | Env var | `OPENROUTER_API_KEY` in `backend/.env` |
 | Degraded mode | Demo scripts / empty recommendations returned if key is absent |
 
-The `/api/ai/recommend` endpoint receives a free-text passenger query plus optional nearest-station context and returns a ranked list of product IDs. The prompt instructs the model to return `[]` if nothing in the catalogue genuinely matches — preventing irrelevant fallback results.
+The `/api/ai/recommend` endpoint uses **lateral, empathetic reasoning** — "sore throat" returns honey and herbal tea, not soap. Product descriptions are included in the catalogue sent to the AI so it can reason about use cases, not just match on names. Explicit good/bad examples in the prompt prevent low-quality connections.
+
+---
+
+## Privacy & Compliance
+
+- **PIPEDA compliant** — no personal data collected without consent
+- **Bill C-27 / CPPA ready** — opt-in consent toggles, right to delete, no third-party data sharing
+- AI route intelligence uses **anonymous aggregated patterns only** — never individual profiles
+- Passengers opt in explicitly; withdrawal and full data deletion available in Account tab
 
 ---
 
@@ -144,19 +191,19 @@ All items are **non-perishable and locally produced** — sourced from regional 
 ## SDG Alignment
 
 ### SDG 7 — Affordable and Clean Energy
-When a passenger uses location detection, the platform displays a real-time **CO₂ savings banner** showing how much carbon they've avoided compared to driving the same distance (rail emits ~0.04 kg CO₂/km vs. ~0.21 kg/km by car). A **🌿 Eco Picks filter** surfaces the 19 products in the catalogue made by vendors using sustainable, natural, or low-impact materials — beeswax candles, wildflower seed kits, boreal soaps, honey, and foraged goods. Together these features make the environmental benefit of rail travel visible and connect passengers to a greener commerce choice.
+CO₂ savings banner (shown for distances ≥10 km) shows carbon avoided vs. driving. 🌿 Eco Picks filter surfaces 19 sustainable products made with natural/low-impact materials.
 
 ### SDG 8 — Decent Work and Economic Growth
-The platform creates a **digital marketplace channel for local artisans and small producers** who would otherwise lack access to VIA Rail's 4+ million annual passenger touchpoints — from Limestone City Craft Co. in Kingston to Indigenous art vendors in Prince Rupert. The AI Personalize feature generates marketing copy for their products on demand, lowering the barrier to digital commerce for micro-vendors with no e-commerce presence.
-
-### SDG 10 — Reduced Inequalities
-Without this platform, vendors in Churchill, Miramichi, or Senneterre have zero access to the passenger market that Toronto and Montréal vendors take for granted. The catalogue gives equal digital shelf space to every station regardless of size. The geolocation feature further levels the playing field by surfacing nearby vendors first — a passenger near Jasper sees Jasper products, not just urban ones.
+Digital marketplace channel for local artisans with zero e-commerce presence — equal access to VIA Rail's 4.4M annual passengers. AI Personalize generates marketing copy on demand.
 
 ### SDG 9 — Industry, Innovation and Resilient Infrastructure
-The **offline-first store-and-forward queue** ensures commerce works across rural and remote stretches of Canada — Churchill, The Pas, northern BC — where connectivity is intermittent or absent. Orders placed during cellular dead zones are queued locally and synced the moment connectivity returns at the next platform. Beyond connectivity resilience, the AI Personalize and AI Recommend endpoints give a Churchill general store or Miramichi soap maker the same AI-powered retail tools that large urban retailers pay thousands for — democratizing innovation infrastructure across the rail corridor.
+AI Recommend and AI Personalize give a Churchill vendor the same retail AI tools that large urban retailers pay thousands for. Phase 2 AI route intelligence democratizes demand forecasting across the corridor.
+
+### SDG 10 — Reduced Inequalities
+Equal digital shelf space for Churchill, Miramichi, and Senneterre alongside Toronto and Montréal. Geolocation surfaces nearby vendors first — a passenger near Jasper sees Jasper products.
 
 ### SDG 11 — Sustainable Cities and Communities
-Making rail travel more commercially useful supports modal shift away from private vehicles. If passengers can shop, discover destinations, and place orders onboard, the train becomes a more compelling alternative to driving. The Discover tab also actively promotes smaller corridor communities (Baie-Saint-Paul, The Pas, Cobourg) to passengers who might not have considered them — strengthening local tourism and cultural economy.
+Richer onboard experience supports modal shift away from private vehicles. Discover tab promotes smaller corridor communities and strengthens local tourism.
 
 ---
 
@@ -174,7 +221,7 @@ Making rail travel more commercially useful supports modal shift away from priva
 | Primary AI model | google/gemini-2.5-flash-lite |
 | Fallback AI model | meta-llama/llama-3.3-70b-instruct |
 | Geolocation | Browser Geolocation API + Haversine distance |
-| Persistence | localStorage (profile, order history, messages) |
+| Persistence | localStorage (profile, order history, messages, consent) |
 | Deployment | Render (single service, FastAPI serves built React frontend) |
 
 ---
@@ -190,7 +237,7 @@ OPENROUTER_API_KEY=your_openrouter_key_here
 
 ## Deployment
 
-The app is deployed as a single Render service. The build command compiles the React frontend and copies the output to be served as static files by FastAPI:
+Single Render service — FastAPI serves the built React frontend as static files:
 
 ```yaml
 buildCommand: cd frontend && npm install && npm run build && cd ../backend && pip install -r requirements.txt
@@ -201,4 +248,22 @@ Set `OPENROUTER_API_KEY` in the Render environment variables dashboard to enable
 
 ---
 
-*RailOpt AI Express Market — Phase 1 demonstration platform. Production would add authentication, persistent SQLite/PostgreSQL queue, and integration with VIA Rail's POS and inventory systems.*
+## Git Workflow
+
+All feature development happens on the branch `claude/railopt-express-market-p1-lzfqff` and is squash-merged to `main` via pull requests. The branch is rebased on `main` before each push to avoid conflicts from squash-merge divergence.
+
+```bash
+# Clone and set up
+git clone https://github.com/duck46/railopt-ai-express-market.git
+cd railopt-ai-express-market
+git checkout claude/railopt-express-market-p1-lzfqff
+
+# Before pushing new changes
+git fetch origin main
+git rebase origin/main
+git push --force-with-lease origin claude/railopt-express-market-p1-lzfqff
+```
+
+---
+
+*RailOpt AI Express Market — Phase 1 demonstration platform. Production would add authentication, persistent SQLite/PostgreSQL order queue, Instacart API integration, VIA Rail POS integration, and CPPA-compliant data infrastructure.*

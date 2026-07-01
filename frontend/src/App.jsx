@@ -3203,6 +3203,17 @@ export default function App() {
       </header>
 
       {/* Content */}
+      {/* Hero tagline — always visible, every tab */}
+      <div style={{ background: "linear-gradient(90deg, #1c1917 0%, #292524 100%)", borderBottom: "1px solid #FFCC00" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto", padding: "0.6rem 1rem", display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: "1.1rem" }}>🚆</span>
+          <p style={{ margin: 0, fontSize: "0.78rem", color: "#e7e5e4", lineHeight: 1.4 }}>
+            <strong style={{ color: "#FFCC00" }}>Forgot something? Need something?</strong>
+            {" "}You're on a train — it comes to you. Local artisan picks delivered to your seat. Anything else at the platform.
+          </p>
+        </div>
+      </div>
+
       <main style={{ maxWidth: 960, margin: "0 auto", padding: "1.25rem 1rem" }}>
         {tab === "retail"    && <Tab1 shopStation={shopStation} onStationHandled={() => setShopStation("All")} />}
         {tab === "instacart" && <TabInstacart />}
