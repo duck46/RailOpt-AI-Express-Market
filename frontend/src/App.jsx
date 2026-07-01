@@ -608,6 +608,25 @@ function Tab1({ shopStation = "All", onStationHandled }) {
         />
       )}
 
+      {/* After-hours notice — VIA Rail cart service ends at 7pm */}
+      {new Date().getHours() >= 19 && (
+        <div style={{ background: "#1c1917", border: "1px solid #FFCC00", borderRadius: 12, padding: "0.6rem 1rem", marginBottom: "0.85rem", display: "flex", alignItems: "center", gap: 9 }}>
+          <span style={{ fontSize: "1rem", flexShrink: 0 }}>🌙</span>
+          <span style={{ fontSize: "0.78rem", color: "#fef3c7", lineHeight: 1.4 }}>
+            <strong style={{ color: "#FFCC00" }}>Onboard cart service has ended for the night.</strong>
+            {" "}The Shop tab is open 24/7 — order now, collect at the café car zone.
+          </span>
+        </div>
+      )}
+
+      {/* Offline-first badge */}
+      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: "0.85rem" }}>
+        <span style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 20, padding: "0.2rem 0.65rem", fontSize: "0.7rem", fontWeight: 700, color: "#166534", display: "flex", alignItems: "center", gap: 5 }}>
+          <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
+          Offline-first — orders queue automatically in no-signal zones
+        </span>
+      </div>
+
       {/* Location detection banner */}
       {!locationDismissed && !nearestStation && (
         <div className="slide-up" style={{ background: "#FFFBF0", border: "1px solid #FFCC00", borderRadius: 12, padding: "0.75rem 1rem", marginBottom: "1rem", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
@@ -2712,6 +2731,7 @@ const DEMO_STOPS = [
   { station: "Kingston",   province: "ON", offset: 185 },
   { station: "Brockville", province: "ON", offset: 255 },
   { station: "Ottawa",     province: "ON", offset: 375 },
+  { station: "Winnipeg",   province: "MB", offset: 480, note: "Station concessions closed at night — order ahead, your shopper meets you at the platform." },
   { station: "Montréal",   province: "QC", offset: 555 },
 ];
 const MIN_LEAD_MIN = 120;
@@ -2892,6 +2912,9 @@ function TabInstacart() {
                   <div>
                     <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "#111" }}>{stop.station}</span>
                     <span style={{ fontSize: "0.72rem", color: "#6b7280", marginLeft: 6 }}>{stop.province}</span>
+                    {stop.note && (
+                      <div style={{ fontSize: "0.67rem", color: "#2563eb", fontWeight: 600, marginTop: 2, maxWidth: 180 }}>{stop.note}</div>
+                    )}
                   </div>
                 </div>
                 <div style={{ textAlign: "right" }}>
