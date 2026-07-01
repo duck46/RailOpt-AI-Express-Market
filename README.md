@@ -41,7 +41,7 @@ VIA Rail's current onboard commerce is a café cart. No app, no local products, 
 - **Eco Picks filter** — surfaces 19 sustainable products made with natural/low-impact materials
 - **8-minute order countdown** — timer starts on first cart addition, turns red in final 2 minutes
 - **AI Personalize** — per-product AI-generated marketing scripts tailored to passenger preferences
-- **Seat delivery** — fulfilled by VIA Rail's existing onboard service model
+- **Onboard pickup zone** — collect your order at the designated café car area, ready in ~8 minutes (works on all trains regardless of seat assignment)
 
 ### 🛒 Pickup Tab — Instacart Station Pickup *(Phase 1)*
 - **Any store near any station** — Fresh Food, Pharmacy, Books & Magazines, Gifts, Grocery (30 items across 5 categories in demo)
@@ -52,7 +52,7 @@ VIA Rail's current onboard commerce is a café cart. No app, no local products, 
 - **Pharmacy nudge** — typing "advil", "tylenol", etc. in the Shop tab instantly surfaces a blue banner pointing to Pickup
 
 ### 🧠 Phase 2 — AI Onboard Intelligence *(Roadmap)*
-Every Instacart order trains the AI on what passengers on each route actually want. Once enough signal is gathered, the AI tells VIA Rail what to stock onboard — seat delivery unlocked without any platform stop or staff liability issue. The data becomes the moat.
+Every Instacart order trains the AI on what passengers on each route actually want. Once enough signal is gathered, the AI tells VIA Rail what to stock onboard — available at the onboard pickup zone on every train, no platform stop or seat assignment required. The data becomes the moat.
 
 VIA Rail spent **$51.4M on onboard product costs in 2025 (+14.5% YoY)** with no demand intelligence behind that spend. Phase 2 directly attacks that inefficiency: route-level demand forecasting means less waste, better fill rates, and a data asset VIA doesn't currently have. RailOpt is also timed to VIA's **32 new Venture trainsets** just deployed in the Corridor — a clean slate to build digital commerce infrastructure from day one.
 
