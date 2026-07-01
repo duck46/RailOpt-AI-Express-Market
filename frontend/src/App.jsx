@@ -55,11 +55,20 @@ const STATION_COORDS = {
 // ─── Info Bubble ──────────────────────────────────────────────────────────────
 function InfoBubble({ content, color = "#FFCC00" }) {
   const [visible, setVisible] = useState(false);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
   const timerRef = useRef(null);
-  const ref = useRef(null);
+  const btnRef = useRef(null);
 
   const show = () => {
     clearTimeout(timerRef.current);
+    if (btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect();
+      const tipW = 240;
+      let left = r.left + r.width / 2 - tipW / 2;
+      // Clamp to viewport with 8px padding
+      left = Math.max(8, Math.min(left, window.innerWidth - tipW - 8));
+      setPos({ top: r.top + window.scrollY - 8, left });
+    }
     setVisible(true);
     timerRef.current = setTimeout(() => setVisible(false), 4000);
   };
@@ -68,16 +77,17 @@ function InfoBubble({ content, color = "#FFCC00" }) {
   useEffect(() => () => clearTimeout(timerRef.current), []);
 
   return (
-    <span ref={ref} style={{ position: "relative", display: "inline-flex", alignItems: "center", verticalAlign: "middle" }}>
+    <span style={{ position: "relative", display: "inline-flex", alignItems: "center", verticalAlign: "middle" }}>
       <button
-        onMouseEnter={show} onMouseLeave={hide} onClick={(e) => { e.stopPropagation(); visible ? hide() : show(); }}
-        style={{ background: "none", border: `1.5px solid ${color}`, borderRadius: "50%", width: 16, height: 16, fontSize: "0.6rem", fontWeight: 800, color, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", lineHeight: 1, padding: 0, flexShrink: 0 }}
+        ref={btnRef}
+        onMouseEnter={show} onMouseLeave={hide}
+        onClick={(e) => { e.stopPropagation(); visible ? hide() : show(); }}
+        style={{ background: "none", border: `1.5px solid ${color}`, borderRadius: "50%", width: 18, height: 18, fontSize: "0.65rem", fontWeight: 800, color, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", lineHeight: 1, padding: 0, flexShrink: 0, touchAction: "manipulation" }}
         aria-label="More info"
       >i</button>
       {visible && (
-        <div style={{ position: "absolute", bottom: "calc(100% + 6px)", left: "50%", transform: "translateX(-50%)", background: "#1c1917", border: `1px solid ${color}40`, borderRadius: 10, padding: "0.6rem 0.8rem", width: 240, zIndex: 999, boxShadow: "0 4px 20px rgba(0,0,0,0.35)", pointerEvents: "none" }}>
-          <div style={{ fontSize: "0.72rem", color: "#e7e5e4", lineHeight: 1.5 }}>{content}</div>
-          <div style={{ position: "absolute", bottom: -5, left: "50%", transform: "translateX(-50%)", width: 8, height: 8, background: "#1c1917", border: `1px solid ${color}40`, borderTop: "none", borderLeft: "none", rotate: "45deg" }} />
+        <div style={{ position: "fixed", top: pos.top - 8, left: pos.left, transform: "translateY(-100%)", background: "#1c1917", border: `1px solid ${color}40`, borderRadius: 10, padding: "0.65rem 0.85rem", width: 240, zIndex: 9999, boxShadow: "0 4px 24px rgba(0,0,0,0.4)", pointerEvents: "none" }}>
+          <div style={{ fontSize: "0.73rem", color: "#e7e5e4", lineHeight: 1.55 }}>{content}</div>
         </div>
       )}
     </span>
@@ -1029,7 +1039,7 @@ function Tab2() {
             <div style={{ fontSize: "0.65rem", fontWeight: 700, color: "#9ca3af", letterSpacing: "0.1em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 6, marginBottom: "1rem" }}>
               <Train size={11} color="#FFCC00" />Track Layout — Napanee / Collins Bay
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "1.5rem", marginBottom: "1rem" }}>
               <TrackBar state={data.track_a_state} label="Track A — Mainline" />
               <TrackBar state={data.track_b_state} label="Track B — Siding" />
             </div>
@@ -1106,7 +1116,7 @@ function Tab3() {
           </button>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1.5rem", textAlign: "center" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(100px, 1fr))", gap: "1rem", marginBottom: "1.5rem", textAlign: "center" }}>
           {[
             { label: "Orders Queued", value: depth, active: depth > 0 },
             { label: "Bytes Buffered", value: bytes.toLocaleString(), active: bytes > 0 },
@@ -1149,7 +1159,7 @@ function Tab3() {
         {depth === 0 && !syncing && <p style={{ textAlign: "center", fontSize: "0.7rem", color: "#9ca3af", marginTop: 6 }}>No pending orders</p>}
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: "0.75rem" }}>
         {[["AES-256", "Encryption", ShieldCheck], ["MQTT", "Protocol", Activity], ["4× Exp.", "Retry Policy", RefreshCw]].map(([val, label, Icon]) => (
           <div key={label} className="card" style={{ padding: "1rem" }}>
             <div style={{ fontSize: "0.6rem", fontWeight: 700, color: "#9ca3af", letterSpacing: "0.1em", textTransform: "uppercase", display: "flex", alignItems: "center", gap: 4, marginBottom: 6 }}>
@@ -2515,7 +2525,7 @@ function TabAccount() {
               <div style={{ fontSize: "0.75rem", color: "#9ca3af" }}>{form.viaNumber ? `VIA Préférence #${form.viaNumber}` : "No VIA Préférence number"}</div>
             </div>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "1rem" }}>
             {field("Full Name", "name", "text", "Jane Smith")}
             {field("Email", "email", "email", "jane@example.com")}
             {field("VIA Préférence #", "viaNumber", "text", "123456789")}
@@ -2526,7 +2536,7 @@ function TabAccount() {
           <h3 style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", display: "flex", alignItems: "center", gap: 7, margin: 0 }}>
             <Train size={16} color="#FFCC00" /> Journey Details
           </h3>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "1rem" }}>
             {field("Car Number (optional)", "seatCar", "text", "e.g. 4")}
             {field("Seat Number (optional)", "seatNumber", "text", "e.g. 22A")}
           </div>
@@ -3340,7 +3350,7 @@ function TabPitch() {
         <Bullet><strong>Shop tab:</strong> 120+ non-perishable products from local artisans at 41 VIA Rail stations across 8 provinces — carried onboard on consignment, browsable via AI Concierge, collected at the café car pickup zone.</Bullet>
         <Bullet><strong>Pickup tab:</strong> Order from any local store near any stop. A Rail Certified Instacart shopper meets you at your car door during the scheduled stop — you never leave the train.</Bullet>
         <Bullet><strong>Phase 2 AI:</strong> Every order trains a demand model. Once we have 6–12 months of route data, we sell VIA Rail a forecasting licence — telling them exactly what to stock on each route, cutting waste from their $51.4M spend.</Bullet>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8, margin: "0.75rem 0" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 8, margin: "0.75rem 0" }}>
           <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.75rem" }}>
             <div style={{ fontWeight: 800, fontSize: "0.82rem", color: "#166534", marginBottom: 4 }}>🛍️ Shop — Artisan Consignment</div>
             <div style={{ fontSize: "0.72rem", color: "#374151", lineHeight: 1.5 }}>Products loaded at origin station · café car pickup zone · 8-min ready time · AI-personalized feed</div>
@@ -3376,7 +3386,7 @@ function TabPitch() {
 
       {/* 5. The Market */}
       <Section num="5" title="The Market" color="#06b6d4">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 8, marginBottom: "0.85rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))", gap: 8, marginBottom: "0.85rem" }}>
           <Stat val="4.4M" label="VIA Rail passengers/year" />
           <Stat val="$489M" label="2025 passenger revenue" />
           <Stat val="95%" label="long-haul corridor trips" />
@@ -3411,7 +3421,7 @@ function TabPitch() {
 
       {/* 7. Measurable Impact */}
       <Section num="7" title="Measurable Impact" color="#10b981">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: "0.85rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 8, marginBottom: "0.85rem" }}>
           {[
             ["SDG 7", "⚡", "Zero-marginal-carbon commerce on existing clean rail infrastructure"],
             ["SDG 8", "💼", "New income channel for artisans with zero e-commerce setup"],
@@ -3494,19 +3504,19 @@ export default function App() {
           </div>
 
           {/* Tabs */}
-          <div style={{ display: "flex", gap: 0 }}>
+          <div style={{ display: "flex", gap: 0, overflowX: "auto", scrollbarWidth: "none" }}>
             {TABS.map((t) => (
               <button key={t.id} onClick={() => setTab(t.id)} style={{
-                flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                padding: "0.6rem", fontSize: "0.8rem", fontWeight: 700,
+                flex: "1 0 auto", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2,
+                padding: "0.5rem 0.4rem", minWidth: 52, fontSize: "0.68rem", fontWeight: 700,
                 borderBottom: tab === t.id ? "2.5px solid #FFCC00" : "2.5px solid transparent",
                 color: tab === t.id ? "#111" : "#9ca3af",
                 background: "transparent", border: "none",
                 borderBottomWidth: "2.5px", borderBottomStyle: "solid",
                 borderBottomColor: tab === t.id ? "#FFCC00" : "transparent",
-                cursor: "pointer", transition: "all 0.15s",
+                cursor: "pointer", transition: "all 0.15s", whiteSpace: "nowrap",
               }}>
-                <span>{t.emoji}</span>
+                <span style={{ fontSize: "1.1rem", lineHeight: 1 }}>{t.emoji}</span>
                 <span>{t.label}</span>
               </button>
             ))}
