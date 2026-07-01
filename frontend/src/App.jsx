@@ -608,6 +608,36 @@ function Tab1({ shopStation = "All", onStationHandled }) {
         />
       )}
 
+      {/* Prosperity Impact Banner */}
+      <div style={{ background: "linear-gradient(135deg, #1c1917 0%, #1a2e1a 100%)", border: "1px solid #22c55e40", borderRadius: 14, padding: "1rem 1.1rem", marginBottom: "1rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.6rem" }}>
+          <span style={{ fontSize: "1rem" }}>🌱</span>
+          <span style={{ fontWeight: 800, fontSize: "0.82rem", color: "#86efac", letterSpacing: "0.07em", textTransform: "uppercase" }}>Prosperity Impact — SDG 8 · SDG 10</span>
+        </div>
+        <p style={{ margin: "0 0 0.75rem", fontSize: "0.78rem", color: "#d1fae5", lineHeight: 1.55 }}>
+          Every purchase puts money directly into a <strong style={{ color: "#86efac" }}>local Canadian artisan's hands</strong> — a Churchill candle maker, a Miramichi soap producer, a Jasper woodworker. No middlemen. No urban gatekeepers.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: "0.75rem" }}>
+          {[
+            { val: "120+", label: "Local Products" },
+            { val: "41",   label: "VIA Stations" },
+            { val: "8",    label: "Provinces" },
+            { val: "4.4M", label: "Annual Passengers" },
+          ].map(({ val, label }) => (
+            <div key={label} style={{ background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.55rem 0.4rem", textAlign: "center" }}>
+              <div style={{ fontWeight: 800, fontSize: "1rem", color: "#4ade80", lineHeight: 1 }}>{val}</div>
+              <div style={{ fontSize: "0.62rem", color: "#86efac", marginTop: 3, lineHeight: 1.3 }}>{label}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ background: "rgba(255,204,0,0.08)", border: "1px solid rgba(255,204,0,0.25)", borderRadius: 10, padding: "0.55rem 0.8rem", display: "flex", alignItems: "flex-start", gap: 8 }}>
+          <span style={{ fontSize: "0.9rem", flexShrink: 0, marginTop: 1 }}>⚖️</span>
+          <p style={{ margin: 0, fontSize: "0.73rem", color: "#fef3c7", lineHeight: 1.5 }}>
+            <strong style={{ color: "#FFCC00" }}>Equal digital shelf space.</strong> A vendor in Churchill, Manitoba gets the same AI-powered storefront and access to VIA Rail's 4.4M passengers as a vendor in Toronto — zero e-commerce setup required.
+          </p>
+        </div>
+      </div>
+
       {/* After-hours notice — VIA Rail cart service ends at 7pm */}
       {new Date().getHours() >= 19 && (
         <div style={{ background: "#1c1917", border: "1px solid #FFCC00", borderRadius: 12, padding: "0.6rem 1rem", marginBottom: "0.85rem", display: "flex", alignItems: "center", gap: 9 }}>
@@ -2298,6 +2328,17 @@ function Tab4({ onShopStation }) {
           </div>
         </div>
       )}
+
+      {/* Prosperity header for Discover tab */}
+      <div style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)", border: "1px solid rgba(139,92,246,0.3)", borderRadius: 14, padding: "1rem 1.1rem", marginBottom: "1.5rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.5rem" }}>
+          <span style={{ fontSize: "1rem" }}>🗺️</span>
+          <span style={{ fontWeight: 800, fontSize: "0.8rem", color: "#c4b5fd", letterSpacing: "0.07em", textTransform: "uppercase" }}>The Prosperity Map</span>
+        </div>
+        <p style={{ margin: 0, fontSize: "0.77rem", color: "#e0e7ff", lineHeight: 1.55 }}>
+          41 communities across Canada — each with artisan vendors whose products were invisible to 4.4M annual VIA Rail passengers until now. Tap any destination to browse local products and connect directly with makers.
+        </p>
+      </div>
 
       {/* Destination cards by province */}
       {Object.entries(byProvince).map(([province, dests]) => (
