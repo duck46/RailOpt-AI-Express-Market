@@ -240,22 +240,27 @@ All items are **non-perishable and locally produced** — sourced from regional 
 
 ---
 
-## SDG Alignment
+## SDG Alignment — Prosperity Category Focus
 
-### SDG 7 — Affordable and Clean Energy
-CO₂ savings banner (shown for distances ≥10 km) shows carbon avoided vs. driving. 🌿 Eco Picks filter surfaces 19 sustainable products made with natural/low-impact materials.
+RailOpt targets six SDGs with direct, defensible connections to VIA Rail's existing mission. The core thesis: **prosperity built on clean rail infrastructure**.
 
-### SDG 8 — Decent Work and Economic Growth
-Digital marketplace channel for local artisans with zero e-commerce presence — equal access to VIA Rail's 4.4M annual passengers. AI Personalize generates marketing copy on demand.
+### ⚡ SDG 7 — Affordable and Clean Energy *(Prosperity category anchor)*
+Rail emits ~80% less CO₂ per passenger-km than driving. RailOpt's argument: a richer onboard commerce experience makes the rail journey more valuable than driving — accelerating modal shift at scale. Every new rail passenger represents ~0.17 kg CO₂/km avoided. The key insight is **zero-marginal-carbon commerce**: the train runs whether passengers buy anything or not, so every dollar of artisan or Instacart revenue generated onboard is economic growth that adds zero incremental energy consumption. VIA Rail alignment: VIA has published carbon reduction targets and frames rail as Canada's sustainable intercity backbone; RailOpt makes that backbone more economically productive without additional energy cost.
 
-### SDG 9 — Industry, Innovation and Resilient Infrastructure
-AI Recommend and AI Personalize give a Churchill vendor the same retail AI tools that large urban retailers pay thousands for. Phase 2 AI route intelligence democratizes demand forecasting across the corridor.
+### 💼 SDG 8 — Decent Work and Economic Growth
+Digital marketplace channel for local artisans with zero e-commerce presence — equal access to VIA Rail's 4.4M annual passengers via consignment model (no upfront cost to VIA Rail, vendors paid per sale). AI Personalize generates professional marketing copy on demand for vendors with no marketing budget. Rail Certified Instacart shoppers earn with a platform credential at every stop. VIA Rail alignment: VIA's mandate explicitly includes economic development of corridor communities.
 
-### SDG 10 — Reduced Inequalities
-Equal digital shelf space for Churchill, Miramichi, and Senneterre alongside Toronto and Montréal. Geolocation surfaces nearby vendors first — a passenger near Jasper sees Jasper products.
+### 🏗️ SDG 9 — Industry, Innovation and Resilient Infrastructure
+Offline-first store-and-forward order queue: orders placed in no-signal zones sync automatically at the next station. Phase 2 AI route intelligence applies demand forecasting to VIA Rail's $51.4M onboard product cost line. AI Recommend and AI Personalize give a Churchill vendor the same retail AI tools that large urban retailers pay thousands for. VIA Rail alignment: VIA's 32 new Venture trainsets are a clean-slate digital infrastructure investment — RailOpt is the commerce layer built for day one.
 
-### SDG 11 — Sustainable Cities and Communities
-Richer onboard experience supports modal shift away from private vehicles. Discover tab promotes smaller corridor communities and strengthens local tourism.
+### ⚖️ SDG 10 — Reduced Inequalities
+Equal digital shelf space: a vendor in Churchill, Manitoba has identical reach, AI tools, and storefront quality as a vendor in Toronto — zero e-commerce setup required. Geolocation surfaces nearby vendors first, so passengers near Jasper see Jasper products. Phase 2 AI demand intelligence gives rural route vendors the same data insights as Corridor vendors. VIA Rail alignment: VIA's northern routes (The Canadian, Hudson Bay line to Churchill) exist specifically to serve communities with no road or air alternatives.
+
+### 🏙️ SDG 11 — Sustainable Cities and Communities
+A richer onboard experience increases the value of choosing rail over driving for long-haul intercity trips — direct modal shift contribution. Discover tab promotes 41 corridor communities as destinations worth visiting, strengthening local tourism beyond just transit. VIA Rail alignment: VIA's stated purpose is connecting Canadian communities, not just moving passengers between endpoints.
+
+### ♻️ SDG 12 — Responsible Consumption and Production
+Consignment model means VIA Rail only pays for what actually sells — directly reducing overstock waste vs. their current $51.4M intuition-based inventory spend. Non-perishable, locally sourced products eliminate long-haul supply chain emissions. Eco Picks filter (19 sustainable products) surfaces low-impact options to passengers. VIA Rail alignment: the annual report flags on-train product costs as a growing efficiency problem; Phase 2 AI forecasting is a responsible procurement solution.
 
 ---
 

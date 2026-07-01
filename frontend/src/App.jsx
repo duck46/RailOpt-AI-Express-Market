@@ -612,7 +612,7 @@ function Tab1({ shopStation = "All", onStationHandled }) {
       <div style={{ background: "linear-gradient(135deg, #1c1917 0%, #1a2e1a 100%)", border: "1px solid #22c55e40", borderRadius: 14, padding: "1rem 1.1rem", marginBottom: "1rem" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.6rem" }}>
           <span style={{ fontSize: "1rem" }}>🌱</span>
-          <span style={{ fontWeight: 800, fontSize: "0.82rem", color: "#86efac", letterSpacing: "0.07em", textTransform: "uppercase" }}>Prosperity Impact — SDG 8 · SDG 10</span>
+          <span style={{ fontWeight: 800, fontSize: "0.82rem", color: "#86efac", letterSpacing: "0.07em", textTransform: "uppercase" }}>Prosperity Impact — SDG 7 · SDG 8 · SDG 10</span>
         </div>
         <p style={{ margin: "0 0 0.75rem", fontSize: "0.78rem", color: "#d1fae5", lineHeight: 1.55 }}>
           Every purchase puts money directly into a <strong style={{ color: "#86efac" }}>local Canadian artisan's hands</strong> — a Churchill candle maker, a Miramichi soap producer, a Jasper woodworker. No middlemen. No urban gatekeepers.
@@ -630,10 +630,16 @@ function Tab1({ shopStation = "All", onStationHandled }) {
             </div>
           ))}
         </div>
-        <div style={{ background: "rgba(255,204,0,0.08)", border: "1px solid rgba(255,204,0,0.25)", borderRadius: 10, padding: "0.55rem 0.8rem", display: "flex", alignItems: "flex-start", gap: 8 }}>
+        <div style={{ background: "rgba(255,204,0,0.08)", border: "1px solid rgba(255,204,0,0.25)", borderRadius: 10, padding: "0.55rem 0.8rem", display: "flex", alignItems: "flex-start", gap: 8, marginBottom: "0.6rem" }}>
           <span style={{ fontSize: "0.9rem", flexShrink: 0, marginTop: 1 }}>⚖️</span>
           <p style={{ margin: 0, fontSize: "0.73rem", color: "#fef3c7", lineHeight: 1.5 }}>
             <strong style={{ color: "#FFCC00" }}>Equal digital shelf space.</strong> A vendor in Churchill, Manitoba gets the same AI-powered storefront and access to VIA Rail's 4.4M passengers as a vendor in Toronto — zero e-commerce setup required. Products travel onboard on <strong style={{ color: "#FFCC00" }}>consignment</strong>: no upfront cost to VIA Rail, vendors paid per sale.
+          </p>
+        </div>
+        <div style={{ background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.2)", borderRadius: 10, padding: "0.55rem 0.8rem", display: "flex", alignItems: "flex-start", gap: 8 }}>
+          <span style={{ fontSize: "0.9rem", flexShrink: 0, marginTop: 1 }}>⚡</span>
+          <p style={{ margin: 0, fontSize: "0.73rem", color: "#d1fae5", lineHeight: 1.5 }}>
+            <strong style={{ color: "#86efac" }}>Zero-marginal-carbon commerce.</strong> The train runs whether passengers buy anything or not. Every dollar of artisan revenue generated onboard is prosperity built on clean rail infrastructure — economic growth decoupled from additional energy consumption. Rail emits <strong style={{ color: "#86efac" }}>~80% less CO₂</strong> per passenger-km than driving.
           </p>
         </div>
       </div>
@@ -2335,9 +2341,15 @@ function Tab4({ onShopStation }) {
           <span style={{ fontSize: "1rem" }}>🗺️</span>
           <span style={{ fontWeight: 800, fontSize: "0.8rem", color: "#c4b5fd", letterSpacing: "0.07em", textTransform: "uppercase" }}>The Prosperity Map</span>
         </div>
-        <p style={{ margin: 0, fontSize: "0.77rem", color: "#e0e7ff", lineHeight: 1.55 }}>
+        <p style={{ margin: "0 0 0.5rem", fontSize: "0.77rem", color: "#e0e7ff", lineHeight: 1.55 }}>
           41 communities across Canada — each with artisan vendors whose products were invisible to 4.4M annual VIA Rail passengers until now. Tap any destination to browse local products and connect directly with makers.
         </p>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <span style={{ fontSize: "0.75rem" }}>⚡</span>
+          <span style={{ fontSize: "0.7rem", color: "#a5b4fc", lineHeight: 1.4 }}>
+            <strong style={{ color: "#c4b5fd" }}>SDG 7 · SDG 8 · SDG 10 · SDG 11:</strong> Prosperity built on clean rail — discover communities, support local makers, travel sustainably.
+          </span>
+        </div>
       </div>
 
       {/* Destination cards by province */}
@@ -2943,13 +2955,19 @@ function TabInstacart() {
             </div>
           ))}
         </div>
-        <div style={{ marginTop: "0.85rem", paddingTop: "0.75rem", borderTop: "1px solid rgba(255,255,255,0.15)", display: "flex", gap: 16, flexWrap: "wrap" }}>
+        <div style={{ marginTop: "0.85rem", paddingTop: "0.75rem", borderTop: "1px solid rgba(255,255,255,0.15)", display: "flex", gap: 16, flexWrap: "wrap", marginBottom: "0.6rem" }}>
           {[["5%", "commission per order"], ["$0.99", "platform fee per order"], ["Phase 2", "SaaS to VIA Rail"]].map(([val, label]) => (
             <div key={label} style={{ fontSize: "0.72rem", opacity: 0.85 }}>
               <span style={{ fontWeight: 800, color: "#FFCC00" }}>{val}</span>
               <span style={{ marginLeft: 4 }}>{label}</span>
             </div>
           ))}
+        </div>
+        <div style={{ paddingTop: "0.6rem", borderTop: "1px solid rgba(255,255,255,0.1)", display: "flex", alignItems: "center", gap: 7 }}>
+          <span style={{ fontSize: "0.8rem" }}>⚡</span>
+          <span style={{ fontSize: "0.7rem", opacity: 0.85, lineHeight: 1.4 }}>
+            <strong style={{ color: "#86efac" }}>SDG 7 — Clean Energy:</strong> A better onboard experience makes rail more compelling than driving — modal shift at scale. Every new rail passenger avoids ~<strong style={{ color: "#86efac" }}>0.17 kg CO₂/km</strong> vs. driving.
+          </span>
         </div>
       </div>
 
