@@ -65,6 +65,21 @@ Every Instacart order trains the AI on what passengers on each route actually wa
 
 VIA Rail spent **$51.4M on onboard product costs in 2025 (+14.5% YoY)** with no demand intelligence behind that spend. Phase 2 directly attacks that inefficiency: route-level demand forecasting means less waste, better fill rates, and a data asset VIA doesn't currently have. RailOpt is also timed to VIA's **32 new Venture trainsets** just deployed in the Corridor — a clean slate to build digital commerce infrastructure from day one.
 
+### 🚃 Phase 3 — The Artisan Commerce Car *(LDRR Partnership)*
+
+One coach car converted into VIA Rail's highest-revenue-per-square-foot asset — a dedicated Artisan Discovery Car on long-distance trains.
+
+Passengers on The Canadian are onboard for **2–4 days**. They walk to the car. They're bored. They're in a discovery mindset. This is the highest-quality captive sampling audience a CPG brand can buy — they opted in by walking through the door.
+
+| Revenue Stream | Model | Notes |
+|---------------|-------|-------|
+| Brand sampling fees | $5K–$25K per route per campaign | F&B brands pay to reach verified long-distance passengers |
+| Car sponsorship | Seasonal flat fee | Regional brand sponsors entire car — branding, exclusive shelf, sampling rights |
+| Artisan consignment shelf | 15% commission per sale | Physical version of the Shop tab — same zero-cost-to-VIA model |
+| Physical + digital data | Feeds Phase 2 AI | Which samples get taken? Combined with app data for richer demand model |
+
+**Timed to VIA's LDRR tender (Solicitation 202606009, published June 22, 2026):** VIA Rail is actively procuring F&B design expertise for their Long Distance Rail Renewal fleet. The Artisan Commerce Car is the service concept that tender is designed to find — RailOpt provides the digital layer, vendor relationships, and demand intelligence to make it viable from day one. RailOpt is the data infrastructure the winning consultant will need to make defensible recommendations.
+
 ---
 
 ## Revenue Model
@@ -74,9 +89,11 @@ VIA Rail spent **$51.4M on onboard product costs in 2025 (+14.5% YoY)** with no 
 | Pickup commission | 5% per order | On every Instacart station pickup |
 | Platform fee | $1.99 per order | Charged to passenger at checkout |
 | Shop commission | 15% per artisan sale | Standard marketplace take rate |
+| Brand sampling fee | $5K–$25K per campaign | F&B brands reach captive long-distance passengers in the Commerce Car |
+| Car sponsorship | Seasonal | Regional brand sponsors entire Artisan Commerce Car |
 | Phase 2 SaaS | $X/month to VIA Rail | AI demand forecasting licence |
 
-At 4.4M passengers/year with even 2% conversion on Pickup ($25 AOV) and 5% on Shop ($18 AOV): **~$270K ARR at Phase 1 scale before Phase 2 SaaS revenue kicks in.**
+At 4.4M passengers/year with even 2% conversion on Pickup ($25 AOV) and 5% on Shop ($18 AOV): **~$270K ARR at Phase 1 scale before Phase 2 SaaS and Commerce Car revenue kicks in.**
 
 ---
 
