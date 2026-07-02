@@ -664,17 +664,17 @@ function Tab1({ shopStation = "All", onStationHandled }) {
       )}
 
       {/* Prosperity Impact + Offline-first chips on one line */}
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.85rem", flexWrap: "wrap" }}>
-        <span style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 20, padding: "0.2rem 0.65rem", fontSize: "0.7rem", fontWeight: 700, color: "#166534", display: "flex", alignItems: "center", gap: 6 }}>
-          🌱 Prosperity Impact — SDG 7 · SDG 8 · SDG 10
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.85rem" }}>
+        <span style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 20, padding: "0.2rem 0.65rem", fontSize: "0.7rem", fontWeight: 700, color: "#166534", display: "inline-flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
+          🌱 SDG 7 · 8 · 10
           <InfoBubble color="#22c55e" content={
-            <><strong style={{ color: "#86efac" }}>120+ local products · 41 stations · 8 provinces · 4.4M passengers.</strong>
+            <><strong style={{ color: "#86efac" }}>Prosperity Impact — 120+ local products · 41 stations · 8 provinces · 4.4M passengers.</strong>
             {" "}Every purchase goes directly to a local Canadian artisan on consignment — no upfront cost to VIA Rail, vendors paid per sale. Rail emits ~80% less CO₂/km than driving, making every dollar earned onboard zero-marginal-carbon commerce.</>
           } />
         </span>
-        <span style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 20, padding: "0.2rem 0.65rem", fontSize: "0.7rem", fontWeight: 700, color: "#166534", display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
-          Offline-first — orders queue automatically in no-signal zones
+        <span style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 20, padding: "0.2rem 0.65rem", fontSize: "0.7rem", fontWeight: 700, color: "#166534", display: "inline-flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
+          <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", display: "inline-block", flexShrink: 0 }} />
+          Offline-first queue
           <InfoBubble color="#22c55e" content="Orders placed in tunnels or remote stretches are stored locally and sync automatically when the train reaches the next station's Wi-Fi. Zero orders lost, even on The Canadian through Northern Ontario." />
         </span>
       </div>
