@@ -70,8 +70,10 @@ function InfoBubble({ content, color = "#FFCC00" }) {
       setPos({ top: r.top + window.scrollY - 8, left });
     }
     setVisible(true);
-    timerRef.current = setTimeout(() => setVisible(false), 4000);
+    timerRef.current = setTimeout(() => setVisible(false), 8000);
   };
+  const scheduleHide = () => { timerRef.current = setTimeout(() => setVisible(false), 400); };
+  const cancelHide = () => clearTimeout(timerRef.current);
   const hide = () => { clearTimeout(timerRef.current); setVisible(false); };
 
   useEffect(() => () => clearTimeout(timerRef.current), []);
@@ -80,13 +82,13 @@ function InfoBubble({ content, color = "#FFCC00" }) {
     <span style={{ position: "relative", display: "inline-flex", alignItems: "center", verticalAlign: "middle" }}>
       <button
         ref={btnRef}
-        onMouseEnter={show} onMouseLeave={hide}
+        onMouseEnter={show} onMouseLeave={scheduleHide}
         onClick={(e) => { e.stopPropagation(); visible ? hide() : show(); }}
         style={{ background: "none", border: `1.5px solid ${color}`, borderRadius: "50%", width: 18, height: 18, fontSize: "0.65rem", fontWeight: 800, color, cursor: "pointer", display: "inline-flex", alignItems: "center", justifyContent: "center", lineHeight: 1, padding: 0, flexShrink: 0, touchAction: "manipulation" }}
         aria-label="More info"
       >i</button>
       {visible && (
-        <div style={{ position: "fixed", top: pos.top - 8, left: pos.left, transform: "translateY(-100%)", background: "#1c1917", border: `1px solid ${color}40`, borderRadius: 10, padding: "0.65rem 0.85rem", width: 240, zIndex: 9999, boxShadow: "0 4px 24px rgba(0,0,0,0.4)", pointerEvents: "none" }}>
+        <div onMouseEnter={cancelHide} onMouseLeave={scheduleHide} style={{ position: "fixed", top: pos.top - 8, left: pos.left, transform: "translateY(-100%)", background: "#1c1917", border: `1px solid ${color}40`, borderRadius: 10, padding: "0.65rem 0.85rem", width: 240, zIndex: 9999, boxShadow: "0 4px 24px rgba(0,0,0,0.4)", pointerEvents: "auto" }}>
           <div style={{ fontSize: "0.73rem", color: "#e7e5e4", lineHeight: 1.55 }}>{content}</div>
         </div>
       )}
@@ -661,14 +663,19 @@ function Tab1({ shopStation = "All", onStationHandled }) {
         />
       )}
 
-      {/* Prosperity Impact chip */}
-      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: "0.85rem" }}>
+      {/* Prosperity Impact + Offline-first chips on one line */}
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.85rem", flexWrap: "wrap" }}>
         <span style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 20, padding: "0.2rem 0.65rem", fontSize: "0.7rem", fontWeight: 700, color: "#166534", display: "flex", alignItems: "center", gap: 6 }}>
           🌱 Prosperity Impact — SDG 7 · SDG 8 · SDG 10
           <InfoBubble color="#22c55e" content={
             <><strong style={{ color: "#86efac" }}>120+ local products · 41 stations · 8 provinces · 4.4M passengers.</strong>
             {" "}Every purchase goes directly to a local Canadian artisan on consignment — no upfront cost to VIA Rail, vendors paid per sale. Rail emits ~80% less CO₂/km than driving, making every dollar earned onboard zero-marginal-carbon commerce.</>
           } />
+        </span>
+        <span style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 20, padding: "0.2rem 0.65rem", fontSize: "0.7rem", fontWeight: 700, color: "#166534", display: "flex", alignItems: "center", gap: 5 }}>
+          <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
+          Offline-first — orders queue automatically in no-signal zones
+          <InfoBubble color="#22c55e" content="Orders placed in tunnels or remote stretches are stored locally and sync automatically when the train reaches the next station's Wi-Fi. Zero orders lost, even on The Canadian through Northern Ontario." />
         </span>
       </div>
 
@@ -682,15 +689,6 @@ function Tab1({ shopStation = "All", onStationHandled }) {
           </span>
         </div>
       )}
-
-      {/* Offline-first badge */}
-      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: "0.85rem" }}>
-        <span style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 20, padding: "0.2rem 0.65rem", fontSize: "0.7rem", fontWeight: 700, color: "#166534", display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
-          Offline-first — orders queue automatically in no-signal zones
-          <InfoBubble color="#22c55e" content="Orders placed in tunnels or remote stretches are stored locally and sync automatically when the train reaches the next station's Wi-Fi. Zero orders lost, even on The Canadian through Northern Ontario." />
-        </span>
-      </div>
 
       {/* Location detection banner */}
       {!locationDismissed && !nearestStation && (
