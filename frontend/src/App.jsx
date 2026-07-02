@@ -3425,7 +3425,7 @@ function TabPitch() {
         <Bullet>Passengers who forget medication, need a gift, or want local snacks have one option: <strong>sprint to a convenience store during a 10-minute stop</strong> and hope they make it back.</Bullet>
         <Bullet>VIA Rail spent <strong>$51.4M on onboard products in 2025 (+14.5% YoY)</strong> with no demand data behind that spend — stocking by intuition, not intelligence.</Bullet>
         <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 10, padding: "0.75rem 1rem", margin: "0.75rem 0", fontSize: "0.78rem", color: "#7f1d1d", fontStyle: "italic", lineHeight: 1.6 }}>
-          "Sioux Lookout has a Subway just down the street — that's pushing it time wise — or a Rexall past the CIBC. There have been times the stop is long enough for a dash over to Subway but it is very rare. Make sure you have at least 20 minutes otherwise do NOT make the run." — Reddit, r/ViaRail
+          "Sioux Lookout [remote boreal town in Northern Ontario — rail is the primary access] has a Subway just down the street — that's pushing it time wise — or a Rexall past the CIBC. There have been times the stop is long enough for a dash over to Subway but it is very rare. Make sure you have at least 20 minutes otherwise do NOT make the run." — Reddit, r/ViaRail
         </div>
         <Bullet>The demand is real and proven. VIA Rail just has no infrastructure to serve it.</Bullet>
       </Section>
@@ -3614,9 +3614,9 @@ function TabPitch() {
 
         <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Diversity &amp; Inclusion — Equal Digital Shelf</div>
         <div style={{ background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 10, padding: "0.75rem 0.9rem", marginBottom: "0.5rem", fontSize: "0.78rem", color: "#78350f", lineHeight: 1.55 }}>
-          <strong>🪶 Indigenous &amp; Remote Community Vendors</strong> — A Churchill, MB vendor has the same digital shelf space as a Toronto vendor. RailOptAI does not tier by geography. VIA Rail's mandatory remote routes (Churchill MB, Thompson MB, The Pas MB, Sioux Lookout ON) are not afterthoughts — they are the core case for why this platform exists.
+          <strong>🪶 Indigenous &amp; Remote Community Vendors</strong> — A Churchill, MB vendor has the same digital shelf space as a Toronto vendor. RailOptAI does not tier by geography. VIA Rail's mandatory remote routes — Churchill MB, Thompson MB, The Pas MB, and Sioux Lookout ON (a remote boreal town in Northern Ontario where rail is the primary access) — are not afterthoughts. They are the core case for why this platform exists.
         </div>
-        <Bullet>Pelican Lake First Nation artisans (Sioux Lookout), Opaskwayak Cree Nation (The Pas), Itsanitaq Museum (Churchill) — all catalogued at launch with 🪶 Indigenous badge and dedicated filter in the Shop.</Bullet>
+        <Bullet>Pelican Lake First Nation artisans (Sioux Lookout, ON — remote boreal, rail-primary access), Opaskwayak Cree Nation (The Pas, MB), Itsanitaq Museum (Churchill, MB) — all catalogued at launch with 🪶 Indigenous badge and dedicated filter in the Shop.</Bullet>
         <Bullet>For communities with no road access (Churchill, Manitoba — rail-only in winter), RailOptAI is not a convenience layer — it's the only scalable e-commerce channel. Every sale on The Canadian is economic infrastructure for these vendors.</Bullet>
         <Bullet>Aligns directly with SDG 10 (reduced inequalities) — measurable outcome: Indigenous vendor revenue per route vs. southern corridor average.</Bullet>
 
