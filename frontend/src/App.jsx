@@ -3581,8 +3581,8 @@ function TabPitch() {
           {[
             ["SDG 7", "⚡", "Zero-marginal-carbon commerce on existing clean rail infrastructure"],
             ["SDG 8", "💼", "New income channel for artisans with zero e-commerce setup"],
-            ["SDG 10", "🪶", "Indigenous & remote vendors: equal digital shelf, real economic access"],
             ["SDG 9", "🏗️", "Offline-first infrastructure + AI demand forecasting"],
+            ["SDG 10", "🪶", "Indigenous & remote vendors: equal digital shelf, real economic access"],
             ["SDG 11", "🏙️", "Modal shift; 41 corridor communities promoted"],
             ["SDG 12", "♻️", "Consignment model eliminates VIA's overstock waste"],
           ].map(([sdg, icon, desc]) => (
