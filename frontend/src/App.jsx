@@ -1757,11 +1757,11 @@ const DESTINATIONS = [
     "emoji": "🎨",
     "hero_color": "#1a0a2e",
     "highlights": [
+      "VIA Rail Winnipeg Union Station — a beaux-arts landmark (not Toronto's Union Station — Winnipeg's own)",
+      "The Forks National Historic Site — where the Red and Assiniboine Rivers meet; steps from the platform",
       "Canadian Museum for Human Rights — one of the world's most striking museum buildings",
       "Exchange District — 600+ outdoor murals, boutiques, galleries, and local restaurants",
-      "The Forks National Historic Site — where the Red and Assiniboine Rivers meet",
-      "Assiniboine Park Zoo — 150+ animal species in a year-round urban oasis",
-      "Riel House NHS — home of Louis Riel, founding father of Manitoba"
+      "Assiniboine Park Zoo — 150+ animal species in a year-round urban oasis"
     ],
     "vibe": [
       "🎨 Street Art",
@@ -2834,7 +2834,15 @@ const DEMO_STOPS = [
   { station: "Toronto",       province: "ON", offset: -60,  departed: true,  trainDelayMins: 0,   storeDistanceKm: 0.3 },
   { station: "Sudbury",       province: "ON", offset: 185,                   trainDelayMins: 12,  storeDistanceKm: 0.4 },
   { station: "Sioux Lookout", province: "ON", offset: 420,  note: "The Rexall & Subway stop — passengers used to sprint here during 20-min stops. Order ahead instead.", trainDelayMins: 22, storeDistanceKm: 0.2 },
-  { station: "Winnipeg",      province: "MB", offset: 780,  note: "Station concessions closed at night — order ahead, your shopper meets you at the platform.", trainDelayMins: 8,  storeDistanceKm: 0.6 },
+  { station: "Winnipeg",      province: "MB", offset: 780,  note: "VIA Rail Winnipeg Union Station (different from Toronto Union) — The Forks Market is steps away.", trainDelayMins: 8,  storeDistanceKm: 0.6,
+    nearbyPlaces: [
+      { name: "The Forks Market", rating: "4.8★", price: "$20–30", note: "Steps from the platform" },
+      { name: "The Kolachi Kitchen", rating: "4.4★", price: "$20–30", note: "175 Hargrave St · Open late" },
+      { name: "Kabul Grill", rating: "4.8★", price: "$10–20", note: "172 Main St · Best value" },
+      { name: "Robin's Donuts", rating: "", price: "$", note: "Freshly baked — quick pickup" },
+      { name: "The Keg Steakhouse + Bar", rating: "", price: "$$$", note: "Garry St · Pre-order recommended" },
+    ]
+  },
   { station: "Saskatoon",     province: "SK", offset: 1140,                  trainDelayMins: 0,   storeDistanceKm: 1.8 },
   { station: "Vancouver",     province: "BC", offset: 1560,                  trainDelayMins: 0,   storeDistanceKm: 0.3 },
 ];
@@ -3111,6 +3119,28 @@ function TabInstacart() {
             <span style={{ fontSize: "0.78rem", color: "#166534", fontWeight: 600 }}>
               Order by <strong>{cutoffStr}</strong> to receive at {selectedStop.station} (arriving {etaStr})
             </span>
+          </div>
+        )}
+        {selectedStop?.nearbyPlaces && (
+          <div style={{ marginTop: "0.75rem", background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 10, padding: "0.75rem 0.9rem" }}>
+            <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#92400e", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: 5 }}>
+              <MapPin size={12} color="#b45309" /> Nearby food at {selectedStop.station}
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+              {selectedStop.nearbyPlaces.map((p) => (
+                <div key={p.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.72rem", gap: 8 }}>
+                  <div>
+                    <span style={{ fontWeight: 700, color: "#111" }}>{p.name}</span>
+                    {p.rating && <span style={{ color: "#f59e0b", marginLeft: 5 }}>{p.rating}</span>}
+                    <span style={{ color: "#6b7280", marginLeft: 5 }}>{p.price}</span>
+                  </div>
+                  <span style={{ color: "#9ca3af", whiteSpace: "nowrap", fontSize: "0.67rem" }}>{p.note}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: "0.5rem", fontSize: "0.66rem", color: "#b45309" }}>
+              💡 Order via Instacart — your Rail Certified shopper picks up and meets you at the platform
+            </div>
           </div>
         )}
       </div>
