@@ -2441,7 +2441,7 @@ const STATUS_META = {
 const DEMO_MESSAGES = [
   {
     id: "msg-001",
-    from: "RailOpt Express",
+    from: "RailOptAI Express",
     avatar: "🚆",
     subject: "Your order is being prepared",
     body: "Your order ORD-1001 is currently being prepared by our onboard team. Head to the onboard pickup zone (café car) in 8–12 minutes to collect your items.",
@@ -2459,7 +2459,7 @@ const DEMO_MESSAGES = [
   },
   {
     id: "msg-003",
-    from: "RailOpt AI",
+    from: "RailOptAI",
     avatar: "⚡",
     subject: "New products at your next stop",
     body: "Based on your preferences, we found 4 new items available at Kingston station. Check out the Shop tab for Artisan Knitwear and Heritage Prints.",
@@ -2632,7 +2632,7 @@ function TabAccount() {
             {
               key: "consentPersonalization",
               title: "Personalized recommendations",
-              desc: "Allow RailOpt AI to use your stated interests and language preference to tailor product suggestions. This data never leaves your device.",
+              desc: "Allow RailOptAI to use your stated interests and language preference to tailor product suggestions. This data never leaves your device.",
             },
             {
               key: "consentAiTraining",
@@ -3014,7 +3014,7 @@ function TabInstacart() {
           {[
             ["5%", "commission per order", null],
             ["$1.99", "platform fee per order", null],
-            ["Phase 2", "SaaS to VIA Rail", "Every order placed through RailOpt builds the demand dataset VIA Rail doesn't currently have. After 6–12 months of operation, we bring VIA route-level purchase intelligence and a forecasting licence — telling them exactly what to stock on each route. VIA spent $51.4M on onboard products in 2025 with no data behind it."],
+            ["Phase 2", "SaaS to VIA Rail", "Every order placed through RailOptAI builds the demand dataset VIA Rail doesn't currently have. After 6–12 months of operation, we bring VIA route-level purchase intelligence and a forecasting licence — telling them exactly what to stock on each route. VIA spent $51.4M on onboard products in 2025 with no data behind it."],
           ].map(([val, label, tip]) => (
             <div key={label} style={{ fontSize: "0.72rem", opacity: 0.85, display: "flex", alignItems: "center", gap: 4 }}>
               <span style={{ fontWeight: 800, color: "#FFCC00" }}>{val}</span>
@@ -3406,7 +3406,7 @@ function TabPitch() {
       {/* Hero */}
       <div style={{ background: "linear-gradient(135deg, #1c1917 0%, #292524 100%)", borderRadius: 16, padding: "1.5rem", marginBottom: "1.75rem", textAlign: "center" }}>
         <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>🚆</div>
-        <h1 style={{ fontWeight: 900, fontSize: "1.4rem", color: "#FFCC00", margin: "0 0 0.35rem" }}>RailOpt AI Express Market</h1>
+        <h1 style={{ fontWeight: 900, fontSize: "1.4rem", color: "#FFCC00", margin: "0 0 0.35rem" }}>RailOptAI Express Market</h1>
         <p style={{ color: "#e7e5e4", fontSize: "0.85rem", margin: "0 0 1rem", lineHeight: 1.5 }}>Onboard Retail & Destination Discovery Platform for VIA Rail</p>
         <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap" }}>
           {["SDG 7", "SDG 8", "SDG 9", "SDG 10", "SDG 11", "SDG 12"].map((s) => (
@@ -3468,7 +3468,7 @@ function TabPitch() {
         </div>
         <div style={{ background: "#1c1917", borderRadius: 10, padding: "0.75rem 1rem", fontSize: "0.75rem", color: "#e7e5e4", lineHeight: 1.6 }}>
           <span style={{ color: "#FFCC00", fontWeight: 800 }}>Timed to VIA's LDRR tender (Solicitation 202606009, June 2026):</span>{" "}
-          VIA Rail is actively procuring F&B design expertise for their Long Distance Rail Renewal fleet right now. The Artisan Commerce Car is the service concept innovation that tender is looking for — RailOpt provides the digital layer, the demand data, and the vendor relationships to make it viable from day one.
+          VIA Rail is actively procuring F&B design expertise for their Long Distance Rail Renewal fleet right now. The Artisan Commerce Car is the service concept innovation that tender is looking for — RailOptAI provides the digital layer, the demand data, and the vendor relationships to make it viable from day one.
         </div>
       </Section>
 
@@ -3476,14 +3476,14 @@ function TabPitch() {
       <Section num="3" title="The Team" color="#8b5cf6">
         {/* Founder card */}
         <div style={{ background: "#faf5ff", border: "1px solid #c4b5fd", borderRadius: 10, padding: "0.85rem 1rem", marginBottom: "0.5rem" }}>
-          <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#6d28d9", marginBottom: 6 }}>{founderName} — Co-Founder & Product Lead</div>
+          <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#6d28d9", marginBottom: 6 }}>Simon Li — Co-Founder & Product Lead</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: "0.5rem" }}>
             {[
-              ["🛍️", "Shopify", "SMB commerce ops · North America"],
-              ["📊", "Kraft Heinz", "Consumer insights & demand data"],
-              ["🛒", "Canadian Tire", "International e-commerce"],
-              ["⚙️", "Miele", "Intrapreneur & e-commerce"],
-              ["🏦", "RBC", "IT change mgmt · compliance & audit"],
+              ["🛍️", "Shopify", "Support Advisor · SMB · North America"],
+              ["📊", "Kraft Heinz", "Consumer Insights Associate"],
+              ["🛒", "Canadian Tire", "International E-commerce Associate"],
+              ["⚙️", "Miele", "Intrapreneur & E-commerce"],
+              ["🏦", "RBC", "IT Change Manager · Compliance & Audit"],
             ].map(([icon, co, role]) => (
               <div key={co} style={{ background: "#ede9fe", borderRadius: 8, padding: "3px 8px", fontSize: "0.68rem", color: "#4c1d95", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
                 <span>{icon}</span>
@@ -3492,26 +3492,28 @@ function TabPitch() {
               </div>
             ))}
           </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: "0.5rem" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: "0.6rem" }}>
             <div style={{ background: "#f3e8ff", borderRadius: 8, padding: "3px 8px", fontSize: "0.68rem", color: "#6d28d9", fontWeight: 700 }}>🎓 B.Comm — Toronto Metropolitan University</div>
-            <div style={{ background: "#f3e8ff", borderRadius: 8, padding: "3px 8px", fontSize: "0.68rem", color: "#6d28d9", fontWeight: 700 }}>🤖 AI Prototyping — Ivey Business School, Western University</div>
+            <div style={{ background: "#f3e8ff", borderRadius: 8, padding: "3px 8px", fontSize: "0.68rem", color: "#6d28d9", fontWeight: 700 }}>🤖 AI Prototyping Executive Cert — Ivey Business School, Western University</div>
           </div>
-          <div style={{ fontSize: "0.75rem", color: "#374151", lineHeight: 1.6 }}>
-            <strong>Shopify</strong> built the merchant empathy behind the artisan onboarding model.{" "}
-            <strong>Kraft Heinz</strong> consumer insights experience maps directly to Phase 2 AI demand forecasting.{" "}
-            <strong>RBC IT change management</strong> (compliance, audit, governance) is why PIPEDA + Bill C-27 architecture was built in from day one — not retrofitted.{" "}
-            <strong>Ivey AI Prototyping certificate</strong> grounds the technical implementation in executive-level product thinking.
+          <div style={{ fontSize: "0.75rem", color: "#374151", lineHeight: 1.7 }}>
+            <strong>Why these companies matter for this product:</strong><br />
+            • <strong>Shopify</strong> — advised thousands of SMB merchants across North America. Understands exactly what it takes to onboard vendors with zero e-commerce experience onto a platform that just works.<br />
+            • <strong>Kraft Heinz</strong> — consumer insights role means direct experience turning purchase behaviour data into demand signals. This is Phase 2 of RailOptAI: route-level demand forecasting from real transaction data.<br />
+            • <strong>Canadian Tire</strong> — international e-commerce operations at a major Canadian retailer. Knows how logistics, fulfilment, and digital shelf management actually work at scale.<br />
+            • <strong>Miele</strong> — intrapreneurial role inside a premium brand. Built e-commerce from within an enterprise — the same model as deploying RailOptAI inside VIA Rail's existing infrastructure.<br />
+            • <strong>RBC</strong> — IT Change Manager focused on compliance, audit, and governance. This is why PIPEDA + Bill C-27/CPPA compliance was architected from day one, not bolted on. A Crown Corporation like VIA Rail will ask about this on day one.
           </div>
         </div>
 
         {/* Co-founder card */}
         <div style={{ background: "#faf5ff", border: "1px solid #c4b5fd", borderRadius: 10, padding: "0.85rem 1rem", marginBottom: "0.5rem" }}>
-          <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#6d28d9", marginBottom: 6 }}>Hannah — Co-Founder & Supply Chain Lead</div>
+          <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#6d28d9", marginBottom: 6 }}>Hannah Fu — Co-Founder & Supply Chain Lead</div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: "0.5rem" }}>
             <div style={{ background: "#ede9fe", borderRadius: 8, padding: "3px 8px", fontSize: "0.68rem", color: "#4c1d95", fontWeight: 700 }}>📦 Supply Chain Professional</div>
           </div>
-          <div style={{ fontSize: "0.75rem", color: "#374151", lineHeight: 1.55 }}>
-            Leads consignment logistics, vendor onboarding operations, and Indigenous & remote community partnerships. Supply chain expertise is the operational backbone of the artisan consignment model — zero upfront cost to vendors, zero inventory risk to VIA Rail.
+          <div style={{ fontSize: "0.75rem", color: "#374151", lineHeight: 1.6 }}>
+            Supply chain background is the operational backbone of the artisan consignment model. Hannah leads vendor onboarding logistics, consignment fulfilment design, and Indigenous & remote community vendor partnerships. Her expertise is why the model is zero upfront cost to vendors and zero inventory risk to VIA Rail — it's not a pitch claim, it's a supply chain architecture decision.
           </div>
         </div>
 
@@ -3526,7 +3528,7 @@ function TabPitch() {
         <Bullet><strong>Instacart + Uber partnership (May 2024)</strong> proves the platform pickup model at scale. Rail Certified shoppers ride the same wave.</Bullet>
         <Bullet><strong>AI inference costs collapsed</strong> — OpenRouter's Gemini Flash makes real-time product personalization and demand forecasting viable at zero marginal cost per query.</Bullet>
         <Bullet><strong>Post-pandemic modal shift</strong> — intercity rail ridership rebounding; VIA's 4.4M passenger year (2025) is the baseline, not the ceiling.</Bullet>
-        <Bullet><strong>Bill C-27 / CPPA</strong> creates a trust gap for data-driven commerce. RailOpt is built compliant from day one — a moat competitors can't retrofit easily.</Bullet>
+        <Bullet><strong>Bill C-27 / CPPA</strong> creates a trust gap for data-driven commerce. RailOptAI is built compliant from day one — a moat competitors can't retrofit easily.</Bullet>
       </Section>
 
       {/* 5. The Market */}
@@ -3546,7 +3548,7 @@ function TabPitch() {
       {/* 6. Business Model */}
       <Section num="6" title="Business Model" color="#FFCC00">
         {[
-          ["5%", "Commission per Pickup order", "On every Instacart station pickup processed through RailOpt"],
+          ["5%", "Commission per Pickup order", "On every Instacart station pickup processed through RailOptAI"],
           ["$1.99", "Platform fee per order", "Charged to passenger at checkout — below psychological resistance threshold"],
           ["15%", "Shop commission", "Standard marketplace take rate on every artisan sale"],
           ["$5K–25K", "Brand sampling fee per route", "F&B brands pay per trip to reach captive long-distance passengers in the Artisan Commerce Car — opt-in, discovery-mindset audience"],
@@ -3591,7 +3593,7 @@ function TabPitch() {
       <Section num="8" title="Additional Information" color="#6b7280">
         <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", marginBottom: "0.4rem" }}>Competitive Advantage</div>
         <Bullet>The only platform that combines onboard artisan consignment + Instacart platform pickup + AI demand intelligence in a single rail-native product.</Bullet>
-        <Bullet>2018 Metrolinx/PC Express pilot failed: order-night-before, walk to locker, Loblaws only, no personalization, 3-min commuter stops. RailOpt solves every one of those failure modes.</Bullet>
+        <Bullet>2018 Metrolinx/PC Express pilot failed: order-night-before, walk to locker, Loblaws only, no personalization, 3-min commuter stops. RailOptAI solves every one of those failure modes.</Bullet>
 
         <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Go-to-Market — No Permission Needed</div>
         <Bullet>Phase 1 launches as a standalone passenger app — no VIA Rail contract required. Instacart shoppers already service station areas.</Bullet>
@@ -3608,10 +3610,10 @@ function TabPitch() {
 
         <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Diversity &amp; Inclusion — Equal Digital Shelf</div>
         <div style={{ background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 10, padding: "0.75rem 0.9rem", marginBottom: "0.5rem", fontSize: "0.78rem", color: "#78350f", lineHeight: 1.55 }}>
-          <strong>🪶 Indigenous &amp; Remote Community Vendors</strong> — A Churchill, MB vendor has the same digital shelf space as a Toronto vendor. RailOpt does not tier by geography. VIA Rail's mandatory remote routes (Churchill MB, Thompson MB, The Pas MB, Sioux Lookout ON) are not afterthoughts — they are the core case for why this platform exists.
+          <strong>🪶 Indigenous &amp; Remote Community Vendors</strong> — A Churchill, MB vendor has the same digital shelf space as a Toronto vendor. RailOptAI does not tier by geography. VIA Rail's mandatory remote routes (Churchill MB, Thompson MB, The Pas MB, Sioux Lookout ON) are not afterthoughts — they are the core case for why this platform exists.
         </div>
         <Bullet>Pelican Lake First Nation artisans (Sioux Lookout), Opaskwayak Cree Nation (The Pas), Itsanitaq Museum (Churchill) — all catalogued at launch with 🪶 Indigenous badge and dedicated filter in the Shop.</Bullet>
-        <Bullet>For communities with no road access (Churchill, Manitoba — rail-only in winter), RailOpt is not a convenience layer — it's the only scalable e-commerce channel. Every sale on The Canadian is economic infrastructure for these vendors.</Bullet>
+        <Bullet>For communities with no road access (Churchill, Manitoba — rail-only in winter), RailOptAI is not a convenience layer — it's the only scalable e-commerce channel. Every sale on The Canadian is economic infrastructure for these vendors.</Bullet>
         <Bullet>Aligns directly with SDG 10 (reduced inequalities) — measurable outcome: Indigenous vendor revenue per route vs. southern corridor average.</Bullet>
 
         <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Scalability & Roadmap</div>
@@ -3633,7 +3635,7 @@ const TABS = [
 ];
 
 export default function App() {
-  const [tab, setTab] = useState("retail");
+  const [tab, setTab] = useState("pitch");
   const [shopStation, setShopStation] = useState("All");
 
   const handleShopStation = (stationName) => {

@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-app = FastAPI(title="RailOpt AI Express Market API", version="1.0.0")
+app = FastAPI(title="RailOptAI Express Market API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -2513,7 +2513,7 @@ def simulate_sync():
     }
 
 
-# --- RailOpt Simulation ---
+# --- RailOptAI Simulation ---
 
 def _calculate_siding_conflict(freight_delay: int):
     """
@@ -2586,7 +2586,7 @@ async def _call_openrouter(model: str, prompt: str) -> str:
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://railopt.ai",
-        "X-Title": "RailOpt AI Express Market",
+        "X-Title": "RailOptAI Express Market",
     }
     payload = {
         "model": model,
@@ -2618,7 +2618,7 @@ async def ai_recommend(req: RecommendRequest):
     ]
     location_ctx = f"The passenger is near {req.station} station (~{req.distance_km} km away). " if req.station else ""
     prompt = (
-        f"You are RailOpt AI Concierge on a VIA Rail train. "
+        f"You are RailOptAI Concierge on a VIA Rail train. "
         f"{location_ctx}"
         f"A passenger said: \"{req.query}\". "
         f"Think laterally and empathetically. This is a curated local artisan catalogue — not a pharmacy or grocery store. "
@@ -2672,7 +2672,7 @@ async def ai_personalize(req: PersonalizeRequest):
         }
 
     prompt = (
-        f"You are RailOpt AI Concierge, a friendly onboard retail assistant on a VIA Rail train. "
+        f"You are RailOptAI Concierge, a friendly onboard retail assistant on a VIA Rail train. "
         f"Write exactly 2 sentences of compelling marketing copy for this product: "
         f"'{item['name']}' by '{item['vendor']}' from {item['station']} station, priced at {item['price_display']}. "
         f"Tailor it to a passenger who described their preferences as: '{req.preferences}'. "
@@ -2717,4 +2717,4 @@ if os.path.exists(STATIC_DIR):
 else:
     @app.get("/")
     def root():
-        return {"service": "RailOpt AI Express Market API", "version": "1.0.0", "status": "operational"}
+        return {"service": "RailOptAI Express Market API", "version": "1.0.0", "status": "operational"}
