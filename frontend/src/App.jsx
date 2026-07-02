@@ -3560,7 +3560,7 @@ export default function App() {
                 <Train size={20} color="#111" />
               </div>
               <div>
-                <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", lineHeight: 1.2 }}>RailOpt Express</div>
+                <div style={{ fontWeight: 800, fontSize: "0.95rem", color: "#111", lineHeight: 1.2 }}>RailOpt<span style={{ color: "#FFCC00" }}>AI</span> Express</div>
                 <div style={{ fontSize: "0.65rem", color: "#9ca3af", fontWeight: 600, letterSpacing: "0.05em" }}>VIA Rail Onboard Market</div>
               </div>
             </div>
