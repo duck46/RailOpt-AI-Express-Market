@@ -3374,6 +3374,7 @@ function TabPitch() {
     return (
       <div style={{ marginBottom: "0.6rem", border: "1px solid #e7e5e4", borderRadius: 12, overflow: "hidden" }}>
         <button
+          type="button"
           onClick={() => toggleSection(num)}
           style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "0.75rem 1rem", background: isOpen ? "#fafaf9" : "#fff", border: "none", cursor: "pointer", textAlign: "left" }}
         >
