@@ -28,7 +28,7 @@ Every traveller has had that moment — you're on the train and you realize you 
 
 This is how passengers on The Canadian actually solve it today, from Reddit:
 
-> *"Sioux Lookout has a Subway just down the street — that's pushing it time wise — or a Rexall past the CIBC across the street which is your best bet. There have been times the stop is long enough for a dash over to Subway but it is very rare. Make sure you have at least 20 minutes in station otherwise do NOT make the run. If you have 10 minutes you can do the Rexall. It does involve running. Make sure you communicate clearly with VIA staff. Also the Edmonton vending machines are cheaper than on train. Winnipeg and Jasper are your main places to pick up food."*
+> *"The Ontario Station has a Subway just down the street — that's pushing it time wise — or a Rexall past the CIBC across the street which is your best bet. There have been times the stop is long enough for a dash over to Subway but it is very rare. Make sure you have at least 20 minutes in station otherwise do NOT make the run. If you have 10 minutes you can do the Rexall. It does involve running. Make sure you communicate clearly with VIA staff. Also the Edmonton vending machines are cheaper than on train. Winnipeg and Jasper are your main places to pick up food."*
 
 Passengers are sprinting to convenience stores during 10-minute stops, timing Rexall dashes, and relying on local knowledge passed around Reddit threads. The demand is real and proven — VIA Rail just has no infrastructure to serve it.
 
@@ -45,9 +45,9 @@ RailOptAI replaces the sprint with an app. Order before the stop, a Rail Certifi
 - **Geolocation** — "Use My Location" finds your nearest station and filters the catalogue to nearby products
 - **CO₂ savings banner** — shows carbon avoided vs. driving when location is detected
 - **Eco Picks filter** — surfaces 19 sustainable products made with natural/low-impact materials
-- **8-minute order countdown** — timer starts on first cart addition, turns red in final 2 minutes
+- **Order countdown** — timer starts on first cart addition, turns red in final 2 minutes
 - **AI Personalize** — per-product AI-generated marketing scripts tailored to passenger preferences
-- **Onboard pickup zone** — collect your order at the café car area, ready in ~8 minutes (works on all trains regardless of seat assignment)
+- **Onboard pickup zone** — collect your order at the café car area (works on all trains regardless of seat assignment)
 
 #### Consignment Fulfillment Model
 Artisan products travel onboard on **consignment** — VIA Rail carries inventory loaded at the origin station at no upfront cost. Vendors are paid only when a unit sells; RailOptAI handles digital discovery, checkout, and settlement. Unsold stock returns at journey's end or is donated locally. This mirrors how VIA's existing café car operates and requires no change to their current procurement process — just a digital layer on top.
