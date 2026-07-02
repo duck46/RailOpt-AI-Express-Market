@@ -1,4 +1,4 @@
-# RailOpt AI Express Market
+# RailOptAI Express Market
 
 **Onboard Retail & Destination Discovery Platform for VIA Rail**
 
@@ -16,7 +16,7 @@ VIA Rail carried **4.4 million passengers** in 2025, travelling **986 million pa
 
 VIA Rail spent **$51.4 million on onboard product costs in 2025**, up **14.5% year-over-year**, driven by higher ridership in Business and Sleeper classes and rising supplier prices. The annual report flags this cost line as a growing financial pressure — yet there is no demand intelligence behind it. VIA stocks trains by intuition, not data.
 
-RailOpt's Phase 2 AI turns that $51M cost line into a precision operation: learn what passengers on each route actually buy, tell VIA exactly what to stock, reduce waste, improve fill rates. The data moat is built in Phase 1.
+RailOptAI's Phase 2 AI turns that $51M cost line into a precision operation: learn what passengers on each route actually buy, tell VIA exactly what to stock, reduce waste, improve fill rates. The data moat is built in Phase 1.
 
 *(Source: VIA Rail 2025 Annual Report)*
 
@@ -32,7 +32,7 @@ This is how passengers on The Canadian actually solve it today, from Reddit:
 
 Passengers are sprinting to convenience stores during 10-minute stops, timing Rexall dashes, and relying on local knowledge passed around Reddit threads. The demand is real and proven — VIA Rail just has no infrastructure to serve it.
 
-RailOpt replaces the sprint with an app. Order before the stop, a Rail Certified Instacart shopper meets you at the platform door, you never leave the train.
+RailOptAI replaces the sprint with an app. Order before the stop, a Rail Certified Instacart shopper meets you at the platform door, you never leave the train.
 
 ---
 
@@ -50,7 +50,7 @@ RailOpt replaces the sprint with an app. Order before the stop, a Rail Certified
 - **Onboard pickup zone** — collect your order at the café car area, ready in ~8 minutes (works on all trains regardless of seat assignment)
 
 #### Consignment Fulfillment Model
-Artisan products travel onboard on **consignment** — VIA Rail carries inventory loaded at the origin station at no upfront cost. Vendors are paid only when a unit sells; RailOpt handles digital discovery, checkout, and settlement. Unsold stock returns at journey's end or is donated locally. This mirrors how VIA's existing café car operates and requires no change to their current procurement process — just a digital layer on top.
+Artisan products travel onboard on **consignment** — VIA Rail carries inventory loaded at the origin station at no upfront cost. Vendors are paid only when a unit sells; RailOptAI handles digital discovery, checkout, and settlement. Unsold stock returns at journey's end or is donated locally. This mirrors how VIA's existing café car operates and requires no change to their current procurement process — just a digital layer on top.
 
 ### 🛒 Pickup Tab — Instacart Station Pickup *(Phase 1)*
 - **Any store near any station** — Fresh Food, Pharmacy, Books & Magazines, Gifts, Grocery (30 items across 5 categories in demo)
@@ -63,7 +63,7 @@ Artisan products travel onboard on **consignment** — VIA Rail carries inventor
 ### 🧠 Phase 2 — AI Onboard Intelligence *(Roadmap)*
 Every Instacart order trains the AI on what passengers on each route actually want. Once enough signal is gathered, the AI tells VIA Rail what to stock onboard — available at the onboard pickup zone on every train, no platform stop or seat assignment required. The data becomes the moat.
 
-VIA Rail spent **$51.4M on onboard product costs in 2025 (+14.5% YoY)** with no demand intelligence behind that spend. Phase 2 directly attacks that inefficiency: route-level demand forecasting means less waste, better fill rates, and a data asset VIA doesn't currently have. RailOpt is also timed to VIA's **32 new Venture trainsets** just deployed in the Corridor — a clean slate to build digital commerce infrastructure from day one.
+VIA Rail spent **$51.4M on onboard product costs in 2025 (+14.5% YoY)** with no demand intelligence behind that spend. Phase 2 directly attacks that inefficiency: route-level demand forecasting means less waste, better fill rates, and a data asset VIA doesn't currently have. RailOptAI is also timed to VIA's **32 new Venture trainsets** just deployed in the Corridor — a clean slate to build digital commerce infrastructure from day one.
 
 ### 🚃 Phase 3 — The Artisan Commerce Car *(LDRR Partnership)*
 
@@ -78,7 +78,7 @@ Passengers on The Canadian are onboard for **2–4 days**. They walk to the car.
 | Artisan consignment shelf | 15% commission per sale | Physical version of the Shop tab — same zero-cost-to-VIA model |
 | Physical + digital data | Feeds Phase 2 AI | Which samples get taken? Combined with app data for richer demand model |
 
-**Timed to VIA's LDRR tender (Solicitation 202606009, published June 22, 2026):** VIA Rail is actively procuring F&B design expertise for their Long Distance Rail Renewal fleet. The Artisan Commerce Car is the service concept that tender is designed to find — RailOpt provides the digital layer, vendor relationships, and demand intelligence to make it viable from day one. RailOpt is the data infrastructure the winning consultant will need to make defensible recommendations.
+**Timed to VIA's LDRR tender (Solicitation 202606009, published June 22, 2026):** VIA Rail is actively procuring F&B design expertise for their Long Distance Rail Renewal fleet. The Artisan Commerce Car is the service concept that tender is designed to find — RailOptAI provides the digital layer, vendor relationships, and demand intelligence to make it viable from day one. RailOptAI is the data infrastructure the winning consultant will need to make defensible recommendations.
 
 ---
 
@@ -101,13 +101,13 @@ At 4.4M passengers/year with even 2% conversion on Pickup ($25 AOV) and 5% on Sh
 
 **We don't need VIA Rail's permission to launch Phase 1.**
 
-- RailOpt launches as a **standalone passenger app** — no VIA Rail contract required
+- RailOptAI launches as a **standalone passenger app** — no VIA Rail contract required
 - Passengers order Instacart pickups independently; shoppers already service train station areas
 - Artisan vendors sign up as sellers directly; we handle the digital shelf
 - We collect demand data across every route and stop
 
 **Phase 2 is the enterprise sale:**
-After 6–12 months of Phase 1 operation, RailOpt brings VIA Rail the route-level demand dataset they don't currently have: *"Here's exactly what passengers on your Winnipeg run actually buy — here's what you should stock."* VIA Rail's $51.4M onboard product cost problem now has a data-backed solution. This is a prototype and proposal — Phase 1 operation is what generates the data.
+After 6–12 months of Phase 1 operation, RailOptAI brings VIA Rail the route-level demand dataset they don't currently have: *"Here's exactly what passengers on your Winnipeg run actually buy — here's what you should stock."* VIA Rail's $51.4M onboard product cost problem now has a data-backed solution. This is a prototype and proposal — Phase 1 operation is what generates the data.
 
 This sidesteps the 18–36 month Crown Corporation procurement cycle. We build leverage before we knock on the door.
 
@@ -117,7 +117,7 @@ This sidesteps the 18–36 month Crown Corporation procurement cycle. We build l
 
 Loblaw and Metrolinx ran a grocery pickup pilot at 5 GO Transit stations in 2018. It was shut down. The key differences:
 
-| PC Express / Metrolinx (2018) | RailOpt Express Market |
+| PC Express / Metrolinx (2018) | RailOptAI Express Market |
 |---|---|
 | Order the night before | 2-hour lead time |
 | Walk to a locker | Shopper meets you at your car door |
@@ -185,7 +185,7 @@ Open `http://localhost:5173`.
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│                   RailOpt AI Express Market                      │
+│                   RailOptAI Express Market                      │
 │                                                                  │
 │  ┌──────────────────────┐    ┌────────────────────────────────┐  │
 │  │  React + Vite         │    │  FastAPI Backend               │  │
@@ -259,16 +259,16 @@ All items are **non-perishable and locally produced** — sourced from regional 
 
 ## SDG Alignment — Prosperity Category Focus
 
-RailOpt targets six SDGs with direct, defensible connections to VIA Rail's existing mission. The core thesis: **prosperity built on clean rail infrastructure**.
+RailOptAI targets six SDGs with direct, defensible connections to VIA Rail's existing mission. The core thesis: **prosperity built on clean rail infrastructure**.
 
 ### ⚡ SDG 7 — Affordable and Clean Energy *(Prosperity category anchor)*
-Rail emits ~80% less CO₂ per passenger-km than driving. RailOpt's argument: a richer onboard commerce experience makes the rail journey more valuable than driving — accelerating modal shift at scale. Every new rail passenger represents ~0.17 kg CO₂/km avoided. The key insight is **zero-marginal-carbon commerce**: the train runs whether passengers buy anything or not, so every dollar of artisan or Instacart revenue generated onboard is economic growth that adds zero incremental energy consumption. VIA Rail alignment: VIA has published carbon reduction targets and frames rail as Canada's sustainable intercity backbone; RailOpt makes that backbone more economically productive without additional energy cost.
+Rail emits ~80% less CO₂ per passenger-km than driving. RailOptAI's argument: a richer onboard commerce experience makes the rail journey more valuable than driving — accelerating modal shift at scale. Every new rail passenger represents ~0.17 kg CO₂/km avoided. The key insight is **zero-marginal-carbon commerce**: the train runs whether passengers buy anything or not, so every dollar of artisan or Instacart revenue generated onboard is economic growth that adds zero incremental energy consumption. VIA Rail alignment: VIA has published carbon reduction targets and frames rail as Canada's sustainable intercity backbone; RailOptAI makes that backbone more economically productive without additional energy cost.
 
 ### 💼 SDG 8 — Decent Work and Economic Growth
 Digital marketplace channel for local artisans with zero e-commerce presence — equal access to VIA Rail's 4.4M annual passengers via consignment model (no upfront cost to VIA Rail, vendors paid per sale). AI Personalize generates professional marketing copy on demand for vendors with no marketing budget. Rail Certified Instacart shoppers earn with a platform credential at every stop. VIA Rail alignment: VIA's mandate explicitly includes economic development of corridor communities.
 
 ### 🏗️ SDG 9 — Industry, Innovation and Resilient Infrastructure
-Offline-first store-and-forward order queue: orders placed in no-signal zones sync automatically at the next station. Phase 2 AI route intelligence applies demand forecasting to VIA Rail's $51.4M onboard product cost line. AI Recommend and AI Personalize give a Churchill vendor the same retail AI tools that large urban retailers pay thousands for. VIA Rail alignment: VIA's 32 new Venture trainsets are a clean-slate digital infrastructure investment — RailOpt is the commerce layer built for day one.
+Offline-first store-and-forward order queue: orders placed in no-signal zones sync automatically at the next station. Phase 2 AI route intelligence applies demand forecasting to VIA Rail's $51.4M onboard product cost line. AI Recommend and AI Personalize give a Churchill vendor the same retail AI tools that large urban retailers pay thousands for. VIA Rail alignment: VIA's 32 new Venture trainsets are a clean-slate digital infrastructure investment — RailOptAI is the commerce layer built for day one.
 
 ### ⚖️ SDG 10 — Reduced Inequalities
 Equal digital shelf space: a vendor in Churchill, Manitoba has identical reach, AI tools, and storefront quality as a vendor in Toronto — zero e-commerce setup required. Geolocation surfaces nearby vendors first, so passengers near Jasper see Jasper products. Phase 2 AI demand intelligence gives rural route vendors the same data insights as Corridor vendors. VIA Rail alignment: VIA's northern routes (The Canadian, Hudson Bay line to Churchill) exist specifically to serve communities with no road or air alternatives.
@@ -340,4 +340,4 @@ git push --force-with-lease origin claude/railopt-express-market-p1-lzfqff
 
 ---
 
-*RailOpt AI Express Market — Phase 1 demonstration platform. Production would add authentication, persistent SQLite/PostgreSQL order queue, Instacart API integration, VIA Rail POS integration, and CPPA-compliant data infrastructure.*
+*RailOptAI Express Market — Phase 1 demonstration platform. Production would add authentication, persistent SQLite/PostgreSQL order queue, Instacart API integration, VIA Rail POS integration, and CPPA-compliant data infrastructure.*
