@@ -3609,8 +3609,8 @@ function TabPitch() {
         <Bullet>The only platform that combines onboard artisan consignment + Instacart platform pickup + AI demand intelligence in a single rail-native product.</Bullet>
         <Bullet>2018 Metrolinx/PC Express pilot failed: order-night-before, walk to locker, Loblaws only, no personalization, 3-min commuter stops. RailOptAI solves every one of those failure modes.</Bullet>
 
-        <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Go-to-Market — No Permission Needed</div>
-        <Bullet>Phase 1 launches as a standalone passenger app — no VIA Rail contract required. Instacart shoppers already service station areas.</Bullet>
+        <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Go-to-Market</div>
+        <Bullet>Phase 1 launches as a standalone passenger app — a VIA Rail contract is required for the real-time train status API. Instacart shoppers already service station areas.</Bullet>
         <Bullet>This sidesteps the 18–36 month Crown Corporation procurement cycle. We build leverage before we knock on the door.</Bullet>
 
         <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Traction & Validation</div>
