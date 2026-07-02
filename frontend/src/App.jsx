@@ -2830,7 +2830,8 @@ const STATION_TZ = {
 const DEMO_STOPS = [
   { station: "Toronto",       province: "ON", offset: -60,  departed: true,  trainDelayMins: 0,   storeDistanceKm: 0.3 },
   { station: "Sudbury",       province: "ON", offset: 185,                   trainDelayMins: 12,  storeDistanceKm: 0.4 },
-  { station: "Sioux Lookout", province: "ON", offset: 420,  note: "The Rexall & Subway stop — passengers used to sprint here during 20-min stops. Order ahead instead.", trainDelayMins: 22, storeDistanceKm: 0.2 },
+  { station: "Sioux Lookout", province: "ON", offset: 420, subtitle: "Remote boreal town · rail-only access · Northern Ontario",
+    note: "Subway is just down the street, Rexall is past the CIBC — but only worth the dash if you have 20+ min. Train +22 min late today. Order ahead, don't risk it.", trainDelayMins: 22, storeDistanceKm: 0.2 },
   { station: "Winnipeg",      province: "MB", offset: 780,  note: "VIA Rail Winnipeg Union Station (different from Toronto Union) — The Forks Market is steps away.", trainDelayMins: 8,  storeDistanceKm: 0.6,
     nearbyPlaces: [
       { name: "The Forks Market", rating: "4.8★", price: "$20–30", note: "Steps from the platform" },
@@ -3080,6 +3081,9 @@ function TabInstacart() {
                   <div>
                     <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "#111" }}>{stop.station}</span>
                     <span style={{ fontSize: "0.72rem", color: "#6b7280", marginLeft: 6 }}>{stop.province}</span>
+                    {stop.subtitle && (
+                      <div style={{ fontSize: "0.62rem", color: "#9ca3af", marginTop: 1, fontStyle: "italic" }}>{stop.subtitle}</div>
+                    )}
                     {stop.note && (
                       <div style={{ fontSize: "0.67rem", color: "#2563eb", fontWeight: 600, marginTop: 2, maxWidth: 180 }}>{stop.note}</div>
                     )}
