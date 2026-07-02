@@ -784,7 +784,7 @@ function Tab1({ shopStation = "All", onStationHandled }) {
             border: ecoOnly ? "1.5px solid #86efac" : "1.5px solid #e7e5e4",
           }}
         >
-          🌿 Eco Picks
+          🌿 Eco Picks <InfoBubble color="#22c55e" content="Products marked 🌿 Eco are sustainably sourced, locally made, or certified by the vendor as low-impact. These items reduce packaging waste and support responsible artisan practices." />
         </button>
         <button
           onClick={() => setIndigenousOnly((v) => !v)}
@@ -795,7 +795,7 @@ function Tab1({ shopStation = "All", onStationHandled }) {
             border: indigenousOnly ? "1.5px solid #fcd34d" : "1.5px solid #e7e5e4",
           }}
         >
-          🪶 Indigenous
+          🪶 Indigenous <InfoBubble color="#b45309" content="Products marked 🪶 Indigenous are made by First Nations, Métis, or Inuit artisans from remote communities along VIA Rail's mandatory routes — including Sioux Lookout ON, The Pas MB, Thompson MB, and Churchill MB. Every purchase directly supports Indigenous economic self-determination." />
         </button>
         <select
           value={activeStation}
