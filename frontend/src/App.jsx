@@ -2935,6 +2935,8 @@ function TabInstacart() {
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [orderStep, setOrderStep] = useState(0);
   const [orderId, setOrderId] = useState("");
+  const [aiQuery, setAiQuery] = useState("");
+  const [aiResults, setAiResults] = useState(null);
 
   const allItems = Object.values(INSTACART_CATALOGUE).flat();
   const cartCount = cart.reduce((s, c) => s + c.qty, 0);
@@ -3029,6 +3031,85 @@ function TabInstacart() {
           </span>
         </div>
       </div>
+
+      {/* AI Search bar */}
+      {(() => {
+        const allItems = Object.values(INSTACART_CATALOGUE).flat();
+        const runSearch = (q) => {
+          const query = q.toLowerCase().trim();
+          if (!query) { setAiResults(null); return; }
+          const keywords = {
+            headache: ["IC-P001"], pain: ["IC-P001"], advil: ["IC-P001"], tylenol: ["IC-P001"],
+            nausea: ["IC-P003"], sick: ["IC-P003", "IC-P001"], motion: ["IC-P003"],
+            sanitizer: ["IC-P002"], clean: ["IC-P002"],
+            hydration: ["IC-P004"], electrolyte: ["IC-P004"], dehydrated: ["IC-P004"],
+            "first aid": ["IC-P005"], bandage: ["IC-P005"], cut: ["IC-P005"],
+            eyes: ["IC-P006"], dry: ["IC-P006"],
+            snack: ["IC-GR001", "IC-GR003", "IC-GR005"], hungry: ["IC-F001", "IC-F002", "IC-GR001"],
+            fruit: ["IC-F001"], sandwich: ["IC-F002"], juice: ["IC-F004"], coffee: ["IC-GR006"],
+            kids: ["IC-B006", "IC-GR004"], baby: ["IC-GR004"], child: ["IC-B006"],
+            gift: ["IC-G002", "IC-G004", "IC-G001"], chocolate: ["IC-G002"],
+            honey: ["IC-G001"], maple: ["IC-G004"], wine: ["IC-G005"],
+            book: ["IC-B003"], read: ["IC-B003", "IC-B002"], magazine: ["IC-B002"],
+            puzzle: ["IC-B005"], journal: ["IC-B004"],
+            water: ["IC-GR002"], grocery: ["IC-GR001", "IC-GR002", "IC-GR003"],
+            protein: ["IC-GR005"], energy: ["IC-GR005", "IC-F004"],
+          };
+          const matched = new Set();
+          Object.entries(keywords).forEach(([kw, ids]) => {
+            if (query.includes(kw)) ids.forEach(id => matched.add(id));
+          });
+          // Fallback: search item names and descriptions
+          if (matched.size === 0) {
+            allItems.forEach(item => {
+              if (item.name.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query))
+                matched.add(item.id);
+            });
+          }
+          const results = [...matched].slice(0, 3).map(id => allItems.find(i => i.id === id)).filter(Boolean);
+          setAiResults(results.length > 0 ? results : []);
+        };
+        return (
+          <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 12, padding: "0.85rem 1rem", marginBottom: "1rem" }}>
+            <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#166534", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: 6 }}>
+              🤖 AI Pickup Assistant — tell me what you need
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              <input
+                value={aiQuery}
+                onChange={(e) => { setAiQuery(e.target.value); if (!e.target.value) setAiResults(null); }}
+                onKeyDown={(e) => e.key === "Enter" && runSearch(aiQuery)}
+                placeholder="e.g. headache, snack for kids, gift, something to read…"
+                style={{ flex: 1, border: "1px solid #86efac", borderRadius: 8, padding: "0.45rem 0.7rem", fontSize: "0.8rem", outline: "none", background: "#fff" }}
+              />
+              <button type="button" onClick={() => runSearch(aiQuery)} style={{ background: "#22c55e", border: "none", borderRadius: 8, padding: "0.45rem 0.9rem", fontSize: "0.8rem", fontWeight: 700, color: "#fff", cursor: "pointer" }}>Search</button>
+            </div>
+            {aiResults !== null && (
+              <div style={{ marginTop: "0.65rem" }}>
+                {aiResults.length === 0 ? (
+                  <div style={{ fontSize: "0.75rem", color: "#6b7280" }}>No matches found — try "headache", "snack", "gift", or "kids".</div>
+                ) : (
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    {aiResults.map(item => (
+                      <div key={item.id} style={{ background: "#fff", border: "1px solid #bbf7d0", borderRadius: 10, padding: "0.55rem 0.75rem", display: "flex", alignItems: "center", gap: 10 }}>
+                        <span style={{ fontSize: "1.2rem" }}>{item.emoji}</span>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#111" }}>{item.name}</div>
+                          <div style={{ fontSize: "0.68rem", color: "#6b7280" }}>{item.desc}</div>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                          <span style={{ fontWeight: 800, fontSize: "0.82rem", color: "#166534" }}>${item.price.toFixed(2)}</span>
+                          <button type="button" onClick={() => { addToCart(item); }} style={{ background: "#22c55e", border: "none", borderRadius: 7, padding: "0.3rem 0.6rem", fontSize: "0.72rem", fontWeight: 700, color: "#fff", cursor: "pointer" }}>+ Add</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Live Train Status banner */}
       {stops.some(s => s.delayMins > 0 && !s.departed) && (
