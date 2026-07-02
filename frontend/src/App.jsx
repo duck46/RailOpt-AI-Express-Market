@@ -3474,22 +3474,50 @@ function TabPitch() {
 
       {/* 3. The Team */}
       <Section num="3" title="The Team" color="#8b5cf6">
+        {/* Founder card */}
         <div style={{ background: "#faf5ff", border: "1px solid #c4b5fd", borderRadius: 10, padding: "0.85rem 1rem", marginBottom: "0.5rem" }}>
-          <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#6d28d9", marginBottom: 4 }}>{founderName} — Co-Founder & Technical Lead</div>
-          <div style={{ fontSize: "0.78rem", color: "#374151", lineHeight: 1.55 }}>
-            Builder of RailOpt AI Express Market — full-stack platform combining AI personalization, offline-first commerce infrastructure, and a two-phase business model targeting VIA Rail's $51.4M onboard product cost line.
+          <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#6d28d9", marginBottom: 6 }}>{founderName} — Co-Founder & Product Lead</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: "0.5rem" }}>
+            {[
+              ["🛍️", "Shopify", "SMB commerce ops · North America"],
+              ["📊", "Kraft Heinz", "Consumer insights & demand data"],
+              ["🛒", "Canadian Tire", "International e-commerce"],
+              ["⚙️", "Miele", "Intrapreneur & e-commerce"],
+              ["🏦", "RBC", "IT change mgmt · compliance & audit"],
+            ].map(([icon, co, role]) => (
+              <div key={co} style={{ background: "#ede9fe", borderRadius: 8, padding: "3px 8px", fontSize: "0.68rem", color: "#4c1d95", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                <span>{icon}</span>
+                <span style={{ fontWeight: 800 }}>{co}</span>
+                <span style={{ opacity: 0.75, fontWeight: 400 }}>· {role}</span>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: "0.5rem" }}>
+            <div style={{ background: "#f3e8ff", borderRadius: 8, padding: "3px 8px", fontSize: "0.68rem", color: "#6d28d9", fontWeight: 700 }}>🎓 B.Comm — Toronto Metropolitan University</div>
+            <div style={{ background: "#f3e8ff", borderRadius: 8, padding: "3px 8px", fontSize: "0.68rem", color: "#6d28d9", fontWeight: 700 }}>🤖 AI Prototyping — Ivey Business School, Western University</div>
+          </div>
+          <div style={{ fontSize: "0.75rem", color: "#374151", lineHeight: 1.6 }}>
+            <strong>Shopify</strong> built the merchant empathy behind the artisan onboarding model.{" "}
+            <strong>Kraft Heinz</strong> consumer insights experience maps directly to Phase 2 AI demand forecasting.{" "}
+            <strong>RBC IT change management</strong> (compliance, audit, governance) is why PIPEDA + Bill C-27 architecture was built in from day one — not retrofitted.{" "}
+            <strong>Ivey AI Prototyping certificate</strong> grounds the technical implementation in executive-level product thinking.
           </div>
         </div>
+
+        {/* Co-founder card */}
         <div style={{ background: "#faf5ff", border: "1px solid #c4b5fd", borderRadius: 10, padding: "0.85rem 1rem", marginBottom: "0.5rem" }}>
-          <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#6d28d9", marginBottom: 4 }}>Co-Founder — Operations & Community Partnerships</div>
-          <div style={{ fontSize: "0.78rem", color: "#374151", lineHeight: 1.55 }}>
-            Leads vendor onboarding strategy, Indigenous and remote community partnerships, and consignment logistics. Brings operational perspective to a platform built for artisans with zero e-commerce experience.
+          <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#6d28d9", marginBottom: 6 }}>Hannah — Co-Founder & Supply Chain Lead</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: "0.5rem" }}>
+            <div style={{ background: "#ede9fe", borderRadius: 8, padding: "3px 8px", fontSize: "0.68rem", color: "#4c1d95", fontWeight: 700 }}>📦 Supply Chain Professional</div>
+          </div>
+          <div style={{ fontSize: "0.75rem", color: "#374151", lineHeight: 1.55 }}>
+            Leads consignment logistics, vendor onboarding operations, and Indigenous & remote community partnerships. Supply chain expertise is the operational backbone of the artisan consignment model — zero upfront cost to vendors, zero inventory risk to VIA Rail.
           </div>
         </div>
-        <Bullet><strong>VIA Rail industry validation:</strong> Presented early concept directly to a VIA Rail mentor in a 1:1 session. Was challenged on a critical infrastructure problem — train dead zones with no cellular signal across Northern Ontario and remote Manitoba. This led to a hard pivot: passenger phones as the compute device, offline-first order queue as the architecture. Dead zones became a feature, not a barrier.</Bullet>
-        <Bullet>Deep understanding of VIA Rail's operational constraints (Moneris Go POS, S3 Passenger platform, Economy cart service hours, seat assignment rules by route).</Bullet>
-        <Bullet>Built PIPEDA + Bill C-27/CPPA compliant data architecture with opt-in consent, right to delete, and anonymous aggregation for AI training.</Bullet>
-        <Bullet>Positioned to execute Phase 1 without any VIA Rail contract — standalone passenger app, demand data collection starts at launch.</Bullet>
+
+        <Bullet><strong>VIA Rail industry validation:</strong> Presented early concept in a 1:1 VIA Rail mentor session. Was challenged on a critical problem — dead zones with no cellular signal across Northern Ontario and remote Manitoba. Hard pivot followed: passenger phones as the compute device, offline-first order queue as the architecture. Dead zones became a feature.</Bullet>
+        <Bullet>RBC compliance & audit background directly informs the PIPEDA + Bill C-27/CPPA data architecture — opt-in consent, right to delete, anonymous AI training aggregation.</Bullet>
+        <Bullet>Positioned to launch Phase 1 without any VIA Rail contract — standalone passenger app, demand data collection starts at launch, leverage built before the procurement conversation.</Bullet>
       </Section>
 
       {/* 4. Why Now */}
