@@ -2763,9 +2763,6 @@ function TabAccount() {
                 </div>
               );
             })}
-            <button onClick={() => { localStorage.removeItem("railopt_orders"); setOrders([]); }} style={{ background: "none", border: "1px solid #fca5a5", color: "#ef4444", borderRadius: 10, padding: "0.5rem", fontSize: "0.75rem", fontWeight: 700, cursor: "pointer" }}>
-              Clear History
-            </button>
           </div>
         )}
       </>}
