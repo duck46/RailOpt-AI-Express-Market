@@ -3634,6 +3634,15 @@ function TabPitch() {
         <Bullet><strong>Phase 1:</strong> Passenger app live — Instacart Pickup + artisan Shop operational, demand data collection begins across VIA Rail routes.</Bullet>
         <Bullet><strong>Phase 2:</strong> AI demand forecasting SaaS delivered to VIA Rail — route-level stocking recommendations built from Phase 1 purchase data, targeting their $51.4M cost line.</Bullet>
         <Bullet><strong>Phase 3:</strong> Artisan Commerce Car partnership with VIA Rail — physical branded discovery car on long-distance trains, sampling revenue, and combined physical + digital demand intelligence for LDRR fleet.</Bullet>
+
+        <div style={{ marginTop: "1.25rem", background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.75rem 1rem", display: "flex", alignItems: "center", gap: 10 }}>
+          <span style={{ fontSize: "1.1rem" }}>📬</span>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#166534", marginBottom: 2 }}>Get in touch</div>
+            <a href="mailto:lisimon33@gmail.com" style={{ fontSize: "0.82rem", color: "#15803d", fontWeight: 700, textDecoration: "none" }}>lisimon33@gmail.com</a>
+            <div style={{ fontSize: "0.7rem", color: "#4ade80", marginTop: 2 }}>Simon Li · Co-Founder, RailOptAI Express</div>
+          </div>
+        </div>
       </Section>
 
     </div>
