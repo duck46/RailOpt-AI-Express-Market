@@ -161,6 +161,9 @@ const ITEM_VISUALS = {
   "SUD-001": { emoji: "🪙", bg: "#E3F2FD", label: "Big Nickel Pin" },
   "SUD-002": { emoji: "🎨", bg: "#E8F5E9", label: "Shield Lake Print" },
   "SUD-003": { emoji: "🕯️", bg: "#FFF8E1", label: "Boreal Candle" },
+  // Sioux Lookout
+  "SLK-001": { emoji: "🪶", bg: "#FFF8E1", label: "Dream Catcher" },
+  "SLK-002": { emoji: "🧺", bg: "#F3E5F5", label: "Birchbark Basket" },
   // Windsor
   "WIN-001": { emoji: "🌉", bg: "#E3F2FD", label: "Skyline Print" },
   "WIN-002": { emoji: "🗺️", bg: "#FFF8E1", label: "Walkerville Map" },
@@ -473,6 +476,7 @@ function Tab1({ shopStation = "All", onStationHandled }) {
   const [aiNoMatch, setAiNoMatch] = useState(false);
   const [orderDeadline, setOrderDeadline] = useState(null);
   const [ecoOnly, setEcoOnly] = useState(false);
+  const [indigenousOnly, setIndigenousOnly] = useState(false);
   const [deadlineSecondsLeft, setDeadlineSecondsLeft] = useState(null);
 
   useEffect(() => {
@@ -636,7 +640,8 @@ function Tab1({ shopStation = "All", onStationHandled }) {
 
   const stations = ["All", ...Array.from(new Set(items.map((i) => i.station)))];
   const filtered = (activeStation === "All" ? items : items.filter((i) => i.station === activeStation))
-    .filter((i) => !ecoOnly || i.sustainable);
+    .filter((i) => !ecoOnly || i.sustainable)
+    .filter((i) => !indigenousOnly || i.indigenous);
   const cartCount = cart.reduce((s, c) => s + c.qty, 0);
   const cartTotal = cart.reduce((s, c) => {
     const item = items.find((i) => i.id === c.id);
@@ -781,6 +786,17 @@ function Tab1({ shopStation = "All", onStationHandled }) {
         >
           🌿 Eco Picks
         </button>
+        <button
+          onClick={() => setIndigenousOnly((v) => !v)}
+          style={{
+            flexShrink: 0, padding: "0.45rem 0.9rem", borderRadius: 20, fontSize: "0.78rem", fontWeight: 700, cursor: "pointer",
+            background: indigenousOnly ? "#fef3c7" : "#f5f5f4",
+            color: indigenousOnly ? "#92400e" : "#6b7280",
+            border: indigenousOnly ? "1.5px solid #fcd34d" : "1.5px solid #e7e5e4",
+          }}
+        >
+          🪶 Indigenous
+        </button>
         <select
           value={activeStation}
           onChange={(e) => setActiveStation(e.target.value)}
@@ -856,12 +872,17 @@ function Tab1({ shopStation = "All", onStationHandled }) {
                       <Zap size={9} /> AI Pick
                     </span>
                   )}
+                  {item.indigenous && (
+                    <span style={{ position: "absolute", top: item.sustainable ? 28 : 6, left: 6, background: "#fef3c7", borderRadius: 6, padding: "2px 7px", fontSize: "0.62rem", fontWeight: 800, color: "#92400e", display: "flex", alignItems: "center", gap: 3 }}>
+                      🪶 Indigenous
+                    </span>
+                  )}
                   {item.sustainable && (
                     <span style={{ position: "absolute", top: 6, left: 6, background: "#dcfce7", borderRadius: 6, padding: "2px 7px", fontSize: "0.62rem", fontWeight: 800, color: "#166534", display: "flex", alignItems: "center", gap: 3 }}>
                       🌿 Eco
                     </span>
                   )}
-                  {!item.sustainable && (
+                  {!item.sustainable && !item.indigenous && (
                     <span style={{ position: "absolute", top: 6, left: 6, background: "#fff0f0", borderRadius: 6, padding: "2px 7px", fontSize: "0.62rem", fontWeight: 800, color: "#b91c1c", display: "flex", alignItems: "center", gap: 3 }}>
                       🍁 Canada
                     </span>
@@ -3427,11 +3448,18 @@ function TabPitch() {
       {/* 3. The Team */}
       <Section num="3" title="The Team" color="#8b5cf6">
         <div style={{ background: "#faf5ff", border: "1px solid #c4b5fd", borderRadius: 10, padding: "0.85rem 1rem", marginBottom: "0.5rem" }}>
-          <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#6d28d9", marginBottom: 4 }}>{founderName}</div>
+          <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#6d28d9", marginBottom: 4 }}>{founderName} — Co-Founder & Technical Lead</div>
           <div style={{ fontSize: "0.78rem", color: "#374151", lineHeight: 1.55 }}>
             Builder of RailOpt AI Express Market — full-stack platform combining AI personalization, offline-first commerce infrastructure, and a two-phase business model targeting VIA Rail's $51.4M onboard product cost line.
           </div>
         </div>
+        <div style={{ background: "#faf5ff", border: "1px solid #c4b5fd", borderRadius: 10, padding: "0.85rem 1rem", marginBottom: "0.5rem" }}>
+          <div style={{ fontWeight: 800, fontSize: "0.9rem", color: "#6d28d9", marginBottom: 4 }}>Co-Founder — Operations & Community Partnerships</div>
+          <div style={{ fontSize: "0.78rem", color: "#374151", lineHeight: 1.55 }}>
+            Leads vendor onboarding strategy, Indigenous and remote community partnerships, and consignment logistics. Brings operational perspective to a platform built for artisans with zero e-commerce experience.
+          </div>
+        </div>
+        <Bullet><strong>VIA Rail industry validation:</strong> Presented early concept directly to a VIA Rail mentor in a 1:1 session. Was challenged on a critical infrastructure problem — train dead zones with no cellular signal across Northern Ontario and remote Manitoba. This led to a hard pivot: passenger phones as the compute device, offline-first order queue as the architecture. Dead zones became a feature, not a barrier.</Bullet>
         <Bullet>Deep understanding of VIA Rail's operational constraints (Moneris Go POS, S3 Passenger platform, Economy cart service hours, seat assignment rules by route).</Bullet>
         <Bullet>Built PIPEDA + Bill C-27/CPPA compliant data architecture with opt-in consent, right to delete, and anonymous aggregation for AI training.</Bullet>
         <Bullet>Positioned to execute Phase 1 without any VIA Rail contract — standalone passenger app, demand data collection starts at launch.</Bullet>
@@ -3489,7 +3517,7 @@ function TabPitch() {
           {[
             ["SDG 7", "⚡", "Zero-marginal-carbon commerce on existing clean rail infrastructure"],
             ["SDG 8", "💼", "New income channel for artisans with zero e-commerce setup"],
-            ["SDG 10", "⚖️", "Churchill vendor = Toronto vendor on the digital shelf"],
+            ["SDG 10", "🪶", "Indigenous & remote vendors: equal digital shelf, real economic access"],
             ["SDG 9", "🏗️", "Offline-first infrastructure + AI demand forecasting"],
             ["SDG 11", "🏙️", "Modal shift; 41 corridor communities promoted"],
             ["SDG 12", "♻️", "Consignment model eliminates VIA's overstock waste"],
@@ -3516,10 +3544,20 @@ function TabPitch() {
 
         <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Traction & Validation</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: "0.5rem" }}>
-          {["120+ products catalogued", "41 stations mapped", "8 provinces", "Live demo deployed", "PIPEDA compliant", "OpenRouter AI integrated"].map((t) => (
+          {["120+ products catalogued", "41 stations mapped", "8 provinces", "Live demo deployed", "PIPEDA compliant", "OpenRouter AI integrated", "VIA Rail mentor 1:1", "Dead zone pivot validated"].map((t) => (
             <Tag key={t} color="#f0fdf4" text="#166534">{t}</Tag>
           ))}
         </div>
+        <Bullet><strong>VIA Rail mentor session</strong> confirmed the real dead zone problem on The Canadian (Northern Ontario, remote Manitoba). This single session reshaped the entire architecture — store-and-forward queue, offline-first sync, passenger phones as the primary device. The mentor is our first industry contact for Phase 2 partnership conversations.</Bullet>
+        <Bullet><strong>Market evidence datasets used:</strong> VIA Rail 2025 Annual Report (4.4M passengers, $51.4M onboard product costs, 35% on-time rate, $375.7M subsidy), VIA LDRR Tender 202606009 (June 2026 F&B Design Consultancy), VIA fare matrix (Winter 2025/26 season), Instacart–Uber Eats partnership data (May 2024).</Bullet>
+
+        <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Diversity &amp; Inclusion — Equal Digital Shelf</div>
+        <div style={{ background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 10, padding: "0.75rem 0.9rem", marginBottom: "0.5rem", fontSize: "0.78rem", color: "#78350f", lineHeight: 1.55 }}>
+          <strong>🪶 Indigenous &amp; Remote Community Vendors</strong> — A Churchill, MB vendor has the same digital shelf space as a Toronto vendor. RailOpt does not tier by geography. VIA Rail's mandatory remote routes (Churchill MB, Thompson MB, The Pas MB, Sioux Lookout ON) are not afterthoughts — they are the core case for why this platform exists.
+        </div>
+        <Bullet>Pelican Lake First Nation artisans (Sioux Lookout), Opaskwayak Cree Nation (The Pas), Itsanitaq Museum (Churchill) — all catalogued at launch with 🪶 Indigenous badge and dedicated filter in the Shop.</Bullet>
+        <Bullet>For communities with no road access (Churchill, Manitoba — rail-only in winter), RailOpt is not a convenience layer — it's the only scalable e-commerce channel. Every sale on The Canadian is economic infrastructure for these vendors.</Bullet>
+        <Bullet>Aligns directly with SDG 10 (reduced inequalities) — measurable outcome: Indigenous vendor revenue per route vs. southern corridor average.</Bullet>
 
         <div style={{ fontWeight: 700, fontSize: "0.78rem", color: "#374151", margin: "0.75rem 0 0.4rem" }}>Scalability & Roadmap</div>
         <Bullet><strong>Phase 1:</strong> Passenger app live — Instacart Pickup + artisan Shop operational, demand data collection begins across VIA Rail routes.</Bullet>
