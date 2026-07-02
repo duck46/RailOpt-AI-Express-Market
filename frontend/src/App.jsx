@@ -3546,8 +3546,7 @@ function TabPitch() {
         </div>
         <Bullet><strong>Primary users:</strong> VIA Rail passengers on long-haul intercity journeys (2–5 hours) — highest dwell time of any transit mode.</Bullet>
         <Bullet><strong>Secondary customers:</strong> Local artisan vendors along 41 stations in 8 provinces with zero existing e-commerce presence.</Bullet>
-        <Bullet><strong>Enterprise customer (Phase 2):</strong> VIA Rail itself — a Crown Corporation with a $51.4M annual pain point and no current demand intelligence solution.</Bullet>
-        <Bullet>Sole enterprise client: VIA Rail — Canada's national intercity rail operator, a Crown Corporation with a $51.4M annual cost line and no current demand intelligence infrastructure.</Bullet>
+        <Bullet><strong>Enterprise customer (Phase 2):</strong> VIA Rail itself — Canada's national intercity rail operator, a Crown Corporation with a $51.4M annual pain point and no current demand intelligence solution.</Bullet>
       </Section>
 
       {/* 6. Business Model */}
