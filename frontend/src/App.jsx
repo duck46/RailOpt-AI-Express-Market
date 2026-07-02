@@ -3082,14 +3082,6 @@ function TabInstacart() {
                     {stop.subtitle && (
                       <div style={{ fontSize: "0.62rem", color: "#9ca3af", marginTop: 1, fontStyle: "italic" }}>{stop.subtitle}</div>
                     )}
-                    {stop.note && (
-                      <div style={{ fontSize: "0.67rem", color: "#2563eb", fontWeight: 600, marginTop: 2, maxWidth: 180 }}>{stop.note}</div>
-                    )}
-                    {stop.distanceRisk && stop.eligible && (
-                      <div style={{ fontSize: "0.66rem", color: "#b45309", fontWeight: 600, marginTop: 2, maxWidth: 200, display: "flex", alignItems: "center", gap: 3 }}>
-                        ⚠️ Nearest store is {stop.storeDistanceKm}km from platform — order may be at risk if train runs on time
-                      </div>
-                    )}
                   </div>
                 </div>
                 <div style={{ textAlign: "right" }}>
