@@ -3434,7 +3434,7 @@ function TabPitch() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 8, margin: "0.75rem 0" }}>
           <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.75rem" }}>
             <div style={{ fontWeight: 800, fontSize: "0.82rem", color: "#166534", marginBottom: 4 }}>🛍️ Shop — Artisan Consignment</div>
-            <div style={{ fontSize: "0.72rem", color: "#374151", lineHeight: 1.5 }}>Products loaded at origin station · café car pickup zone · 8-min ready time · AI-personalized feed</div>
+            <div style={{ fontSize: "0.72rem", color: "#374151", lineHeight: 1.5 }}>Products loaded at origin station · café car pickup zone · AI-personalized feed</div>
           </div>
           <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.75rem" }}>
             <div style={{ fontWeight: 800, fontSize: "0.82rem", color: "#166534", marginBottom: 4 }}>🛒 Pickup — Instacart Platform</div>
