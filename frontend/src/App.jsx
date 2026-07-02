@@ -3375,16 +3375,26 @@ function TabInstacart() {
 function TabPitch() {
   const acct = JSON.parse(localStorage.getItem("railopt_account") || "{}");
   const founderName = acct.name || "Founder";
+  const [openSections, setOpenSections] = useState({ "1": true });
 
-  const Section = ({ num, title, color = "#FFCC00", children }) => (
-    <div style={{ marginBottom: "1.5rem" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "0.75rem" }}>
-        <div style={{ background: color, borderRadius: 8, width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "0.8rem", color: "#111", flexShrink: 0 }}>{num}</div>
-        <h2 style={{ fontWeight: 800, fontSize: "1rem", color: "#111", margin: 0 }}>{title}</h2>
+  const toggleSection = (num) => setOpenSections((prev) => ({ ...prev, [num]: !prev[num] }));
+
+  const Section = ({ num, title, color = "#FFCC00", children }) => {
+    const isOpen = !!openSections[num];
+    return (
+      <div style={{ marginBottom: "0.6rem", border: "1px solid #e7e5e4", borderRadius: 12, overflow: "hidden" }}>
+        <button
+          onClick={() => toggleSection(num)}
+          style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "0.75rem 1rem", background: isOpen ? "#fafaf9" : "#fff", border: "none", cursor: "pointer", textAlign: "left" }}
+        >
+          <div style={{ background: color, borderRadius: 8, width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "0.8rem", color: "#111", flexShrink: 0 }}>{num}</div>
+          <h2 style={{ fontWeight: 800, fontSize: "1rem", color: "#111", margin: 0, flex: 1 }}>{title}</h2>
+          <span style={{ color: "#9ca3af", fontSize: "1rem", flexShrink: 0 }}>{isOpen ? "▲" : "▼"}</span>
+        </button>
+        {isOpen && <div style={{ padding: "0.75rem 1rem 1rem 1rem", borderTop: "1px solid #e7e5e4" }}>{children}</div>}
       </div>
-      <div style={{ paddingLeft: 38 }}>{children}</div>
-    </div>
-  );
+    );
+  };
 
   const Bullet = ({ children }) => (
     <div style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: "0.45rem" }}>
