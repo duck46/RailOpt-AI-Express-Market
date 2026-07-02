@@ -460,6 +460,37 @@ RETAIL_ITEMS = [
         "perishable": False,
         "sustainable": True,
     },
+    # ── Ontario — Sioux Lookout ───────────────────────────────────────────────
+    {
+        "id": "SLK-001",
+        "station": "Sioux Lookout",
+        "province": "Ontario",
+        "vendor": "Pelican Lake First Nations Artisans",
+        "name": "Anishinaabe Dream Catcher",
+        "price": 28.00,
+        "price_display": "$28.00",
+        "category": "Souvenirs",
+        "description": "Handcrafted dream catcher in traditional Anishinaabe style with hand-dyed sinew, locally gathered feathers, and hand-carved wood hoop — made by Pelican Lake First Nation artisans.",
+        "in_stock": True,
+        "perishable": False,
+        "indigenous": True,
+        "sustainable": True,
+    },
+    {
+        "id": "SLK-002",
+        "station": "Sioux Lookout",
+        "province": "Ontario",
+        "vendor": "Pelican Lake First Nations Artisans",
+        "name": "Woodland Birchbark Basket (Mini)",
+        "price": 34.00,
+        "price_display": "$34.00",
+        "category": "Souvenirs",
+        "description": "Miniature birchbark basket hand-woven in Woodland Cree tradition — harvested sustainably from the boreal forest surrounding Sioux Lookout.",
+        "in_stock": True,
+        "perishable": False,
+        "indigenous": True,
+        "sustainable": True,
+    },
     # ── Ontario — Windsor ─────────────────────────────────────────────────────
     {
         "id": "WIN-001",
@@ -595,6 +626,7 @@ RETAIL_ITEMS = [
         "description": "Archival giclée print by a local Ts'msyen artist celebrating the Pacific North Coast's indigenous heritage.",
         "in_stock": True,
         "perishable": False,
+        "indigenous": True,
     },
     {
         "id": "PR-002",
@@ -1416,6 +1448,7 @@ RETAIL_ITEMS = [
         "description": "Enamel pin marking Thompson's Spirit Way — a 2 km cultural pathway with 15 points celebrating the city's heritage.",
         "in_stock": True,
         "perishable": False,
+        "indigenous": True,
     },
     {
         "id": "THO-003",
@@ -1443,6 +1476,7 @@ RETAIL_ITEMS = [
         "category": "Souvenirs",
         "description": "Hand-beaded keychain in traditional Opaskwayak Cree floral patterns, made by community artisans in The Pas.",
         "in_stock": True,
+        "indigenous": True,
         "perishable": False,
     },
     {
@@ -1496,6 +1530,7 @@ RETAIL_ITEMS = [
         "category": "Souvenirs",
         "description": "Set of 4 archival prints reproducing contemporary Inuit carvings and artworks from the Itsanitaq Museum collection.",
         "in_stock": True,
+        "indigenous": True,
         "perishable": False,
     },
     {
