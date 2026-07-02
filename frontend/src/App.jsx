@@ -3425,7 +3425,7 @@ function TabPitch() {
         <Bullet>Passengers who forget medication, need a gift, or want local snacks have one option: <strong>sprint to a convenience store during a 10-minute stop</strong> and hope they make it back.</Bullet>
         <Bullet>VIA Rail spent <strong>$51.4M on onboard products in 2025 (+14.5% YoY)</strong> with no demand data behind that spend — stocking by intuition, not intelligence.</Bullet>
         <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 10, padding: "0.75rem 1rem", margin: "0.75rem 0", fontSize: "0.78rem", color: "#7f1d1d", fontStyle: "italic", lineHeight: 1.6 }}>
-          "Sioux Lookout [remote boreal town in Northern Ontario — rail is the primary access] has a Subway just down the street — that's pushing it time wise — or a Rexall past the CIBC. There have been times the stop is long enough for a dash over to Subway but it is very rare. Make sure you have at least 20 minutes otherwise do NOT make the run." — Reddit, r/ViaRail
+          "The Ontario Station [Sioux Lookout — remote boreal town in Northern Ontario, rail is the primary access] has a Subway just down the street — that's pushing it time wise — or a Rexall past the CIBC. There have been times the stop is long enough for a dash over to Subway but it is very rare. Make sure you have at least 20 minutes otherwise do NOT make the run." — Reddit, r/ViaRail
         </div>
         <Bullet>The demand is real and proven. VIA Rail just has no infrastructure to serve it.</Bullet>
       </Section>
