@@ -3570,6 +3570,9 @@ function TabPitch() {
         <div style={{ background: "#fffbeb", border: "1px solid #fcd34d", borderRadius: 10, padding: "0.65rem 0.85rem", marginTop: "0.5rem", fontSize: "0.78rem", color: "#92400e", lineHeight: 1.5 }}>
           <strong>Phase 1 ARR estimate:</strong> At 4.4M passengers/year with 2% Pickup conversion ($25 AOV) and 5% Shop conversion ($18 AOV) → <strong>~$270K ARR</strong> before Phase 2 SaaS revenue.
         </div>
+        <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: 10, padding: "0.75rem 0.9rem", marginTop: "0.65rem", fontSize: "0.78rem", color: "#14532d", lineHeight: 1.6 }}>
+          <strong>💡 The sales are the seed — the data is the gold mine.</strong> Every order builds a demand signal VIA Rail has never had: what passengers want, at which station, on which route. Phase 2 integrates that forecast directly into VIA's stocking decisions — projecting a <strong>15–20% reduction on their $51.4M onboard product cost line</strong>, unlocking <strong>$7–10M in annual savings</strong>.
+        </div>
       </Section>
 
       {/* 7. Measurable Impact */}
