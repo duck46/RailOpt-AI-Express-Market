@@ -3549,10 +3549,10 @@ export default function App() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#F5F5F5", color: "#111", paddingBottom: 80 }}>
+    <div style={{ minHeight: "100vh", background: "#F5F5F5", color: "#111", paddingBottom: 80, overflowX: "hidden", maxWidth: "100vw" }}>
 
       {/* Header */}
-      <header style={{ background: "#fff", borderBottom: "1px solid #E8E8E8", position: "sticky", top: 0, zIndex: 50 }}>
+      <header style={{ background: "#fff", borderBottom: "1px solid #E8E8E8", position: "sticky", top: 0, zIndex: 50, overflowX: "hidden" }}>
         <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 1rem" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.85rem 0" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
@@ -3568,7 +3568,7 @@ export default function App() {
           </div>
 
           {/* Tabs */}
-          <div style={{ display: "flex", gap: 0, overflowX: "auto", scrollbarWidth: "none" }}>
+          <div style={{ display: "flex", gap: 0, overflowX: "auto", scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}>
             {TABS.map((t) => (
               <button key={t.id} onClick={() => setTab(t.id)} style={{
                 flex: "1 0 auto", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2,
@@ -3600,7 +3600,7 @@ export default function App() {
         </div>
       </div>
 
-      <main style={{ maxWidth: 960, margin: "0 auto", padding: "1.25rem 1rem" }}>
+      <main style={{ maxWidth: 960, margin: "0 auto", padding: "1.25rem 1rem", overflowX: "hidden" }}>
         {tab === "retail"    && <Tab1 shopStation={shopStation} onStationHandled={() => setShopStation("All")} />}
         {tab === "instacart" && <TabInstacart />}
         {tab === "discover"  && <Tab4 onShopStation={handleShopStation} />}
